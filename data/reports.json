@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1775789034474,
+    "title": "Laporan baru",
+    "status": "lost",
+    "latitude": -6.872406051503526,
+    "longitude": 107.66327977180482
+  },
+  {
+    "id": 1775789136312,
+    "title": "Laporan baru",
+    "status": "lost",
+    "latitude": -6.873045506445139,
+    "longitude": 107.66288280487062
+  },
+  {
+    "id": 1775789210823,
+    "title": "Laporan baru",
+    "status": "lost",
+    "latitude": -6.8722568452267145,
+    "longitude": 107.66039371490479
+  },
+  {
+    "id": 1775789217536,
+    "title": "Laporan baru",
+    "status": "lost",
+    "latitude": -6.870359789910513,
+    "longitude": 107.65979290008546
+  },
+  {
+    "id": 1775790787906,
+    "title": "Laporan baru",
+    "status": "lost",
+    "latitude": -6.877733432509392,
+    "longitude": 107.64661788940431
+  },
+  {
+    "id": 1775792959355,
+    "latitude": -6.8713829218078475,
+    "longitude": 107.66529679298402,
+    "title": "testing",
+    "status": "lost"
+  },
+  {
+    "id": 1775792978521,
+    "latitude": -6.871095166184245,
+    "longitude": 107.66547918319704,
+    "title": "hai",
+    "status": "lost"
+  },
+  {
+    "id": 1775793810496,
+    "latitude": -6.870189606391148,
+    "longitude": 107.66754984855653,
+    "title": "halo",
+    "status": "lost"
+  },
+  {
+    "id": 1775800827389,
+    "latitude": -6.938026666801642,
+    "longitude": 107.60186254978181,
+    "title": "hilang",
+    "status": "lost"
+  }
+]
