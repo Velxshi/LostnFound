@@ -1,4 +1,5 @@
 "use client";
+import MapHeader from "@/components/common/MapHeader";
 import dynamic from "next/dynamic";
 
 import { useEffect, useState } from "react";
@@ -13,5 +14,11 @@ export default function Home() {
       .then((res) => res.json())
       .then((data) => setReports(data));
   }, []);
-  return <Map data={reports} />;
+  return (
+    <>
+      <MapHeader />
+
+      <Map data={reports} />
+    </>
+  );
 }

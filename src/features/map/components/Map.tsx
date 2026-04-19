@@ -1,11 +1,11 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-import { useState } from "react";
-import MapClickHandler from "../MapClickHandler";
+import { useState, useEffect } from "react";
+import MapClickHandler from "./MapClickHandler";
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
 L.Icon.Default.mergeOptions({
@@ -43,8 +43,25 @@ export default function Map({ data }: any) {
     setDraft(null);
   }
 
+  function SetUserLocation() {
+    const map = useMap();
+
+    useEffect(() => {
+      map.locate({
+        setView: true,
+        maxZoom: 17,
+      });
+
+      map.on("locationfound", (e) => {
+        map.setView(e.latlng, 17);
+      });
+    }, [map]);
+    return null;
+  }
+
   return (
-    <MapContainer center={[-6.873, 107.664]} zoom={17} style={{ height: "100vh", width: "100%" }}>
+    <MapContainer zoom={17} style={{ height: "100vh", width: "100%" }} zoomControl={false} attributionControl={false}>
+      <SetUserLocation />
       <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
       <MapClickHandler onClick={handleMapClick} />
