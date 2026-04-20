@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 
 function FilterButton({ title }: { title: string }) {
   return (
-    <button className="w-fit p-2.5 rounded-2xl bg-cream-light font-jakarta text-caption shadow h-fit cursor-pointer hover:scale-105 transform duration-300">
+    <button className="w-fit p-2.5 rounded-2xl bg-cream-light font-jakarta text-caption shadow h-fit cursor-pointer hover:scale-105 transition-all duration-300">
       <p>{title}</p>
     </button>
   );
@@ -27,7 +27,7 @@ export default function MapHeader() {
       <Image
         src="https://i.pinimg.com/1200x/e3/6b/c6/e36bc6a279e7cc29547dd0bb84d65939.jpg"
         alt="profile"
-        className="object-cover rounded-full w-10 h-10 cursor-pointer hover:scale-105 transform duration-300 md:w-14 md:h-14"
+        className="object-cover rounded-full w-10 h-10 cursor-pointer hover:scale-105 transition-all duration-300 md:w-14 md:h-14"
         width={40}
         height={40}
         onClick={goToProfile}

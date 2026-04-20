@@ -218,13 +218,9 @@
   color: var(--royale-active);
 }
 
-.text-dark {
-  color: var(--charcoal);
+.text-cream-light {
+  color: var(--cream-light);
 }
-.text-muted {
-  color: var(--charcoal-light);
-}
-
 .text-cream {
   color: var(--cream);
 }
@@ -235,6 +231,18 @@
 
 .text-cream-darker {
   color: var(--cream-darker);
+}
+.text-dark {
+  color: var(--charcoal);
+}
+.text-dark-hover {
+  color: var(--charcoal-hover);
+}
+.text-muted {
+  color: var(--charcoal-light);
+}
+.text-dark-active {
+  color: var(--charcoal-active);
 }
 
 .bg-primary {

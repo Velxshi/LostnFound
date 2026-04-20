@@ -4,7 +4,20 @@ const nextConfig: NextConfig = {
   /* config options here */
 
   images: {
-    remotePatterns: [new URL("https://i.pinimg.com/**")],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "i.pinimg.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "i.etsystatic.com",
+        port: "",
+        pathname: "/**",
+      },
+    ],
   },
 };
 
