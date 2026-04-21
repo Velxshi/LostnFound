@@ -24,14 +24,9 @@ export default function MapHeader() {
         <FilterButton title="Ditemukan" />
       </div>
 
-      <Image
-        src="https://i.pinimg.com/1200x/e3/6b/c6/e36bc6a279e7cc29547dd0bb84d65939.jpg"
-        alt="profile"
-        className="object-cover rounded-full w-10 h-10 cursor-pointer hover:scale-105 transition-all duration-300 md:w-14 md:h-14"
-        width={40}
-        height={40}
-        onClick={goToProfile}
-      />
+      <div className="flex hover:ring-4 hover:ring-(--royale) transition-all duration-300 rounded-full ">
+        <Image src="https://i.pinimg.com/1200x/e3/6b/c6/e36bc6a279e7cc29547dd0bb84d65939.jpg" alt="profile" className="object-cover rounded-full w-10 h-10 cursor-pointer  md:w-14 md:h-14" width={40} height={40} onClick={goToProfile} />
+      </div>
     </div>
   );
 }
