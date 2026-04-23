@@ -1,5 +1,4 @@
 "use client";
-import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'; 
@@ -22,7 +21,7 @@ const SidebarNavbar = () => {
 
   const navItems = [
     { name: 'Dashboard', icon: DashboardIcon, link: '/admin/dashboard', iconactive: DashboardIconActive },
-    { name: 'Reports', icon: ReportsIcon, link: '/admin/reports', iconactive: ReportsIconActive },
+    { name: 'Reports', icon: ReportsIcon, link: '/admin/report', iconactive: ReportsIconActive },
     { name: 'Map', icon: MapIcon, link: '/admin/map', iconactive: MapIconActive },
     { name: 'Category', icon: CategoryIcon, link: '/admin/category', iconactive: CategoryIconActive },
     { name: 'Profile', icon: ProfileIcon, link: '/admin/profile', iconactive: ProfileIconActive },
@@ -31,10 +30,10 @@ const SidebarNavbar = () => {
   return (
     <nav className="fixed z-9999 bg-white border-gray-300 bottom-0 left-0 right-0 border-t pb-3 pt-3 px-4 lg:top-0 lg:bottom-0 lg:left-0 lg:w-64 lg:border-t-0 lg:border-r lg:pt-8 lg:px-6">
       
-      {/* Container Logo (Hanya muncul di Desktop sesuai gambar) */}
+    
       <div className="hidden lg:flex items-center gap-3 mb-10 px-2">
         <div className="relative h-10 w-10">
-          {/* Ganti dengan Logo 'Lost n Found' kamu */}
+    
           <Image src={Logo} alt="Logo" fill className="object-contain" />
         </div>
         <span className="text-blue-800 font-bold text-title1 font-poppins">Lost n Found</span>
