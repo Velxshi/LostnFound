@@ -29,11 +29,7 @@ const SidebarNavbar = () => {
   ];
 
   return (
-    <nav className="fixed z-50 bg-white border-gray-300 
-      /* Mobile: Bottom Bar */
-      bottom-0 left-0 right-0 border-t pb-3 pt-3 px-4 
-      /* Desktop: Sidebar */
-      lg:top-0 lg:bottom-0 lg:left-0 lg:w-64 lg:border-t-0 lg:border-r lg:pt-8 lg:px-6">
+    <nav className="fixed z-9999 bg-white border-gray-300 bottom-0 left-0 right-0 border-t pb-3 pt-3 px-4 lg:top-0 lg:bottom-0 lg:left-0 lg:w-64 lg:border-t-0 lg:border-r lg:pt-8 lg:px-6">
       
       {/* Container Logo (Hanya muncul di Desktop sesuai gambar) */}
       <div className="hidden lg:flex items-center gap-3 mb-10 px-2">

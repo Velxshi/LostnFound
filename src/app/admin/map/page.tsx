@@ -1,5 +1,4 @@
 "use client";
-import reports from "../Reports/page";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import MapHeaderAdmin from "@/components/admin/map/MapHeaderadmin";
@@ -15,7 +14,7 @@ useEffect(() => {
     .then((data) => setReports(data));
 }, []);
     return (
-    <div className="">
+    <div className="w-full min-h-screen inset-0 z-10">
     <MapHeaderAdmin />
     <Map data={reports} />
     </div>
