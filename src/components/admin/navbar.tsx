@@ -16,7 +16,7 @@ import CategoryIconActive from '../../../public/Navbar-admin/CategoryActive.svg'
 import ProfileIconActive from '../../../public/Navbar-admin/ProfileActive.svg';
 
 const BottomNavbar = () => {
-  const pathname = usePathname(); // Ambil URL saat ini
+  const pathname = usePathname(); 
 
   const navItems = [
     { name: 'Dashboard', icon: DashboardIcon, link: '/admin/dashboard', iconactive: DashboardIconActive },
@@ -27,7 +27,7 @@ const BottomNavbar = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 border-t border-gray-100 bg-white pb-3 pt-3 px-4 z-50">
+    <nav className="fixed bottom-0 left-0 right-0 border-t border-gray-300 bg-white pb-3 pt-3 px-4 z-50 ">
       <div className="mx-auto flex max-w-lg items-center justify-around">
         {navItems.map((item) => {
           const isActive = pathname === item.link;

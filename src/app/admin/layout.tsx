@@ -4,7 +4,7 @@ import BottomNavbar from "@/components/admin/navbar";
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <section className="min-h-screen bg-[#F7F3F0] w-full flex justify-center">
-      <div className="pb-16"> 
+      <div className="pb-26"> 
         {children}
       </div>
       <BottomNavbar />
