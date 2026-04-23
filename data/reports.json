@@ -68,5 +68,19 @@
     "longitude": 107.60127782821657,
     "title": "coba coba",
     "status": "lost"
+  },
+  {
+    "id": 1776755278949,
+    "latitude": -6.939974011342163,
+    "longitude": 107.71509468555452,
+    "title": "kukuku",
+    "status": "lost"
+  },
+  {
+    "id": 1776755286121,
+    "latitude": -6.939930355544632,
+    "longitude": 107.7143168449402,
+    "title": "tes",
+    "status": "lost"
   }
 ]
