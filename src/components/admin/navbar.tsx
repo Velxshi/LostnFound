@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'; 
 
+
+import Logo from '../../../public/logo/Logo.svg'; 
 import DashboardIcon from '../../../public/Navbar-admin/Dashboard.svg';
 import ReportsIcon from '../../../public/Navbar-admin/Reports.svg';
 import MapIcon from '../../../public/Navbar-admin/map.svg';
@@ -15,7 +17,7 @@ import MapIconActive from '../../../public/Navbar-admin/MapActive.svg';
 import CategoryIconActive from '../../../public/Navbar-admin/CategoryActive.svg';
 import ProfileIconActive from '../../../public/Navbar-admin/ProfileActive.svg';
 
-const BottomNavbar = () => {
+const SidebarNavbar = () => {
   const pathname = usePathname(); 
 
   const navItems = [
@@ -27,8 +29,25 @@ const BottomNavbar = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 border-t border-gray-300 bg-white pb-3 pt-3 px-4 z-50 ">
-      <div className="mx-auto flex max-w-lg items-center justify-around">
+    <nav className="fixed z-50 bg-white border-gray-300 
+      /* Mobile: Bottom Bar */
+      bottom-0 left-0 right-0 border-t pb-3 pt-3 px-4 
+      /* Desktop: Sidebar */
+      lg:top-0 lg:bottom-0 lg:left-0 lg:w-64 lg:border-t-0 lg:border-r lg:pt-8 lg:px-6">
+      
+      {/* Container Logo (Hanya muncul di Desktop sesuai gambar) */}
+      <div className="hidden lg:flex items-center gap-3 mb-10 px-2">
+        <div className="relative h-10 w-10">
+          {/* Ganti dengan Logo 'Lost n Found' kamu */}
+          <Image src={Logo} alt="Logo" fill className="object-contain" />
+        </div>
+        <span className="text-blue-800 font-bold text-title1 font-poppins">Lost n Found</span>
+      </div>
+
+      <div className="mx-auto flex max-w-lg items-center justify-around 
+        /* Desktop Adjustment */
+        lg:flex-col lg:max-w-none lg:items-start lg:gap-4">
+        
         {navItems.map((item) => {
           const isActive = pathname === item.link;
 
@@ -36,13 +55,15 @@ const BottomNavbar = () => {
             <Link 
               key={item.name}
               href={item.link}
-              className="flex flex-1 flex-col items-center gap-1 transition-all duration-200 active:scale-90"
+              className="flex flex-1 flex-col items-center gap-1 transition-all duration-200 active:scale-95
+                /* Desktop Link Style */
+                lg:flex-row lg:w-full lg:gap-4 lg:py-3 lg:px-4 lg:rounded-lg"
             >
               <div 
                 className={`relative h-6 w-6 transition-all duration-200 ${
                   isActive 
-                    ? 'text-blue-700 disabled ' 
-                    : 'grayscale opacity-50'
+                    ? '' 
+                    : 'grayscale opacity-40'
                 }`}
               >
                 <Image 
@@ -54,7 +75,7 @@ const BottomNavbar = () => {
               </div>
 
               <span
-                className={`text-caption font-bold transition-colors ${
+                className={`text-xs md:text-base font-bold transition-colors ${
                   isActive ? 'text-blue-700' : 'text-gray-400'
                 }`}
               >
@@ -68,4 +89,4 @@ const BottomNavbar = () => {
   );
 };
 
-export default BottomNavbar;
+export default SidebarNavbar;

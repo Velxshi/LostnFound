@@ -29,13 +29,13 @@ const CardItem = () => {
         }
     ];
 return (
-    <div className="grid grid-cols-2 gap-3 mt-4 md:grid-cols-3">
+    <div className="grid grid-cols-2 gap-3 mt-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
             {data.map((item) => (
                 <div 
                     key={item.id} 
-                    className="w-full overflow-hidden rounded-xl bg-white shadow-lg h-41.5 "
+                    className="w-full overflow-hidden rounded-xl bg-white shadow-lg h-41.5 lg:h-46"
                 >
-                    <div className="relative h-23.5 w-full ">
+                    <div className="relative h-23.5 lg:h-27 w-full ">
                         <div className="relative h-full w-full overflow-hidden rounded-[18px] rounded-b-none">
                             <div className={`flex justify-center items-center absolute w-16.25 h-8 left-2 top-2 z-10 rounded-lg px-3 py-1.5 shadow-sm ${
                                 item.status === 'Lost' ? 'bg-[#FF4D4D] text-white' : 'bg-[#FFCE00] text-black'

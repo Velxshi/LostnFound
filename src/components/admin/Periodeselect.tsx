@@ -9,7 +9,7 @@ const [selected, setSelected] = useState('Periode');
 const options = ['7 Hari', '30 Hari' ];
 
 return (
-    <div className="relative inline-block w-29 cursor-pointer">
+    <div className="relative inline-block w-29 lg:w-59 lg:h-12 cursor-pointer">
     <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between rounded-xl bg-white px-5 py-3 text-sm font-medium text-gray-800 shadow-sm transition-all hover:bg-gray-50 active:scale-95"
