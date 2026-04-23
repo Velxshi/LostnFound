@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 function FilterButton({ title }: { title: string }) {
   return (
@@ -11,13 +12,17 @@ function FilterButton({ title }: { title: string }) {
 
 export default function MapHeaderAdmin() {
   const router = useRouter();
-
+  const pathname = usePathname();   
   function goToProfile() {
-    router.push("/profile");
+    if (pathname.startsWith("/admin")) {      
+      router.push("/admin/profile");
+    }   else {
+      router.push("/profile");
+    }   
   }
 
   return (
-    <div className=" flex justify-between lg:ml-64 absolute h-fit top-6 left-6 right-6 z-1000 items-center md:top-9 md:left-9 md:right-9">
+    <div className=" flex justify-between  absolute h-fit top-6 left-6 right-6 z-1000 items-center md:top-9 md:left-9 md:right-9">
       <div className="flex gap-2 text-cream-darker">
         <FilterButton title="Hilang" />
         <FilterButton title="Ditemukan" />

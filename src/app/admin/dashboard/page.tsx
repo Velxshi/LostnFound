@@ -7,6 +7,7 @@ import Bardit from "../../../../public/Dashboard-Admin/Bardit.svg";
 import CardItem from "@/components/admin/cardItem";
 
 import Image from "next/image";
+import { BlurFade } from "@/components/ui/blur-fade";
 export default function Dashboard() {   
     
     const totallaporan = 100;
@@ -16,11 +17,13 @@ export default function Dashboard() {
 
     return <div className="w-full min-h-screen p-9 flex justify-center">
         <div className="container flex flex-col">
+            <BlurFade delay={0.15} inView>
             <div>
                 <h1 className="font-poppins font-bold text-title1 text-dark md:text-[32px] lg:text-[40px]!">Statistik Laporan</h1>
             </div>
-
+                </BlurFade>
             {/* card statistik */}
+            <BlurFade delay={0.45} inView>
             <div className="card-container grid grid-cols-2 lg:grid-cols-4 lg:gap-16 gap-3 mt-3">
                 <div className="card w-full h-24.5 md:h-36  bg-[#FEFEFE] rounded-[20px] flex flex-col items-center justify-center gap-2">
                     <div className="logo">
@@ -54,7 +57,8 @@ export default function Dashboard() {
                     <p className="text-caption lg:text-[14px]! text-[#B9B6B4] font-poppins">Barang Dikembalikan</p>
                 </div>
             </div>
-
+            </BlurFade>
+<BlurFade delay={0.65} inView>
             <div className="mt-5 flex flex-row items-center justify-between">
                 <h1 className="font-poppins font-bold text-title2 text-dark lg:text-[24px]!">Laporan 7 Hari Terakhir</h1>
                 <Periodeselect/>
@@ -65,7 +69,8 @@ export default function Dashboard() {
                     <img src='https://www.jaspersoft.com/content/dam/jaspersoft/images/graphics/infographics/column-chart-example.svg' alt='grafik' className="w-full h-full object-contain"/>
                 </div>
             </div>
-
+            </BlurFade>
+            <BlurFade delay={0.65} inView>
             <div className="mt-5 flex flex-row items-center justify-between">
                 <h1 className="font-poppins font-bold text-title2 lg:text-[24px] text-dark">Laporan Terbaru</h1>
                 <p className="font-poppins text-[14px] lg:text-title2 font-semibold text-[#2848B7]">Lihat Semua</p>
@@ -74,6 +79,7 @@ export default function Dashboard() {
             <div>
                 <CardItem/>
             </div>
+            </BlurFade>
         </div>
     </div>
 }   
