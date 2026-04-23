@@ -1,4 +1,4 @@
-import Periodeselect from "@/components/admin/Periodeselect";
+import Periodeselect from "@/components/admin/Dashboard/Periodeselect";
 import Totlap from "../../../../public/Dashboard-Admin/Totlap.svg";
 import Barhil from "../../../../public/Dashboard-Admin/Barhil.svg";
 import Bardik from "../../../../public/Dashboard-Admin/Bardik.svg";
@@ -14,7 +14,7 @@ export default function Dashboard() {
     const barangditemukan = 30;
     const barangdikembalikan = 20;
 
-    return <div className="w-full min-h-screen p-9">
+    return <div className="w-full min-h-screen p-9 flex justify-center">
         <div className="container flex flex-col">
             <div>
                 <h1 className="font-poppins font-bold text-title1 text-dark md:text-[32px] lg:text-[40px]!">Statistik Laporan</h1>

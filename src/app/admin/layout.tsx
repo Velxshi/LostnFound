@@ -3,10 +3,9 @@ import SidebarNavbar from "@/components/admin/navbar";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <section className="min-h-screen bg-[#F7F3F0] w-full flex justify-center">
+    <section className="min-h-screen bg-[#F7F3F0] min-w-screen flex ">
       <SidebarNavbar />
-      <div className="pb-26 lg:ml-64 lg:pb-0
-        min-h-screen"> 
+      <div className="pb-26 lg:ml-64 lg:pb-0 min-h-screen w-full"> 
         {children}
       </div>
     

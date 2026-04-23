@@ -26,6 +26,25 @@ const CardItem = () => {
             foto: "https://borneostore.co.id/wp-content/uploads/2023/02/e4e524496d013a77046086b0b1756267.jpg",
             waktu: "2 Jam yang lalu",
             status: "Found",
+        },{ 
+            id: 5,
+            namaBarang: "MacBook Air M2",
+            foto: "https://borneostore.co.id/wp-content/uploads/2023/02/e4e524496d013a77046086b0b1756267.jpg",
+            waktu: "2 Jam yang lalu",
+            status: "Found",
+        }
+        ,{ 
+            id: 6,
+            namaBarang: "MacBook Air M2",
+            foto: "https://borneostore.co.id/wp-content/uploads/2023/02/e4e524496d013a77046086b0b1756267.jpg",
+            waktu: "2 Jam yang lalu",
+            status: "Found",
+        },{ 
+            id: 7,
+            namaBarang: "MacBook Air M2",
+            foto: "https://borneostore.co.id/wp-content/uploads/2023/02/e4e524496d013a77046086b0b1756267.jpg",
+            waktu: "2 Jam yang lalu",
+            status: "Found",
         }
     ];
 return (
@@ -38,7 +57,7 @@ return (
                     <div className="relative h-23.5 lg:h-27 w-full ">
                         <div className="relative h-full w-full overflow-hidden rounded-[18px] rounded-b-none">
                             <div className={`flex justify-center items-center absolute w-16.25 h-8 left-2 top-2 z-10 rounded-lg px-3 py-1.5 shadow-sm ${
-                                item.status === 'Lost' ? 'bg-[#FF4D4D] text-white' : 'bg-[#FFCE00] text-black'
+                                item.status === 'Lost' ? 'bg-[#FF4D4D]' : 'bg-[#FFCE00] '
                             }`}>
                                 <span className="text-[13px] font-bold">{item.status}</span>
                             </div>
