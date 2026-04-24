@@ -22,10 +22,9 @@ export async function seedUsers(prisma: PrismaClient) {
     where: { email: 'admin@lostnfound.com' },
     update: {},
     create: {
-      googleId: 'google-123',
       name: 'Admin LostnFound',
       email: 'admin@lostnfound.com',
-      avatar: faker.image.avatar(),
+      image: faker.image.avatar(),
       roleId: roleAdmin.id,
     },
   })
@@ -34,10 +33,9 @@ export async function seedUsers(prisma: PrismaClient) {
     where: { email: 'user@mail.com' },
     update: {},
     create: {
-      googleId: 'google-456',
       name: 'Budi Hartono',
       email: 'user@mail.com',
-      avatar: faker.image.avatar(),
+      image: faker.image.avatar(),
       roleId: roleUser.id,
     },
   })
