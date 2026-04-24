@@ -4,25 +4,24 @@ import { faker } from '@faker-js/faker'
 export async function seedUsers(prisma: PrismaClient) {
   console.log('Seeding Users...')
 
-  // Buat Role dulu
+  // Role (tanpa set id manual)
   const roleAdmin = await prisma.role.upsert({
-    where: { id: 'role-admin' }, // Pakai ID statis biar gampang dipanggil di file lain
+    where: { roleName: 'ADMIN' },
     update: {},
-    create: { id: 'role-admin', roleName: 'ADMIN' },
+    create: { roleName: 'ADMIN' },
   })
 
   const roleUser = await prisma.role.upsert({
-    where: { id: 'role-user' },
+    where: { roleName: 'USER' },
     update: {},
-    create: { id: 'role-user', roleName: 'USER' },
+    create: { roleName: 'USER' },
   })
 
-  // Buat 2 User
+  // Users
   const u1 = await prisma.user.upsert({
     where: { email: 'admin@lostnfound.com' },
     update: {},
     create: {
-      id: 'user-admin-id',
       googleId: 'google-123',
       name: 'Admin LostnFound',
       email: 'admin@lostnfound.com',
@@ -35,7 +34,6 @@ export async function seedUsers(prisma: PrismaClient) {
     where: { email: 'user@mail.com' },
     update: {},
     create: {
-      id: 'user-biasa-id',
       googleId: 'google-456',
       name: 'Budi Hartono',
       email: 'user@mail.com',
