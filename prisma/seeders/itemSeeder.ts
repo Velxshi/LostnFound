@@ -17,11 +17,20 @@ export async function seedItems(prisma: PrismaClient, userIds: number[]) {
 
   // 2. Seed Category sesuai request
   const categories = await Promise.all(
-    ['Elektronik', 'Dompet', 'Tas', 'Kunci', 'Kartu Identitas'].map((name) =>
+    [
+      { name: 'Elektronik', seed: 'electronics' },
+      { name: 'Dompet', seed: 'wallet' },
+      { name: 'Tas', seed: 'bag' },
+      { name: 'Kunci', seed: 'key' },
+      { name: 'Kartu Identitas', seed: 'id-card' },
+    ].map((cat) =>
       prisma.category.upsert({
-        where: { name },
+        where: { name: cat.name },
         update: {},
-        create: { name },
+        create: {
+          name: cat.name,
+          linkImage: `https://picsum.photos/seed/${cat.seed}/400/300`,
+        },
       }),
     ),
   )
@@ -39,7 +48,6 @@ export async function seedItems(prisma: PrismaClient, userIds: number[]) {
     await prisma.item.create({
       data: {
         title: faker.commerce.productName(),
-        linkImage: `https://picsum.photos/seed/${faker.string.uuid()}/400/300`,
         desc: faker.lorem.sentence(),
         latitude: lat,
         longitude: lng,
