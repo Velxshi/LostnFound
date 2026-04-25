@@ -83,3 +83,75 @@ export async function PUT(
         return errorResponse('Gagal update kategori')
     }
 }
+
+export async function DELETE(
+    req: Request,
+    { params }: { params: Promise<{ id: string }> },
+    ) {
+    try {
+        const auth = await requireAuth(req)
+
+        if (!auth.authorized || !auth.token) {
+            return auth.response
+        }
+
+        const userId = Number(auth.token.id)
+
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                role: true,
+            },
+        })
+
+        if (!user || user.role.roleName !== 'ADMIN') {
+            return errorResponse('Hanya admin yang boleh menghapus kategori', 403)
+        }
+
+        const { id } = await params
+        const categoryId = Number(id)
+
+        if (isNaN(categoryId)) {
+            return errorResponse('ID kategori tidak valid', 400)
+        }
+
+        const existingCategory = await prisma.category.findUnique({
+            where: { id: categoryId },
+            include: {
+                _count: {
+                    select: {
+                        items: true,
+                    },
+                },
+            },
+        })
+
+        if (!existingCategory) {
+            return errorResponse('Kategori tidak ditemukan', 404)
+        }
+
+        if (existingCategory._count.items > 0) {
+            return errorResponse(
+                'Kategori tidak dapat dihapus karena masih digunakan oleh item',
+                400,
+            )
+        }
+
+        await prisma.category.delete({
+            where: { 
+                id: categoryId 
+            },
+        })
+
+        return successResponse(
+            {
+                id: existingCategory.id,
+                name: existingCategory.name,
+            },
+            'Berhasil hapus kategori',
+        )
+    } catch (error) {
+        console.error(error)
+        return errorResponse('Gagal hapus kategori')
+    }
+}
