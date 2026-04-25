@@ -6,7 +6,7 @@ export async function GET(req: Request) {
   try {
     const auth = await requireAuth(req)
 
-    if (!auth.authorized) {
+    if (!auth.authorized || !auth.token) {
       return auth.response
     }
 
