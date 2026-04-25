@@ -41,6 +41,10 @@ export async function GET(
         name: item.category.name,
       },
       desc: item.desc,
+      itemDetails: item.itemDetails,
+      characteristics: item.characteristics,
+      note: item.note,
+      locationDetail: item.locationDetail,
       ditemukanPada: item.createdAt.toISOString().split('T')[0],
       diunggah: timeAgo(item.createdAt),
     }
