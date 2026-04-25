@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation'; 
 
 
-import Logo from '../../../public/logo/Logo.svg'; 
+import Logo from '../../../public/assets/logo/Logo.svg'; 
 import DashboardIcon from '../../../public/Navbar-admin/Dashboard.svg';
 import ReportsIcon from '../../../public/Navbar-admin/Reports.svg';
 import MapIcon from '../../../public/Navbar-admin/map.svg';
@@ -20,7 +20,7 @@ const SidebarNavbar = () => {
   const pathname = usePathname(); 
 
   const navItems = [
-    { name: 'Dashboard', icon: DashboardIcon, link: '/admin/dashboard', iconactive: DashboardIconActive },
+    { name: 'Dashboard', icon: DashboardIcon, link: '/admin', iconactive: DashboardIconActive },
     { name: 'Reports', icon: ReportsIcon, link: '/admin/report', iconactive: ReportsIconActive },
     { name: 'Map', icon: MapIcon, link: '/admin/map', iconactive: MapIconActive },
     { name: 'Category', icon: CategoryIcon, link: '/admin/category', iconactive: CategoryIconActive },

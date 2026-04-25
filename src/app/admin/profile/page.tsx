@@ -1,12 +1,15 @@
 "use client";
-
+import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { BlurFade } from "@/components/ui/blur-fade";
+import { signOut } from "next-auth/react";
 export default function Profile() {
   const router = useRouter();
   const path = usePathname();
+
+  const [user, setUser] = useState<any>(null);
 
   function isAdmin() {
     return path.startsWith("/admin");
@@ -16,7 +19,7 @@ export default function Profile() {
   }
 
   function handleLogout() {
-    console.log("logout");
+    signOut({ callbackUrl: "/" });
   }
 
   const menus = [
@@ -45,6 +48,21 @@ export default function Profile() {
     { id: 5, title: "Keluar", icon: "material-symbols:logout", hint: "Keluar dari akun", action: "logout" },
   ];
 
+
+  useEffect(() => { 
+    const fetchUser = async () => {
+      try {
+        const res = await fetch("/api/auth/session");
+        const data = await res.json();  
+        setUser(data.user);
+      } catch (error) {
+        console.error("Gagal load user:", error);
+      }
+    }
+
+    fetchUser();
+  }, []);
+
   return (
     <div className="w-full min-h-screen p-6">
         <BlurFade delay={0.15} inView>
@@ -54,12 +72,12 @@ export default function Profile() {
       <BlurFade delay={0.25} inView>
         <div className="bg-cream-light-hover rounded-2xl px-6 py-2 flex gap-3 items-center w-full shadow mb-6 mt-3">
           <div className="bg-primary p-1 rounded-full h-full w-auto shadow">
-            <Image src="https://i.pinimg.com/1200x/e3/6b/c6/e36bc6a279e7cc29547dd0bb84d65939.jpg" alt="profile" className="object-cover rounded-full h-full w-auto aspect-square" width={48} height={48} />
+            <Image src={user?.image || "https://i.pinimg.com/1200x/e3/6b/c6/e36bc6a279e7cc29547dd0bb84d65939.jpg"} alt="profile" className="object-cover rounded-full h-full w-auto aspect-square" width={48} height={48} />
           </div>
 
           <div className="flex flex-col gap-1">
-            <h1 className="text-primary font-poppins font-bold text-title2 ">Reina Ueda</h1>
-            <h4 className="text-dark font-jakarta text-body">ueshama_148@gmail.com</h4>
+            <h1 className="text-primary font-poppins font-bold text-title2 ">{user?.name}</h1>
+            <h4 className="text-dark font-jakarta text-body">{user?.email}</h4>
           </div>
         </div>
       </BlurFade>

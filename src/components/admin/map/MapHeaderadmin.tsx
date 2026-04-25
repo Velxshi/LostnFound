@@ -10,7 +10,7 @@ function FilterButton({ title }: { title: string }) {
   );
 }
 
-export default function MapHeaderAdmin() {
+export default function MapHeaderAdmin({ data }: any) {
   const router = useRouter();
   const pathname = usePathname();   
   function goToProfile() {
@@ -29,7 +29,7 @@ export default function MapHeaderAdmin() {
       </div>
 
       <div className="flex hover:ring-4 hover:ring-(--royale) transition-all duration-300 rounded-full ">
-        <Image src="https://i.pinimg.com/1200x/e3/6b/c6/e36bc6a279e7cc29547dd0bb84d65939.jpg" alt="profile" className="object-cover rounded-full w-10 h-10 cursor-pointer  md:w-14 md:h-14" width={40} height={40} onClick={goToProfile} />
+        <Image src={data?.image || "https://i.pinimg.com/1200x/e3/6b/c6/e36bc6a279e7cc29547dd0bb84d65939.jpg"} alt="profile" className="object-cover rounded-full w-10 h-10 cursor-pointer  md:w-14 md:h-14" width={40} height={40} onClick={goToProfile} />
       </div>
     </div>
   );
