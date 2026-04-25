@@ -20,6 +20,7 @@ export async function GET(req: Request) {
     const sort = searchParams.get('sort') || 'terbaru'
     const statusId = searchParams.get('statusId')
     const categoryId = searchParams.get('categoryId')
+    const search = searchParams.get('search')?.trim()
 
     const where: any = {}
 
@@ -29,6 +30,13 @@ export async function GET(req: Request) {
 
     if (categoryId) {
       where.categoryId = Number(categoryId)
+    }
+
+    if (search) {
+      where.title = {
+        contains: search,
+        mode: 'insensitive',
+      }
     }
 
     const orderBy =
