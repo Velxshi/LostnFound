@@ -77,3 +77,44 @@ export async function GET(req: Request) {
     return errorResponse('Gagal ambil data items')
   }
 }
+
+export async function POST(req: Request) {
+  try{
+    const auth = await requireAuth(req)
+
+    if (!auth.authorized || !auth.token) {
+        return auth.response
+    }
+
+    const userId = auth.token.id
+    const body = await req.json()
+
+    const item = await prisma.item.create({
+      data: {
+        title: body.title,
+        categoryId: body.categoryId,
+        desc: body.desc,
+        statusId: body.statusId,
+        userId: Number(userId),
+        createdAt: body.tanggal
+          ? new Date(body.tanggal)
+          : new Date(),
+        note: body.note || null,
+        locationDetail: body.locationDetail || null,
+        latitude: body.latitude || null,
+        longitude: body.longitude || null,
+        itemDetails: body.itemDetails || null,
+        characteristics: body.characteristics || null,
+      },
+    })
+
+    return successResponse(
+      { id: item.id },
+      'Berhasil laporkan item'
+    )
+
+  } catch (error) {
+    console.error(error)
+    return errorResponse('Gagal laporkan item')
+  }
+}
