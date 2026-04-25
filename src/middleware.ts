@@ -38,8 +38,10 @@ export const config = {
   // ],
   matcher: [
     '/admin/:path*',
-    '/dashboard/:path*',
     '/profile/:path*',
-    '/', // Kalau mau root dijaga
+    '/notifications/:path*',
+    '/reports/:path*',
+    '/about/:path*',
+    '/',
   ],
 }

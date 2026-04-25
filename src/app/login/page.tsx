@@ -59,7 +59,7 @@ export default function LoginPage() {
 
           <button
             onClick={() => signIn('google', { callbackUrl: '/' })}
-            className="flex items-center justify-center gap-3 w-full md:w-75 py-3 px-4 rounded-lg bg-white shadow hover:bg-gray-100 transition"
+            className="flex items-center justify-center gap-3 w-full cursor-pointer md:w-75 py-3 px-4 rounded-lg bg-white shadow hover:bg-gray-100 transition"
           >
             <img
               src="/assets/icons/google.png"
