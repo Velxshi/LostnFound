@@ -32,7 +32,7 @@ export async function GET(req: Request) {
       return errorResponse('User tidak ditemukan', 404)
     }
 
-    return successResponse(user, 'Data user berhasil diambil')
+    return successResponse({data: user}, 'Data user berhasil diambil')
   } catch {
     return errorResponse('Gagal ambil data profile')
   }

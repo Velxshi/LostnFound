@@ -28,7 +28,7 @@ export async function GET(req: Request) {
             where.userId = userId
         } else if (filter === 'hilang') {
             where.status = { name: 'LOST' }
-        } else if (filter === 'ditemukan') {
+        } else if (filter === 'temuan') {
             where.status = { name: 'FOUND' }
         }
 

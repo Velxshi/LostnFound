@@ -65,7 +65,7 @@ export async function PUT(
         })
 
         return successResponse(
-        updatedCategory,
+        {data: updatedCategory},
         'Berhasil update kategori',
         )
     } catch (error) {
@@ -144,10 +144,10 @@ export async function DELETE(
         })
 
         return successResponse(
-            {
+            {data:{
                 id: existingCategory.id,
                 name: existingCategory.name,
-            },
+            }},
             'Berhasil hapus kategori',
         )
     } catch (error) {

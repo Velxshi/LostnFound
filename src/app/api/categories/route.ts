@@ -90,7 +90,7 @@ export async function POST(req: Request) {
         })
 
         return successResponse(
-        category,
+        {data: category},
         'Berhasil tambah kategori',
         )
     } catch (error) {
