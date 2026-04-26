@@ -70,6 +70,10 @@ export async function GET(req: Request) {
         id: item.status.id,
         name: item.status.name,
       },
+      category: {
+        id: item.category.id,
+        name: item.category.name,
+      },
       time: timeAgo(item.createdAt),
     }))
 
