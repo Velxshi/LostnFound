@@ -197,6 +197,9 @@
   .text-muted {
     color: var(--charcoal-light);
   }
+  .text-dark-light-active {
+    color: var(--charcoal-light-active);
+  }
   .text-dark {
     color: var(--charcoal);
   }
