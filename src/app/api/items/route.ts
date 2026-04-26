@@ -8,7 +8,7 @@ export async function GET(req: Request) {
   try {
     const auth = await requireAuth(req)
 
-    if (!auth.authorized) {
+    if (!auth.authorized || !auth.token) {
       return auth.response
     }
 
@@ -22,8 +22,13 @@ export async function GET(req: Request) {
     const statusId = searchParams.get('statusId')
     const categoryId = searchParams.get('categoryId')
     const search = searchParams.get('search')?.trim()
+    const type = searchParams.get('type')
 
     const where: any = {}
+    
+    if (type === 'me') {
+      where.userId = Number(auth.token.id)
+    }
 
     if (statusId) {
       where.statusId = Number(statusId)
@@ -65,6 +70,10 @@ export async function GET(req: Request) {
       status: {
         id: item.status.id,
         name: item.status.name,
+      },
+      category: {
+        id: item.category.id,
+        name: item.category.name,
       },
       time: timeAgo(item.createdAt),
     }))
