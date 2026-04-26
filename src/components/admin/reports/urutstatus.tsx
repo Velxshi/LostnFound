@@ -1,15 +1,27 @@
 "use client";
 import { useState } from "react";
 
+interface UrutstatusProps {
+  sortItem: (val: string) => void;
+  statusItem: (val: string) => void;
+}
 
-const Urutstatus = () => {
+export default function Urutstatus({ sortItem, statusItem }: UrutstatusProps) {
 const [openUrut, setOpenUrut] = useState(false);
 const [openStatus, setOpenStatus] = useState(false);
 const [selectedUrut, setSelectedUrut] = useState('Urutkan');
 const [selectedStatus, setSelectedStatus] = useState('Status');
 
-const urutkan = ['Terbaru', 'Terlama' ];
-const status = ['Semua', 'Ditemukan', 'Hilang', 'Selesai' ];
+const urutkan = [
+    { label: 'Terbaru', value: 'terbaru' },
+    { label: 'Terlama', value: 'terlama' }
+  ];
+const status = [
+    { id: '', label: 'Semua' },
+    { id: '1', label: 'Hilang' },      
+    { id: '2', label: 'Ditemukan' },  
+    { id: '3', label: 'Selesai' }     
+  ];
 
 return (
     <div className="flex justify-between gap-4">
@@ -35,14 +47,15 @@ return (
         <div className="py-1">
             {urutkan.map((u) => (
             <button
-                key={u}
+                key={u.value}
                 onClick={() => {
-                setSelectedUrut(u);
+                setSelectedUrut(u.label);
                 setOpenUrut(false);
+                sortItem(u.value);
                 }}
                 className="block w-full px-5 py-3 text-left text-sm text-gray-700 hover:bg-gray-100 font-poppins"
             >
-                {u}
+                {u.label}
             </button>
             ))}
         </div>
@@ -72,14 +85,15 @@ return (
         <div className="py-1">
             {status.map((o) => (
             <button
-                key={o}
+                key={o.id}
                 onClick={() => {
-                setSelectedStatus(o);
+                setSelectedStatus(o.label);
                 setOpenStatus(false);
+                statusItem(o.id);
                 }}
                 className="block w-full px-5 py-3 text-left text-sm text-gray-700 hover:bg-gray-100  font-poppins"
             >
-                {o}
+                {o.label}
             </button>
             ))}
         </div>
@@ -90,4 +104,3 @@ return (
 );
 };
 
-export default Urutstatus;

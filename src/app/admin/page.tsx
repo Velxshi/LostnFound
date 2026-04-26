@@ -9,8 +9,8 @@ import CardItem from "@/components/admin/cardItem";
 
 import Image from "next/image";
 import { BlurFade } from "@/components/ui/blur-fade";
-import { use, useEffect, useState } from "react";
-import { data } from "motion/react-client";
+import {  useEffect, useState } from "react";
+
 export default function Admin() {   
 
     const [items, setItems] = useState<any>(null);
@@ -19,7 +19,7 @@ useEffect(() => {
 const fetchItems = async () => {
     const res = await fetch("/api/items");
     const data = await res.json();
-    setItems(data);
+    setItems(data.data);
 };
     fetchItems();
 }, []);

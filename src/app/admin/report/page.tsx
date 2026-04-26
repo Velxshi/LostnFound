@@ -11,17 +11,19 @@ export default function reports() {
 const [items, setItems] = useState<any>(null);
 const [currentPage, setCurrentPage] = useState(1);
 const [search, setSearch] = useState("");
-const [selectedCategory, setSelectedCategory] = useState("");
+const [selectCategory, setselectCategory] = useState("");
+const [sort, setSort] = useState("");
+const [status, setStatus] = useState("");
    useEffect(() => { 
    const fetchItems = async () => {
     console.log("Fetching Page:", currentPage);
-    const res = await fetch(`/api/items?page=${currentPage}&search=${search}&categoryId=${selectedCategory}`);
+    const res = await fetch(`/api/items?page=${currentPage}&search=${search}&categoryId=${selectCategory}&sort=${sort}&statusId=${status}`);
     const data = await res.json();
-    console.log(data);
-    setItems(data);
+    console.log("kontol :",data.data);
+    setItems(data.data);
   };
     fetchItems();
-  }, [currentPage, search,selectedCategory]);
+  }, [currentPage, search,selectCategory,sort,status]);
 
 return (
   <div className="w-full min-h-screen p-9 flex justify-center">
@@ -31,18 +33,25 @@ return (
         <SearchInput onSearch={(value: string) => setSearch(value)} />
     </div>
     <div className="pt-5 relative z-20">
-        <Urutstatus />
+        <Urutstatus sortItem={(val) => {
+    setSort(val.toLowerCase());
+    setCurrentPage(1);
+  }}
+  statusItem={(id) => {
+    setStatus(id);
+    setCurrentPage(1);
+  }}/>
     </div>
     <div className="pt-5 relative z-10">
         <Kategori onCategoryChange={(cat: string) => {
-        setSelectedCategory(cat);
+        setselectCategory(cat);
         setCurrentPage(1);
       }} />
     </div>
 
     <CardItem data={items} />
 
- {items?.pagination && search === "" && (
+ {items?.pagination && (
   <div className="flex justify-center items-center gap-2 mt-12 pb-10">
     <button
       onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
