@@ -21,7 +21,7 @@ export default function MapHeader() {
       <div className="flex gap-2 text-cream-darker">
         <FilterButton title="Laporan Saya" />
         <FilterButton title="Hilang" />
-        <FilterButton title="Ditemukan" />
+        <FilterButton title="Temuan" />
       </div>
 
       <div className="flex hover:ring-4 hover:ring-(--royale) transition-all duration-300 rounded-full ">

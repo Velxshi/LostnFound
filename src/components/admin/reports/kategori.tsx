@@ -1,0 +1,51 @@
+"use client";
+import { useState } from "react";
+
+
+const Kategori = () => {
+const [isOpen, setIsOpen] = useState(false);
+const [selected, setSelected] = useState('Kategori');
+
+const options = ['Elektronik', 'Dompet', 'Kunci', 'Pakaian', 'Tas', 'Kartu Identitas', 'Lainnya' ];
+
+return (
+    <div className="relative inline-block w-full  lg:h-12 cursor-pointer">
+    <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex w-full items-center justify-between rounded-xl bg-white px-5 py-3 text-sm font-medium text-gray-800 shadow-sm transition-all hover:bg-gray-50 active:scale-95"
+    >
+        <span className="font-poppins">{selected}</span>
+        <svg
+        className={`h-5 w-5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+    </button>
+
+    {isOpen && (
+        <div className="absolute z-50 mt-2 w-full overflow-hidden rounded-2xl bg-white shadow-lg  animate-in fade-in zoom-in duration-100 cursor-pointer">
+        <div className="py-1">
+            {options.map((option) => (
+            <button
+                key={option}
+                onClick={() => {
+                setSelected(option);
+                setIsOpen(false);
+                }}
+                className="block w-full px-5 py-3 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors font-poppins"
+            >
+                {option}
+            </button>
+            ))}
+        </div>
+        </div>
+    )}
+    </div>
+);
+};
+
+export default Kategori;

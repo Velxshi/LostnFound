@@ -15,7 +15,7 @@ export default function MenuLayout({ children }: { children: React.ReactNode }) 
         <div className="flex gap-6 items-center text-dark">
           <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" className="h-full w-auto cursor-pointer" onClick={goBack} />
 
-          <h1 className="font-poppins  text-title1 md:text-h4 font-semibold capitalize">{title}</h1>
+          <h1 className="font-poppins  text-title1 md:text-h5 font-semibold capitalize">{title}</h1>
         </div>
       </header>
 
