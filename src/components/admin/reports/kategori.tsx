@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 const Kategori = () => {
@@ -7,6 +7,25 @@ const [isOpen, setIsOpen] = useState(false);
 const [selected, setSelected] = useState('Kategori');
 
 const options = ['Elektronik', 'Dompet', 'Kunci', 'Pakaian', 'Tas', 'Kartu Identitas', 'Lainnya' ];
+
+ const [categories, setCategories] = useState<any[]>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {   
+                const response = await fetch('/api/categories');
+                const data = await response.json();
+                console.log('Data Kategori:', data);
+        if (data.success && Array.isArray(data.categories)) {
+        setCategories(data.categories);
+        }
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+    }
+        };
+        fetchData();
+    }, []);
+
 
 return (
     <div className="relative inline-block w-full  lg:h-12 cursor-pointer">
@@ -29,16 +48,16 @@ return (
     {isOpen && (
         <div className="absolute z-50 mt-2 w-full overflow-hidden rounded-2xl bg-white shadow-lg  animate-in fade-in zoom-in duration-100 cursor-pointer">
         <div className="py-1">
-            {options.map((option) => (
+            {categories.map((category: any) => (
             <button
-                key={option}
+                key={category.id}
                 onClick={() => {
-                setSelected(option);
+                setSelected(category.name);
                 setIsOpen(false);
                 }}
                 className="block w-full px-5 py-3 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors font-poppins"
             >
-                {option}
+                {category.name}
             </button>
             ))}
         </div>

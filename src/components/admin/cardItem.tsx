@@ -11,7 +11,7 @@ return (
                     <div className="relative h-23.5 lg:h-27 w-full ">
                         <div className="relative h-full w-full overflow-hidden rounded-[18px] rounded-b-none">
                             <div className={`flex justify-center items-center absolute w-16.25 h-8 left-2 top-2  rounded-lg px-3 py-1.5 shadow-sm ${
-                                items.status.name === 'Lost' ? 'bg-[#FF4D4D]' : 'bg-[#FFCE00] '
+                                items.status.name === 'LOST' ? 'bg-[#FF4D4D]' : items.status.name === 'DONE' ? 'bg-[#C7EABB]' : 'bg-[#FFCE00]'
                             }`}>
                                 <span className="text-[13px] font-bold">{items.status.name}</span>
                             </div>

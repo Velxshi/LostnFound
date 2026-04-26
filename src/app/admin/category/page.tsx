@@ -1,8 +1,73 @@
+'use client';
+import SearchComponent from "@/components/admin/reports/Search";
+import CategoryIcon from "../../../../public/Category-Admin/category.svg";
+import TotalBarangIcon from "../../../../public/Category-Admin/Totbar.svg";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import ListCategory from "@/components/admin/Category/ListCategory";
 export default function Category(){
+
+    const [categories, setCategories] = useState<any>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {   
+                const response = await fetch('/api/categories');
+                const data = await response.json();
+                console.log('Data Kategori:', data);
+                setCategories(data);
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            }
+        };
+        fetchData();
+    }, []);
+
+
+    const totalbarang = categories.totalItems;
+    const totalcategories = categories.totalCategories;
+
     return (
+
+
         <div className="w-full min-h-screen p-6">
             <div className="w-full ">
-            <h1 className="text-2xl font-bold text-gray-800">Kelola Kategori</h1>
+            <h1 className="text-2xl font-bold text-gray-800 font-poppins">Kelola Kategori</h1>
+            <div className="mt-3">
+            <div className="lg:hidden">
+            <SearchComponent />
+            </div>
+            <div className=" flex justify-between items-center gap-4 mt-4">
+                <div className="card w-full h-24.5 md:h-36  bg-[#FEFEFE] rounded-[20px] flex flex-col items-center justify-center gap-2">
+                    <div className="logo">
+                        <Image src={TotalBarangIcon} alt="Total Barang" className=" w-full md:w-6.75 md:h-7.5 lg:w-7.25 lg:h-8.25"/>
+                    </div>
+                    <p className="font-poppins text-title2 lg:text-[24px] font-bold">{totalbarang}</p>
+                    <p className="text-caption lg:text-[14px]! text-[#B9B6B4] font-poppins">Total Barang</p>
+                </div>
+
+                <div className="card w-full h-24.5 md:h-36 bg-[#FEFEFE] rounded-[20px] flex flex-col items-center justify-center gap-2">
+                    <div className="logo">
+                        <Image src={CategoryIcon} alt="Kategori" className=" w-full md:w-6.75 md:h-7.5 lg:w-7.25 lg:h-8.25"/>
+                    </div>
+                    <p className="font-poppins text-title2 lg:text-[24px] font-bold">{totalcategories}</p>
+                    <p className="text-caption lg:text-[14px]! text-[#B9B6B4] font-poppins">Kategori</p>
+                </div>
+                </div>
+
+                <div className="mt-4 flex justify-between items-center gap-4">
+                    <div className="lg:flex hidden w-full">
+                    <SearchComponent />
+                </div>
+                    <button className="bg-[#2848B7] hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-lg w-full h-13.25 font-poppins cursor-pointer lg:w-80">
+                        Tambah Kategori
+                    </button>
+                </div>
+
+                <div className="mt-4">
+                    <ListCategory data={categories}/>
+                </div>
+            </div>
             </div>
         </div>
     );

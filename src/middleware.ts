@@ -9,7 +9,7 @@ export default withAuth(
 
 
     if (pathname === '/' && token?.roleId === 1) {
-      return NextResponse.redirect(new URL('/admin/dashboard', req.url))
+      return NextResponse.redirect(new URL('/admin', req.url))
     }
 
     // Proteksi Admin: Cek roleId dari JWT

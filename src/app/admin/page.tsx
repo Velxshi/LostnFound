@@ -24,12 +24,6 @@ const fetchItems = async () => {
     fetchItems();
 }, []);
 
-
-
-
-
-
-
 const totallaporan = items?.pagination?.totalItems;
 const baranghilang = items?.data?.filter((i: any) => i.status.name === "LOST").length || 0;
 const barangditemukan = items?.data?.filter((i: any) => i.status.name === "FOUND").length || 0;
