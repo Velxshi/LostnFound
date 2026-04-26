@@ -50,15 +50,11 @@ const SidebarNavbar = () => {
             <Link 
               key={item.name}
               href={item.link}
-              className="flex flex-1 flex-col items-center gap-1 transition-all duration-200 active:scale-95
-                /* Desktop Link Style */
-                lg:flex-row lg:w-full lg:gap-4 lg:py-3 lg:px-4 lg:rounded-lg"
+              className="flex flex-1 flex-col items-center gap-1 transition-all duration-200 active:scale-95 lg:flex-row lg:w-full lg:gap-4 lg:py-3 lg:px-4 lg:rounded-lg"
             >
               <div 
                 className={`relative h-6 w-6 transition-all duration-200 ${
-                  isActive 
-                    ? '' 
-                    : 'grayscale opacity-40'
+                  isActive ? '' : 'grayscale opacity-40'
                 }`}
               >
                 <Image 

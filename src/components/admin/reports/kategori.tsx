@@ -2,11 +2,10 @@
 import { useEffect, useState } from "react";
 
 
-const Kategori = () => {
+export default function Kategori({ onCategoryChange }: { onCategoryChange: (category: string) => void }) {
 const [isOpen, setIsOpen] = useState(false);
 const [selected, setSelected] = useState('Kategori');
 
-const options = ['Elektronik', 'Dompet', 'Kunci', 'Pakaian', 'Tas', 'Kartu Identitas', 'Lainnya' ];
 
  const [categories, setCategories] = useState<any[]>([]);
 
@@ -24,7 +23,16 @@ const options = ['Elektronik', 'Dompet', 'Kunci', 'Pakaian', 'Tas', 'Kartu Ident
         fetchData();
     }, []);
 
-
+const handleSelect = (category: any) => {
+  if (category === "") {
+    setSelected('Kategori');
+    onCategoryChange("");
+  } else {
+    setSelected(category.name);
+    onCategoryChange(category.id.toString()); 
+  }
+  setIsOpen(false);
+};
 return (
     <div className="relative inline-block w-full  lg:h-12 cursor-pointer">
     <button
@@ -47,16 +55,13 @@ return (
         <div className="absolute z-50 mt-2 w-full overflow-hidden rounded-2xl bg-white shadow-lg  animate-in fade-in zoom-in duration-100 cursor-pointer">
         <div className="py-1">
             {categories.map((category: any) => (
-            <button
+           <button
                 key={category.id}
-                onClick={() => {
-                setSelected(category.name);
-                setIsOpen(false);
-                }}
-                className="block w-full px-5 py-3 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors font-poppins"
-            >
+            
+                onClick={() => handleSelect(category)}
+                className="block w-full px-5 py-3 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors font-poppins">
                 {category.name}
-            </button>
+              </button>
             ))}
         </div>
         </div>
@@ -65,4 +70,3 @@ return (
 );
 };
 
-export default Kategori;

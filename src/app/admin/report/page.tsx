@@ -10,34 +10,39 @@ export default function reports() {
 
 const [items, setItems] = useState<any>(null);
 const [currentPage, setCurrentPage] = useState(1);
+const [search, setSearch] = useState("");
+const [selectedCategory, setSelectedCategory] = useState("");
    useEffect(() => { 
    const fetchItems = async () => {
     console.log("Fetching Page:", currentPage);
-    const res = await fetch(`/api/items?page=${currentPage}`);
+    const res = await fetch(`/api/items?page=${currentPage}&search=${search}&categoryId=${selectedCategory}`);
     const data = await res.json();
     console.log(data);
     setItems(data);
   };
     fetchItems();
-  }, [currentPage]);
+  }, [currentPage, search,selectedCategory]);
 
 return (
   <div className="w-full min-h-screen p-9 flex justify-center">
     <BlurFade delay={0.15} inView>
     <div className="container flex flex-col">
     <div>
-        <SearchInput />
+        <SearchInput onSearch={(value: string) => setSearch(value)} />
     </div>
     <div className="pt-5 relative z-20">
         <Urutstatus />
     </div>
     <div className="pt-5 relative z-10">
-        <Kategori />
+        <Kategori onCategoryChange={(cat: string) => {
+        setSelectedCategory(cat);
+        setCurrentPage(1);
+      }} />
     </div>
 
     <CardItem data={items} />
 
-  {items?.pagination && (
+ {items?.pagination && search === "" && (
   <div className="flex justify-center items-center gap-2 mt-12 pb-10">
     <button
       onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
