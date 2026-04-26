@@ -16,9 +16,7 @@ const options = ['Elektronik', 'Dompet', 'Kunci', 'Pakaian', 'Tas', 'Kartu Ident
                 const response = await fetch('/api/categories');
                 const data = await response.json();
                 console.log('Data Kategori:', data);
-        if (data.success && Array.isArray(data.categories)) {
         setCategories(data.categories);
-        }
     } catch (error) {
         console.error('Error fetching categories:', error);
     }
