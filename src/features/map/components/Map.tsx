@@ -26,15 +26,7 @@ interface MarkerItems {
 }
 
 export default function Map({ data }: MarkerItems) {
-  const [draft, setDraft] = useState<DraftReport | null>(null);
   const [userPosition, setUserPosition] = useState<[number, number] | null>(null);
-  const draftMarkerRef = useRef<L.Marker | null>(null);
-
-  useEffect(() => {
-    if (draft && draftMarkerRef.current) {
-      draftMarkerRef.current.openPopup();
-    }
-  }, [draft]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -43,14 +35,48 @@ export default function Map({ data }: MarkerItems) {
     });
   }, []);
 
+  const [draft, setDraft] = useState<DraftReport | null>(null);
+  const draftMarkerRef = useRef<L.Marker | null>(null);
+
+  useEffect(() => {
+    if (draft && draftMarkerRef.current) {
+      draftMarkerRef.current.openPopup();
+    }
+  }, [draft]);
+
   if (!userPosition) return <p>Loading...</p>;
+
+  const lostIcon = new L.Icon({
+    iconUrl: "/assets/icons/marker-red.svg",
+    shadowUrl: "/assets/icons/marker-shadow.svg",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+    shadowAnchor: [12, 41],
+  });
+
+  const foundIcon = new L.Icon({
+    iconUrl: "/assets/icons/marker-yellow.svg",
+    shadowUrl: "/assets/icons/marker-shadow.svg",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+    shadowAnchor: [12, 41],
+  });
+  function getMarkerIcon(status: string) {
+    if (status === "LOST") return lostIcon;
+    if (status === "FOUND") return foundIcon;
+    return lostIcon;
+  }
 
   return (
     <MapContainer center={userPosition} zoom={17} style={{ height: "100vh", width: "100%" }} zoomControl={false} attributionControl={false}>
       <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
       {data?.map((report) => (
-        <Marker key={report.id} position={[report.latitude, report.longitude]}>
+        <Marker key={report.id} position={[report.latitude, report.longitude]} icon={getMarkerIcon(report.status.name)}>
           <Popup>
             <p>{report.status.name}</p>
           </Popup>
