@@ -248,3 +248,22 @@
 * {
   line-height: 120%;
 }
+
+input,
+textarea {
+  outline: none;
+  background-color: transparent;
+  border: none;
+}
+
+input:active,
+input:focus,
+textarea:active,
+textarea:focus {
+  outline: none !important;
+  border: none !important;
+}
+
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+  margin: 0;
+}
