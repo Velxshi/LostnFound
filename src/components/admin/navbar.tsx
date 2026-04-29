@@ -5,30 +5,21 @@ import { usePathname } from 'next/navigation';
 
 
 import Logo from '../../../public/assets/logo/Logo.svg'; 
-import DashboardIcon from '../../../public/Navbar-admin/Dashboard.svg';
-import ReportsIcon from '../../../public/Navbar-admin/Reports.svg';
-import MapIcon from '../../../public/Navbar-admin/map.svg';
-import CategoryIcon from '../../../public/Navbar-admin/Category.svg';
-import ProfileIcon from '../../../public/Navbar-admin/Profile.svg';
-import DashboardIconActive from '../../../public/Navbar-admin/DashboardActive.svg';
-import ReportsIconActive from '../../../public/Navbar-admin/ReportsActive.svg';
-import MapIconActive from '../../../public/Navbar-admin/MapActive.svg';
-import CategoryIconActive from '../../../public/Navbar-admin/CategoryActive.svg';
-import ProfileIconActive from '../../../public/Navbar-admin/ProfileActive.svg';
+import { Icon } from '@iconify/react';
 
 const SidebarNavbar = () => {
   const pathname = usePathname(); 
 
   const navItems = [
-    { name: 'Dashboard', icon: DashboardIcon, link: '/admin', iconactive: DashboardIconActive },
-    { name: 'Reports', icon: ReportsIcon, link: '/admin/report', iconactive: ReportsIconActive },
-    { name: 'Map', icon: MapIcon, link: '/admin/map', iconactive: MapIconActive },
-    { name: 'Category', icon: CategoryIcon, link: '/admin/category', iconactive: CategoryIconActive },
-    { name: 'Profile', icon: ProfileIcon, link: '/admin/profile', iconactive: ProfileIconActive },
+    { name: 'Dashboard', icon: 'ri:dashboard-line', link: '/admin', iconactive: 'ri:dashboard-fill' },
+    { name: 'Reports', icon: 'mdi:file-outline', link: '/admin/report', iconactive: 'mdi:file' },
+    { name: 'Map', icon: 'mdi:compass-outline', link: '/admin/map', iconactive: 'mdi:compass' },
+    { name: 'Category', icon: 'tabler:tag', link: '/admin/category', iconactive: 'tabler:tag-filled' },
+    { name: 'Profile', icon: 'ic:outline-account-circle', link: '/admin/profile', iconactive: 'ic:round-account-circle' },
   ];
 
   return (
-    <nav className="fixed z-9999 bg-white border-gray-300 bottom-0 left-0 right-0 border-t pb-3 pt-3 px-4 lg:top-0 lg:bottom-0 lg:left-0 lg:w-64 lg:border-t-0 lg:border-r lg:pt-8 lg:px-6">
+    <nav className="fixed z-998 bg-white border-gray-300 bottom-0 left-0 right-0 border-t pb-3 pt-3 px-4 lg:top-0 lg:bottom-0 lg:left-0 lg:w-64 lg:border-t-0 lg:border-r lg:pt-8 lg:px-6">
       
     
       <div className="hidden lg:flex items-center gap-3 mb-10 px-2">
@@ -39,9 +30,7 @@ const SidebarNavbar = () => {
         <span className="text-blue-800 font-bold text-title1 font-poppins">Lost n Found</span>
       </div>
 
-      <div className="mx-auto flex max-w-lg items-center justify-around 
-        /* Desktop Adjustment */
-        lg:flex-col lg:max-w-none lg:items-start lg:gap-4">
+      <div className="mx-auto flex max-w-lg items-center justify-around lg:flex-col lg:max-w-none lg:items-start lg:gap-4">
         
         {navItems.map((item) => {
           const isActive = pathname === item.link;
@@ -57,17 +46,15 @@ const SidebarNavbar = () => {
                   isActive ? '' : 'grayscale opacity-40'
                 }`}
               >
-                <Image 
-                  src={isActive ? item.iconactive : item.icon} 
-                  alt={item.name} 
-                  fill
-                  className="object-contain"
+                <Icon
+                  icon={isActive ? item.iconactive : item.icon} 
+                  className="text-[28px] text-[#2848B7]"
                 />
               </div>
 
               <span
-                className={`text-xs md:text-base font-bold transition-colors ${
-                  isActive ? 'text-blue-700' : 'text-gray-400'
+                className={`text-xs  md:text-base font-bold transition-colors ${
+                  isActive ? 'text-[#2848B7]' : 'text-gray-400'
                 }`}
               >
                 {item.name}

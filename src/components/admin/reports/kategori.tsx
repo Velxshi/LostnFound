@@ -14,7 +14,6 @@ const [selected, setSelected] = useState('Kategori');
             try {   
                 const response = await fetch('/api/categories');
                 const data = await response.json();
-                console.log('Data Kategori:', data);
         setCategories(data.categories);
     } catch (error) {
         console.error('Error fetching categories:', error);
@@ -34,7 +33,7 @@ const handleSelect = (category: any) => {
   setIsOpen(false);
 };
 return (
-    <div className="relative inline-block w-full  lg:h-12 cursor-pointer">
+    <div className="relative inline-block w-full lg:h-12 cursor-pointer">
     <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between rounded-xl bg-white px-5 py-3 text-sm font-medium text-gray-800 shadow-sm transition-all hover:bg-gray-50 active:scale-95"

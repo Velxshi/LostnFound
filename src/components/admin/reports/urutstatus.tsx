@@ -24,7 +24,7 @@ const status = [
   ];
 
 return (
-    <div className="flex justify-between gap-4">
+    <div className="flex w-full justify-between gap-4">
     <div className="relative w-full lg:h-12 cursor-pointer">
     <button
         onClick={() => setOpenUrut(!openUrut)}

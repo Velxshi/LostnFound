@@ -1,10 +1,13 @@
 "use client";
 import CardItem from "@/components/admin/cardItem";
+import DetailItem from "@/components/admin/detail/detailitem";
 import Kategori from "@/components/admin/reports/kategori";
 import SearchInput from "@/components/admin/reports/Search";
 import Urutstatus from "@/components/admin/reports/urutstatus";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { useEffect, useState } from "react";
+
+
 export default function reports() {
 
 
@@ -14,22 +17,32 @@ const [search, setSearch] = useState("");
 const [selectCategory, setselectCategory] = useState("");
 const [sort, setSort] = useState("");
 const [status, setStatus] = useState("");
-   useEffect(() => { 
-   const fetchItems = async () => {
-    console.log("Fetching Page:", currentPage);
+
+const [selectItem, setSelectItem] = useState<any>(null);
+const [popup, setpopup] = useState(false);
+
+    useEffect(() => { 
+    const fetchItems = async () => {
     const res = await fetch(`/api/items?page=${currentPage}&search=${search}&categoryId=${selectCategory}&sort=${sort}&statusId=${status}`);
     const data = await res.json();
-    console.log("kontol :",data.data);
-    setItems(data.data);
+    setItems(data);
   };
     fetchItems();
   }, [currentPage, search,selectCategory,sort,status]);
 
+
+  const handleCardClick = (item: any) => {
+    setSelectItem(item);
+    setpopup(true);
+  }
+
+if (!items) return <div className="p-10 font-poppins text-center">Memuat data...</div>;
+
 return (
   <div className="w-full min-h-screen p-9 flex justify-center">
-    <BlurFade delay={0.15} inView>
-    <div className="container flex flex-col">
-    <div>
+    <BlurFade delay={0.15} inView className="w-full">
+    <div className="flex flex-col w-full mx-auto">
+    <div className="">
         <SearchInput onSearch={(value: string) => setSearch(value)} />
     </div>
     <div className="pt-5 relative z-20">
@@ -49,7 +62,21 @@ return (
       }} />
     </div>
 
-    <CardItem data={items} />
+  {items?.data?.length > 0 ? (
+              <CardItem data={items} openDetail={handleCardClick}/>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-20 text-center w-full">
+                <h3 className="text-xl font-semibold text-gray-700">Data Tidak Ditemukan</h3>
+                <p className="text-gray-500 mt-2">Coba ganti filter atau kata kunci pencarian kamu.</p>
+                <button 
+                  onClick={() => {setSearch(""); setStatus(""); setselectCategory("");}}
+                  className="mt-4 text-blue-600 hover:underline font-medium"
+                >
+                  Reset Filter
+                </button>
+              </div>
+            )}
+
 
  {items?.pagination && (
   <div className="flex justify-center items-center gap-2 mt-12 pb-10">
@@ -88,6 +115,11 @@ return (
 )}
     </div>
     </BlurFade>
+    <DetailItem
+        isOpen={popup} 
+        onClose={() => setpopup(false)} 
+        item={selectItem} 
+      />
 </div>
 );
 }

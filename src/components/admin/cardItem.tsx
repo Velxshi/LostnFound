@@ -1,12 +1,13 @@
 
-export default function CardItem({ data }: any) {
-    const listItems = data || [];
+export default function CardItem({ data, openDetail }: any) {
+    const listItems = data?.data || [];
 return (
     <div className="grid grid-cols-2 gap-3 mt-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
             {listItems.map((items: any) => (
                 <div 
+                    onClick={() => openDetail(items)}
                     key={items.id} 
-                    className="w-full overflow-hidden rounded-xl bg-white shadow-lg h-41.5 lg:h-46"
+                    className="w-full overflow-hidden rounded-xl bg-white shadow-lg h-41.5 lg:h-46 cursor-pointer"
                 >
                     <div className="relative h-23.5 lg:h-27 w-full ">
                         <div className="relative h-full w-full overflow-hidden rounded-[18px] rounded-b-none">
