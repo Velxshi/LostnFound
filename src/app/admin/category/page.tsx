@@ -3,9 +3,10 @@ import SearchComponent from "@/components/admin/reports/Search";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 import ListCategory from "@/components/admin/Category/ListCategory";
-import ModalAdd from "@/components/admin/Category/modalAdd";
-import ModalEdit from "@/components/admin/Category/modalEdit";
-import ModalDelete from "@/components/admin/Category/modalDelete";
+import ModalAdd from "@/components/admin/Category/Modals/modalAdd";
+import ModalEdit from "@/components/admin/Category/Modals/modalEdit";
+import ModalDelete from "@/components/admin/Category/Modals/modalDelete";
+import Toast from "@/components/admin/Category/Toast/Toast";
 export default function Category(){
 
 const [categories, setCategories] = useState<any>([]);
@@ -15,6 +16,11 @@ const [popup, setpopup] = useState(false);
 const [editOpen, seteditOpen] = useState(false);
 const [DeleteOpen, setDeleteOpen] = useState(false);
 const [categoryDipilih, setcategoryDipilih] = useState<any>(null);
+
+const [showToast, setShowToast] = useState(false);
+const [toastMessage, setToastMessage] = useState("");
+const [toastWarna, setToastWarna] = useState("");
+
 
  const fetchData = async () => {
     try {
@@ -40,6 +46,13 @@ const [categoryDipilih, setcategoryDipilih] = useState<any>(null);
     setDeleteOpen(true);
 };
 
+const handleSuccessAction = (message: string, color: string) => {
+    setToastMessage(message);
+    setToastWarna(color);
+    setShowToast(true);
+    fetchData();
+  };
+
     const totalbarang = categories.totalItems;
     const totalcategories = categories.totalCategories;
 
@@ -47,6 +60,13 @@ const [categoryDipilih, setcategoryDipilih] = useState<any>(null);
 
 
         <div className="w-full min-h-screen p-6">
+            {showToast && (
+        <Toast
+        message={toastMessage} 
+        onClose={() => setShowToast(false)}
+        warna={toastWarna}        
+        />
+      )}
             <div className="w-full ">
             <h1 className="text-2xl font-bold text-gray-800 font-poppins">Kelola Kategori</h1>
             <div className="mt-3">
@@ -89,7 +109,7 @@ const [categoryDipilih, setcategoryDipilih] = useState<any>(null);
             </div>
             </div>
 
-            <ModalAdd isOpen={popup} onClose={() => setpopup(false)} onSuccess={fetchData}/>
+            <ModalAdd isOpen={popup} onClose={() => setpopup(false)} onSuccess={() => handleSuccessAction("Berhasil ditambahkan", "#D1E7DD")}/>
 
                 <ModalEdit 
                 isOpen={editOpen} 
@@ -98,14 +118,14 @@ const [categoryDipilih, setcategoryDipilih] = useState<any>(null);
                 setcategoryDipilih(null);
                 }} 
                 category={categoryDipilih}
-                onSuccess={fetchData}
+                onSuccess={() => handleSuccessAction("Berhasil Diubah", "#D1E7DD")}
             />
 
             <ModalDelete 
             isOpen={DeleteOpen} 
             onClose={() => setDeleteOpen(false)} 
             category={categoryDipilih} 
-            onSuccess={fetchData} 
+            onSuccess={() => handleSuccessAction("Berhasil Dihapus", "#D1E7DD")}
             />
         </div>
     );

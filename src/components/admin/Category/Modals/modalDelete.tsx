@@ -2,10 +2,6 @@ import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 
 export default function ModalDelete({ isOpen, onClose, onSuccess,category }: any) {
-if (!isOpen) return null;
-
-
-
 
 const handledelete = async (e: any) => {
     e.preventDefault();
@@ -31,7 +27,7 @@ if (!category) return;
       alert("Terjadi kesalahan koneksi.");
     } 
   };
-
+if (!isOpen) return null;
 
     return (
     <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/50 bg-opacity-50 p-8 outline-none focus:outline-none">
