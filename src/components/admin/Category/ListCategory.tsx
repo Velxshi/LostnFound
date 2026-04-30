@@ -1,11 +1,15 @@
 import { Icon } from "@iconify/react";
+import { useState } from "react";
 
-export default function ListCategory({ data }: { data: any }) {
+export default function ListCategory({ data, onEdit, refreshData, onDelete }: { data: any, onEdit: any, refreshData: any, onDelete: any }) {
+
 
     const listItems = data?.categories || [];
     if (listItems.length === 0) {
     return <div className="text-center py-10 text-gray-500">Belum ada kategori yang tersedia.</div>;
     }
+
+
 
     return (
     <div className="flex flex-col gap-4 w-full">
@@ -24,11 +28,13 @@ export default function ListCategory({ data }: { data: any }) {
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="hover:bg-blue-50 p-2 rounded-full transition-colors group">
+            <button className="hover:bg-blue-50 p-2 rounded-full transition-colors group cursor-pointer active:scale-95" 
+            onClick={() => onEdit(item)}>
               <Icon icon="tabler:pencil" className="text-[#2848B7]" width="20" height="20"/>
             </button>
 
-            <button className="hover:bg-red-50 p-2 rounded-full transition-colors group">
+            <button className="hover:bg-red-50 p-2 rounded-full transition-colors group cursor-pointer active:scale-95"
+            onClick={() => onDelete(item)}>
             <Icon icon="tabler:trash" className="text-[#C10007]" width="20" height="20"/>
             </button>
           </div>

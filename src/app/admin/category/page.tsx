@@ -3,28 +3,45 @@ import SearchComponent from "@/components/admin/reports/Search";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 import ListCategory from "@/components/admin/Category/ListCategory";
+import ModalAdd from "@/components/admin/Category/modalAdd";
+import ModalEdit from "@/components/admin/Category/modalEdit";
+import ModalDelete from "@/components/admin/Category/modalDelete";
 export default function Category(){
 
 const [categories, setCategories] = useState<any>([]);
 const [search, setSearch] = useState("");
-    useEffect(() => {
-        const fetchData = async () => {
-            try {   
-                const response = await fetch(`/api/categories?search=${search}`);
-                const data = await response.json();
-                setCategories(data);
-            } catch (error) {
-                console.error('Error fetching categories:', error);
-            }
-        };
-        fetchData();
-    }, [search]);
+const [popup, setpopup] = useState(false);
 
+const [editOpen, seteditOpen] = useState(false);
+const [DeleteOpen, setDeleteOpen] = useState(false);
+const [categoryDipilih, setcategoryDipilih] = useState<any>(null);
+
+ const fetchData = async () => {
+    try {
+      const response = await fetch(`/api/categories?search=${search}`);
+      const data = await response.json();
+      setCategories(data);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [search]);
+
+  const handleEdit = (category: any) => {
+    setcategoryDipilih(category);
+    seteditOpen(true);
+  };
+
+  const handleDelete = (category: any) => {
+    setcategoryDipilih(category);
+    setDeleteOpen(true);
+};
 
     const totalbarang = categories.totalItems;
     const totalcategories = categories.totalCategories;
-
-    
 
     return (
 
@@ -58,16 +75,38 @@ const [search, setSearch] = useState("");
                     <div className="lg:flex hidden w-full">
                     <SearchComponent onSearch={setSearch} />
                 </div>
-                    <button className="bg-[#2848B7] hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-lg w-full h-13.25 font-poppins cursor-pointer lg:w-80">
+                    <button 
+                        className="bg-[#2848B7] hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-lg w-full h-13.25 font-poppins cursor-pointer lg:w-80 active:scale-95  duration-150 transition-colors"
+                        onClick={() => setpopup(true)}
+                    >
                         Tambah Kategori
                     </button>
                 </div>
 
                 <div className="mt-4">
-                    <ListCategory data={categories}/>
+                    <ListCategory data={categories} onEdit={handleEdit} refreshData={fetchData} onDelete={handleDelete}/>
                 </div>
             </div>
             </div>
+
+            <ModalAdd isOpen={popup} onClose={() => setpopup(false)} onSuccess={fetchData}/>
+
+                <ModalEdit 
+                isOpen={editOpen} 
+                onClose={() => {
+                seteditOpen(false);
+                setcategoryDipilih(null);
+                }} 
+                category={categoryDipilih}
+                onSuccess={fetchData}
+            />
+
+            <ModalDelete 
+            isOpen={DeleteOpen} 
+            onClose={() => setDeleteOpen(false)} 
+            category={categoryDipilih} 
+            onSuccess={fetchData} 
+            />
         </div>
     );
 }

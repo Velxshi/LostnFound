@@ -67,7 +67,6 @@ return (
             ) : (
               <div className="flex flex-col items-center justify-center py-20 text-center w-full">
                 <h3 className="text-xl font-semibold text-gray-700">Data Tidak Ditemukan</h3>
-                <p className="text-gray-500 mt-2">Coba ganti filter atau kata kunci pencarian kamu.</p>
                 <button 
                   onClick={() => {setSearch(""); setStatus(""); setselectCategory("");}}
                   className="mt-4 text-blue-600 hover:underline font-medium"
