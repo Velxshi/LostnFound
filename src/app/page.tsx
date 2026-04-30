@@ -1,27 +1,9 @@
-"use client";
-import MapHeader from "@/components/common/MapHeader";
-import dynamic from "next/dynamic";
-
-import { useEffect, useState } from "react";
-
-const Map = dynamic(() => import("../features/map/components/Map"), {
-  ssr: false,
-});
+import MapSection from "@/components/common/MapSection";
 
 export default function Home() {
-  const [reports, setReports] = useState([]);
-
-  useEffect(() => {
-    fetch("/api/reports/map")
-      .then((res) => res.json())
-      .then((data) => setReports(data.data))
-      .catch((err) => console.error("Gagal load reports:", err));
-  }, []);
   return (
     <>
-      <MapHeader />
-
-      <Map data={reports} />
+      <MapSection />
     </>
   );
 }
