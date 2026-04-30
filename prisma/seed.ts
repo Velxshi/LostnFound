@@ -2,6 +2,7 @@ import { PrismaClient } from '@/generated/prisma/client'
 import { seedItems } from './seeders/itemSeeder'
 import { seedUsers } from './seeders/userSeeder'
 import { PrismaPg } from '@prisma/adapter-pg'
+import { seedNotificationTemplates } from './seeders/notificationTemplateSeeder'
 
 const connectionString = `${process.env.DATABASE_URL}`
 
@@ -13,6 +14,7 @@ async function main() {
     const users = await seedUsers(prisma)
     const userIds = users.map((u) => u.id)
 
+    await seedNotificationTemplates(prisma)
     await seedItems(prisma, userIds)
 
     console.log('✅ Semua seeder berhasil dijalankan!')

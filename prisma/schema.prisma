@@ -126,6 +126,7 @@ model Notification {
   userId     Int
   templateId Int
   message    String?
+  itemId     Int?
   isRead     Boolean @default(false)
 
   createdAt DateTime @default(now())
