@@ -6,13 +6,14 @@ export default withAuth(
   function middleware(req) {
     const token = req.nextauth.token
     const pathname = req.nextUrl.pathname
+    const { searchParams } = req.nextUrl
 
+    const isManualVisit = searchParams.get('mode') === 'public'
 
-    if (pathname === '/' && token?.roleId === 1) {
-      return NextResponse.redirect(new URL('/admin/dashboard', req.url))
+    if (pathname === '/' && token?.roleId === 1 && !isManualVisit) {
+      return NextResponse.redirect(new URL('/admin', req.url))
     }
 
-    // Proteksi Admin: Cek roleId dari JWT
     if (pathname.startsWith('/admin') && token?.roleId !== 1) {
       return NextResponse.redirect(new URL('/', req.url))
     }

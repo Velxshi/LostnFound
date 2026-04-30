@@ -44,7 +44,7 @@ export default function CardProfile() {
       title: isAdmin() ? 'Masuk ke Mode Pengguna' : 'Masuk Ke Mode Admin',
       icon: 'material-symbols:change-circle-outline',
       hint: null,
-      link: isAdmin() ? '/' : '/admin/dashboard',
+      link: isAdmin() ? '/?mode=public' : '/admin',
     },
     {
       id: 4,
