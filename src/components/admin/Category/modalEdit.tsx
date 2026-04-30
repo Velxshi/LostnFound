@@ -87,17 +87,17 @@ const handleedit = async (e: any) => {
                 <button
                 className="rounded-xl bg-[#2848B7] w-full h-12 px-6 py-2 text-sm font-semibold font-poppins text-white shadow cursor-pointer  hover:bg-blue-700 hover:shadow-lg focus:outline-none active:bg-blue-800 active:scale-95 transition-all duration-150"
                 type="submit"
-              >
+            >
                 Simpan Kategori
-              </button>
-              <button
+            </button>
+            <button
                 className="rounded-xl w-full h-12 px-6 py-2 text-sm font-semibold font-poppins text-[#2848B7] transition-all hover:bg-blue-50 outline-none focus:outline-none cursor-pointer active:scale-95  duration-150"
                 type="button"
                 
                 onClick={onClose}
-              >
+            >
                 Batal
-              </button>
+            </button>
             
             </div>
           </form>

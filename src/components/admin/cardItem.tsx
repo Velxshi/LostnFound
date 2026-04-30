@@ -2,7 +2,7 @@
 export default function CardItem({ data, openDetail }: any) {
     const listItems = data?.data || [];
 return (
-    <div className="grid grid-cols-2 gap-3 mt-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
+    <div className="card grid grid-cols-2 gap-3 mt-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
             {listItems.map((items: any) => (
                 <div 
                     onClick={() => openDetail(items)}
@@ -20,7 +20,7 @@ return (
                             <img
                                 src={items.image} 
                                 alt={items.title}
-                                className="object-cover"
+                                className="object-cover w-full h-full"
                             />
                         </div>
                     </div>

@@ -19,7 +19,11 @@ const SidebarNavbar = () => {
   ];
 
   return (
-    <nav className="fixed z-998 bg-white border-gray-300 bottom-0 left-0 right-0 border-t pb-3 pt-3 px-4 lg:top-0 lg:bottom-0 lg:left-0 lg:w-64 lg:border-t-0 lg:border-r lg:pt-8 lg:px-6">
+    <nav className="fixed bottom-0 left-0 right-0 z-998 border-t pb-3 pt-3 px-4 
+      lg:sticky lg:top-0 lg:flex lg:flex-col lg:h-screen lg:w-64 
+      lg:border-t-0 lg:border-r lg:pt-8 lg:px-6 
+      
+      bg-white border-gray-300">
       
     
       <div className="hidden lg:flex items-center gap-3 mb-10 px-2">

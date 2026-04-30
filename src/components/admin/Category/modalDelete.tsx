@@ -61,7 +61,7 @@ if (!category) return;
                 </div>
             </div>
 
-            <div className="flex flex-col items-center justify-end gap-3 px-8 py-5">
+            <div className="flex flex-col items-center justify-end gap-3 px-8 pb-5 p">
                 <button
                 className="rounded-xl bg-[#BA1A1A] w-full h-12 px-6 py-2 text-sm font-semibold font-poppins text-white shadow cursor-pointer  hover:bg-red-700 hover:shadow-lg focus:outline-none active:bg-red-800 active:scale-95 transition-all duration-150"
                 type="submit"
