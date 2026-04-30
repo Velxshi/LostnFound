@@ -10,7 +10,21 @@ export async function GET(req: Request) {
             return auth.response
         }
 
+        const { searchParams } = new URL(req.url)
+
+        const search = searchParams.get('search')?.trim()
+
+        const where: any = {}
+
+        if (search) {
+            where.name = {
+                contains: search,
+                mode: 'insensitive',
+            }
+        }
+
         const categories = await prisma.category.findMany({
+        where,
         select: {
             id: true,
             name: true,
