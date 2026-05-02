@@ -23,6 +23,7 @@ function WrapperInput({ id, children }: { id: string; children: React.ReactNode 
 
 export default function Reports() {
   const pathname = usePathname();
+  const [selectCategory, setSelectCategory] = useState("");
 
   const [formData, setFormData] = useState({
     namaBarang: "",
@@ -87,7 +88,11 @@ export default function Reports() {
               </div>
               <div className="flex flex-col gap-2">
                 <LabelInput title="Kategori" />
-                <Kategori />
+                <Kategori
+                  onCategoryChange={(cat: string) => {
+                    setSelectCategory(cat);
+                  }}
+                />
               </div>
               <div className="flex flex-col gap-2">
                 <LabelInput title="Tanggal Ditemukan" />

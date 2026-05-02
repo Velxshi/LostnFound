@@ -74,7 +74,7 @@ export default function CategorySection() {
 
   const [popup, setPopup] = useState(false);
   return (
-    <div className="w-full min-h-screen p-6">
+    <div className="w-full min-h-screen p-6 md:p-9">
       {showToast && <Toast message={toastMessage} onClose={() => setShowToast(false)} warna={toastWarna} />}
 
       <div className="w-full">

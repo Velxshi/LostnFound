@@ -6,6 +6,7 @@ import Urutstatus from "@/components/common/button/urutStatus";
 import Kategori from "@/components/common/button/kategori";
 import { CardItemProps, ItemsResponse } from "@/types/reportItems.types";
 import CardItem from "../common/CardItem";
+import DetailItem from "./detail/detailitem";
 
 export default function ReportSection() {
   const [search, setSearch] = useState("");
@@ -22,7 +23,7 @@ export default function ReportSection() {
   const [sort, setSort] = useState("");
   const [status, setStatus] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectCategory, setselectCategory] = useState("");
+  const [selectCategory, setSelectCategory] = useState("");
   const [items, setItems] = useState<ItemsResponse | null>(null);
 
   useEffect(() => {
@@ -68,7 +69,7 @@ export default function ReportSection() {
           <BlurFade delay={0.45} inView>
             <Kategori
               onCategoryChange={(cat: string) => {
-                setselectCategory(cat);
+                setSelectCategory(cat);
                 setCurrentPage(1);
               }}
             />
@@ -123,6 +124,7 @@ export default function ReportSection() {
           )}
         </BlurFade>
       </div>
+      <DetailItem isOpen={popupOpen} onClose={closeDetail} item={selectedItem} />
     </div>
   );
 }
