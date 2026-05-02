@@ -60,9 +60,7 @@ export default function DetailItem({ isOpen, onClose, item }: any) {
         </div>
 
         <div className="px-6 pb-12 overflow-y-auto custom-scrollbar">
-          <div className="w-full aspect-video rounded-2xl overflow-hidden mb-5">
-            <Image src={displayData?.image} className="w-full h-full object-cover" alt="image" width={500} height={500} />
-          </div>
+          <div className="w-full aspect-video rounded-2xl overflow-hidden mb-5">{displayData?.image && <Image src={displayData?.image} className="w-full h-full object-cover" alt="image" width={500} height={500} loading="lazy" />}</div>
 
           <div className="flex justify-between items-start gap-4 mb-2">
             <h2 className="text-h5 font-bold font-poppins text-gray-900 leading-tight">{displayData?.title}</h2>

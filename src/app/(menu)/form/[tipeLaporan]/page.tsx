@@ -4,7 +4,7 @@ import Kategori from "@/components/common/button/kategori";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import React, { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 function LabelInput({ title }: { title: string }) {
   return <h5 className="font-poppins font-semibold text-body text-cream-darker md:text-title2">{title}</h5>;
@@ -23,7 +23,10 @@ function WrapperInput({ id, children }: { id: string; children: React.ReactNode 
 
 export default function Reports() {
   const pathname = usePathname();
+  const router = useRouter();
   const [selectCategory, setSelectCategory] = useState("");
+  const lat = useSearchParams().get("lat");
+  const lng = useSearchParams().get("lng");
 
   const [formData, setFormData] = useState({
     namaBarang: "",
@@ -50,21 +53,38 @@ export default function Reports() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    try {
-      await fetch("", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          type: pathname,
-          data: formData,
-        }),
-      });
+    let apiType = "/api/items";
+    let type;
+    if (pathname === "/form/hilang") type = 1;
+    if (pathname === "/form/temuan") type = 2;
+    if (pathname === "/form/informasi") apiType = "/api/items/found";
+    if (pathname === "/form/klaim") apiType = "/api/items/lost";
 
-      console.log("DATA SIAP DIKIRIM", formData);
-    } catch (err) {
-      console.error(err);
+    if (lat && lng) {
+      try {
+        await fetch(apiType, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: formData.namaBarang,
+            categoryId: Number(selectCategory) || 1,
+            desc: formData.catatan,
+            statusId: type,
+            tanggal: formData.tanggalHilang || formData.tanggalDitemukan,
+            note: formData.pesanTambahan,
+            locationDetail: formData.lokasiTerakhir || formData.lokasiDitemukan,
+            itemDetails: formData.isiBarang,
+            characteristics: formData.ciriKhusus,
+            latitude: lat,
+            longitude: lng,
+          }),
+        });
+        router.replace("/");
+      } catch (err) {
+        console.error(err);
+      }
     }
   }
 
@@ -77,7 +97,7 @@ export default function Reports() {
   return (
     <div className="flex flex-col items-center">
       <div className="w-full max-w-2xl">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full">
+        <div className="flex flex-col gap-6 w-full">
           {isHilang && (
             <>
               <div className="flex flex-col gap-2">
@@ -178,13 +198,13 @@ export default function Reports() {
           )}
 
           <div className="flex flex-col gap-9 pt-8 items-center w-full">
-            <button type="submit" className="bg-primary rounded-lg py-4 text-body text-cream font-jakarta font-bold w-full shadow">
+            <button onClick={handleSubmit} className="bg-primary rounded-lg py-4 text-body text-cream font-jakarta font-bold w-full shadow">
               Laporkan
             </button>
 
             <p className="font-jakarta font-bold text-title2 text-dark">Batalkan</p>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
