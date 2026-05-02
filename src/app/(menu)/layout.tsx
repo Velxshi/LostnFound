@@ -3,8 +3,21 @@ import { usePathname, useRouter } from "next/navigation";
 import { Icon } from "@iconify/react";
 
 export default function MenuLayout({ children }: { children: React.ReactNode }) {
-  const title = usePathname().split("/").pop();
+  const pathname = usePathname();
   const router = useRouter();
+
+  const titleMap: { [key: string]: string } = {
+    "/about": "Tentang Website Kami",
+    "/notifications": "Notifikasi",
+    "/reports": "Laporan Saya",
+    "/form/temuan": "Laporkan Barang Temuan",
+    "/form/hilang": "Laporkan Barang Hilang",
+    "/form/klaim": "Form Klaim Barang",
+    "/form/informasi": "Form Informasi Penemuan",
+  };
+
+  const title = titleMap[pathname] || pathname.split("/").pop();
+
   function goBack() {
     router.back();
   }
@@ -19,7 +32,7 @@ export default function MenuLayout({ children }: { children: React.ReactNode }) 
         </div>
       </header>
 
-      <main className="flex-1 p-6 md:p-9">{children}</main>
+      <main className="flex-1 p-6 md:p-9 ">{children}</main>
     </div>
   );
 }

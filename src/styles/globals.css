@@ -188,6 +188,9 @@
   .text-cream {
     color: var(--cream);
   }
+  .text-cream-active {
+    color: var(--cream-active);
+  }
   .text-cream-dark {
     color: var(--cream-dark);
   }
@@ -196,6 +199,9 @@
   }
   .text-muted {
     color: var(--charcoal-light);
+  }
+  .text-dark-light-active {
+    color: var(--charcoal-light-active);
   }
   .text-dark {
     color: var(--charcoal);
@@ -244,4 +250,23 @@
 
 * {
   line-height: 120%;
+}
+
+input,
+textarea {
+  outline: none;
+  background-color: transparent;
+  border: none;
+}
+
+input:active,
+input:focus,
+textarea:active,
+textarea:focus {
+  outline: none !important;
+  border: none !important;
+}
+
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+  margin: 0;
 }
