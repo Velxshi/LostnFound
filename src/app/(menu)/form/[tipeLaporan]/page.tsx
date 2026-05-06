@@ -1,16 +1,26 @@
-"use client";
+'use client'
 
-import Kategori from "@/components/common/button/kategori";
-import { Icon } from "@iconify/react";
-import Image from "next/image";
-import React, { useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Kategori from '@/components/common/button/kategori'
+import { Icon } from '@iconify/react'
+import Image from 'next/image'
+import React, { useState } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 function LabelInput({ title }: { title: string }) {
-  return <h5 className="font-poppins font-semibold text-body text-cream-darker md:text-title2">{title}</h5>;
+  return (
+    <h5 className="font-poppins font-semibold text-body text-cream-darker md:text-title2">
+      {title}
+    </h5>
+  )
 }
 
-function WrapperInput({ id, children }: { id: string; children: React.ReactNode }) {
+function WrapperInput({
+  id,
+  children,
+}: {
+  id: string
+  children: React.ReactNode
+}) {
   return (
     <label
       className="flex w-full items-center gap-1 rounded-xl bg-cream-light px-5 py-3 text-sm font-medium text-dark  shadow-sm transition-all border border-(--cream-dark)  focus-within:ring-2 focus-within:ring-(--cream-dark) hover:ring-2 hover:ring-(--cream-dark) relative"
@@ -18,54 +28,56 @@ function WrapperInput({ id, children }: { id: string; children: React.ReactNode 
     >
       {children}
     </label>
-  );
+  )
 }
 
 export default function Reports() {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [selectCategory, setSelectCategory] = useState("");
-  const lat = useSearchParams().get("lat");
-  const lng = useSearchParams().get("lng");
+  const pathname = usePathname()
+  const router = useRouter()
+  const [selectCategory, setSelectCategory] = useState('')
+  const lat = useSearchParams().get('lat')
+  const lng = useSearchParams().get('lng')
 
   const [formData, setFormData] = useState({
-    namaBarang: "",
-    kategori: "",
-    tanggalHilang: "",
-    catatan: "",
-    lokasiDitemukan: "",
-    tanggalDitemukan: "",
-    warna: "",
-    lokasiTerakhir: "",
-    isiBarang: "",
-    ciriKhusus: "",
-    pesanTambahan: "",
-  });
+    namaBarang: '',
+    kategori: '',
+    tanggalHilang: '',
+    catatan: '',
+    lokasiDitemukan: '',
+    tanggalDitemukan: '',
+    warna: '',
+    lokasiTerakhir: '',
+    isiBarang: '',
+    ciriKhusus: '',
+    pesanTambahan: '',
+  })
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    const { name, value } = e.target;
+  function handleChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
+    const { name, value } = e.target
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
-    }));
+    }))
   }
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+    e.preventDefault()
 
-    let apiType = "/api/items";
-    let type;
-    if (pathname === "/form/hilang") type = 1;
-    if (pathname === "/form/temuan") type = 2;
-    if (pathname === "/form/informasi") apiType = "/api/items/found";
-    if (pathname === "/form/klaim") apiType = "/api/items/lost";
+    let apiType = '/api/items'
+    let type
+    if (pathname === '/form/hilang') type = 1
+    if (pathname === '/form/temuan') type = 2
+    if (pathname === '/form/informasi') apiType = '/api/items/found'
+    if (pathname === '/form/klaim') apiType = '/api/items/lost'
 
     if (lat && lng) {
       try {
-        await fetch(apiType, {
-          method: "POST",
+        const response = await fetch(apiType, {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             title: formData.namaBarang,
@@ -80,19 +92,29 @@ export default function Reports() {
             latitude: lat,
             longitude: lng,
           }),
-        });
-        router.replace("/");
+        })
+        if (response.ok) {
+          const result = await response.json()
+
+          const roleId = result.roleId
+
+          if (Number(roleId) === 1) {
+            router.replace('/?mode=public')
+          } else {
+            router.replace('/')
+          }
+        }
       } catch (err) {
-        console.error(err);
+        console.error(err)
       }
     }
   }
 
-  const isHilang = pathname === "/form/hilang" || pathname === "/form/temuan";
+  const isHilang = pathname === '/form/hilang' || pathname === '/form/temuan'
 
-  const isInformasi = pathname === "/form/informasi";
+  const isInformasi = pathname === '/form/informasi'
 
-  const isKlaim = pathname === "/form/klaim";
+  const isKlaim = pathname === '/form/klaim'
 
   return (
     <div className="flex flex-col items-center">
@@ -103,28 +125,48 @@ export default function Reports() {
               <div className="flex flex-col gap-2">
                 <LabelInput title="Nama Barang" />
                 <WrapperInput id="namaBarang">
-                  <input id="namaBarang" name="namaBarang" type="text" className="w-full placeholder:font-normal placeholder:text-(--cream-dark)" placeholder="Contoh: Macbook Air M2" onChange={handleChange} />
+                  <input
+                    id="namaBarang"
+                    name="namaBarang"
+                    type="text"
+                    className="w-full placeholder:font-normal placeholder:text-(--cream-dark)"
+                    placeholder="Contoh: Macbook Air M2"
+                    onChange={handleChange}
+                  />
                 </WrapperInput>
               </div>
               <div className="flex flex-col gap-2">
                 <LabelInput title="Kategori" />
                 <Kategori
                   onCategoryChange={(cat: string) => {
-                    setSelectCategory(cat);
+                    setSelectCategory(cat)
                   }}
                 />
               </div>
               <div className="flex flex-col gap-2">
                 <LabelInput title="Tanggal Ditemukan" />
                 <WrapperInput id="tanggal">
-                  <input type="datetime-local" name="tanggal" id="tanggal" className=" w-full" onChange={handleChange} />
+                  <input
+                    type="datetime-local"
+                    name="tanggal"
+                    id="tanggal"
+                    className=" w-full"
+                    onChange={handleChange}
+                  />
                 </WrapperInput>
               </div>
 
               <div className="flex flex-col gap-2">
                 <LabelInput title="Catatan" />
                 <WrapperInput id="catatan">
-                  <textarea id="catatan" name="catatan" className="w-full resize-none  placeholder:font-normal placeholder:text-(--cream-dark)" placeholder="Tambahkan catatan yang ingin Anda berikan." rows={6} onChange={handleChange} />
+                  <textarea
+                    id="catatan"
+                    name="catatan"
+                    className="w-full resize-none  placeholder:font-normal placeholder:text-(--cream-dark)"
+                    placeholder="Tambahkan catatan yang ingin Anda berikan."
+                    rows={6}
+                    onChange={handleChange}
+                  />
                 </WrapperInput>
               </div>
             </>
@@ -132,11 +174,21 @@ export default function Reports() {
 
           {(isInformasi || isKlaim) && (
             <div className="flex items-center gap-4 p-4 bg-cream-light border border-(--cream-dark) rounded-xl">
-              <Image src="https://picsum.photos/id/6/5000/3333" alt="Barang" className="aspect-square h-full w-auto rounded-lg" width={64} height={64} />
+              <Image
+                src="https://picsum.photos/id/6/5000/3333"
+                alt="Barang"
+                className="aspect-square h-full w-auto rounded-lg"
+                width={64}
+                height={64}
+              />
 
               <div className="flex flex-col gap-1">
-                <h4 className="font-jakarta font-medium text-caption text-cream-dark">Informasi Barang</h4>
-                <h5 className="font-poppins font-bold text-title2 text-dark">Macbook Air M2</h5>
+                <h4 className="font-jakarta font-medium text-caption text-cream-dark">
+                  Informasi Barang
+                </h4>
+                <h5 className="font-poppins font-bold text-title2 text-dark">
+                  Macbook Air M2
+                </h5>
               </div>
             </div>
           )}
@@ -146,14 +198,33 @@ export default function Reports() {
               <div className="flex flex-col gap-2">
                 <LabelInput title="Lokasi Ditemukan" />
                 <WrapperInput id="lokasi">
-                  <Icon icon="mdi:map-marker-outline" className="text-cream-dark " width={24} height={24} />
-                  <input type="text" name="lokasi" id="lokasi" className=" w-full placeholder:font-normal placeholder:text-(--cream-dark)" placeholder="Contoh: Kantin, Perpustakaan" onChange={handleChange} />
+                  <Icon
+                    icon="mdi:map-marker-outline"
+                    className="text-cream-dark "
+                    width={24}
+                    height={24}
+                  />
+                  <input
+                    type="text"
+                    name="lokasi"
+                    id="lokasi"
+                    className=" w-full placeholder:font-normal placeholder:text-(--cream-dark)"
+                    placeholder="Contoh: Kantin, Perpustakaan"
+                    onChange={handleChange}
+                  />
                 </WrapperInput>
               </div>
               <div className="flex flex-col gap-2">
                 <LabelInput title="Catatan" />
                 <WrapperInput id="catatan">
-                  <textarea id="catatan" name="catatan" className="w-full resize-none  placeholder:font-normal placeholder:text-(--cream-dark)" placeholder="Tambahkan catatan yang ingin Anda berikan." rows={6} onChange={handleChange} />
+                  <textarea
+                    id="catatan"
+                    name="catatan"
+                    className="w-full resize-none  placeholder:font-normal placeholder:text-(--cream-dark)"
+                    placeholder="Tambahkan catatan yang ingin Anda berikan."
+                    rows={6}
+                    onChange={handleChange}
+                  />
                 </WrapperInput>
               </div>
             </>
@@ -164,14 +235,33 @@ export default function Reports() {
               <div className="flex flex-col gap-2">
                 <LabelInput title="Lokasi Ditemukan" />
                 <WrapperInput id="lokasi">
-                  <Icon icon="mdi:map-marker-outline" className="text-cream-dark " width={24} height={24} />
-                  <input type="text" name="lokasi" id="lokasi" className=" w-full placeholder:font-normal placeholder:text-(--cream-dark)" placeholder="Contoh: Kantin, Perpustakaan" onChange={handleChange} />
+                  <Icon
+                    icon="mdi:map-marker-outline"
+                    className="text-cream-dark "
+                    width={24}
+                    height={24}
+                  />
+                  <input
+                    type="text"
+                    name="lokasi"
+                    id="lokasi"
+                    className=" w-full placeholder:font-normal placeholder:text-(--cream-dark)"
+                    placeholder="Contoh: Kantin, Perpustakaan"
+                    onChange={handleChange}
+                  />
                 </WrapperInput>
               </div>
               <div className="flex flex-col gap-2">
                 <LabelInput title="Isi Barang" />
                 <WrapperInput id="isiBarang">
-                  <textarea id="isiBarang" name="isiBarang" className="w-full resize-none  placeholder:font-normal placeholder:text-(--cream-dark)" placeholder="Contoh: Isi tas (laptop, buku)." rows={6} onChange={handleChange} />
+                  <textarea
+                    id="isiBarang"
+                    name="isiBarang"
+                    className="w-full resize-none  placeholder:font-normal placeholder:text-(--cream-dark)"
+                    placeholder="Contoh: Isi tas (laptop, buku)."
+                    rows={6}
+                    onChange={handleChange}
+                  />
                 </WrapperInput>
               </div>
               <div className="flex flex-col gap-2">
@@ -191,21 +281,33 @@ export default function Reports() {
               <div className="flex flex-col gap-2">
                 <LabelInput title="Catatan" />
                 <WrapperInput id="catatan">
-                  <textarea id="catatan" name="catatan" className="w-full resize-none  placeholder:font-normal placeholder:text-(--cream-dark)" placeholder="Tambahkan catatan yang ingin Anda berikan." rows={6} onChange={handleChange} />
+                  <textarea
+                    id="catatan"
+                    name="catatan"
+                    className="w-full resize-none  placeholder:font-normal placeholder:text-(--cream-dark)"
+                    placeholder="Tambahkan catatan yang ingin Anda berikan."
+                    rows={6}
+                    onChange={handleChange}
+                  />
                 </WrapperInput>
               </div>
             </>
           )}
 
           <div className="flex flex-col gap-9 pt-8 items-center w-full">
-            <button onClick={handleSubmit} className="bg-primary rounded-lg py-4 text-body text-cream font-jakarta font-bold w-full shadow">
+            <button
+              onClick={handleSubmit}
+              className="bg-primary rounded-lg py-4 text-body text-cream font-jakarta font-bold w-full shadow"
+            >
               Laporkan
             </button>
 
-            <p className="font-jakarta font-bold text-title2 text-dark">Batalkan</p>
+            <p className="font-jakarta font-bold text-title2 text-dark">
+              Batalkan
+            </p>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'
 import { prisma } from '@/lib/prisma'
 import { successResponse, errorResponse } from '@/lib/response'
 import { timeAgo } from '@/lib/helper/time'
@@ -25,7 +25,7 @@ export async function GET(req: Request) {
     const type = searchParams.get('type')
 
     const where: any = {}
-    
+
     if (type === 'me') {
       where.userId = Number(auth.token.id)
     }
@@ -97,11 +97,11 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  try{
+  try {
     const auth = await requireAuth(req)
 
     if (!auth.authorized || !auth.token) {
-        return auth.response
+      return auth.response
     }
 
     const userId = auth.token.id
@@ -114,9 +114,7 @@ export async function POST(req: Request) {
         desc: body.desc,
         statusId: body.statusId,
         userId: Number(userId),
-        createdAt: body.tanggal
-          ? new Date(body.tanggal)
-          : new Date(),
+        createdAt: body.tanggal ? new Date(body.tanggal) : new Date(),
         note: body.note || null,
         locationDetail: body.locationDetail || null,
         latitude: body.latitude || null,
@@ -126,11 +124,15 @@ export async function POST(req: Request) {
       },
     })
 
-    return successResponse(
-      { id: item.id },
-      'Berhasil laporkan item'
-    )
+    const user = await prisma.user.findUnique({
+      where: { id: Number(userId) },
+      select: { roleId: true },
+    })
 
+    return successResponse(
+      { id: item.id, roleId: user?.roleId },
+      'Berhasil laporkan item',
+    )
   } catch (error) {
     console.error(error)
     return errorResponse('Gagal laporkan item')
