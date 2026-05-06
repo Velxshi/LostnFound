@@ -8,24 +8,42 @@ import CardStatistik from "./CardStatistik";
 
 export default function DashboardSection() {
   const [items, setItems] = useState<CardItemProps[]>([]);
+  const [stats, setStats] = useState<any>(null);
   useEffect(() => {
     fetch("/api/items")
       .then((res) => res.json())
-      .then((data) => setItems(data.data))
+      .then((data) => {
+      console.log("Data dari API:", data); 
+      setItems(data.data);
+    })
+
       .catch((err) => console.error("Gagal load reports:", err));
   }, []);
 
-  const totalHilang = items.filter((item) => item.status.name === "LOST").length;
 
-  const totalTemuan = items.filter((item) => item.status.name === "FOUND").length;
+  useEffect(() => {
+    fetch("/api/stats")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Data dari STATS:", data),
+        setStats(data)}
+        )
+      .catch((err) => console.error("Gagal load reports:", err));
+  }, []);
 
-  const totalDikembalikan = items.filter((item) => item.status.name === "DONE").length;
+  const totaldata = stats?.summary?.total_reports || 0;
+
+  const totalHilang = stats?.summary?.active_lost_items || 0;
+
+  const totalTemuan = stats?.summary?.active_found_items || 0;
+
+  const totalDikembalikan = stats?.summary?.returned_items || 0;
 
   const statistikItem = [
     {
       label: "Total Laporan",
       icon: "tabler:database",
-      total: items.length,
+      total: totaldata,
     },
     {
       label: "Barang Hilang Aktif",
