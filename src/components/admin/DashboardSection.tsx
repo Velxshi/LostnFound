@@ -38,7 +38,7 @@ export default function DashboardSection() {
   const totalTemuan = stats?.summary?.active_found_items || 0;
 
   const totalDikembalikan = stats?.summary?.returned_items || 0;
-
+  
   const statistikItem = [
     {
       label: "Total Laporan",

@@ -23,10 +23,10 @@ export default function MapSection() {
       .catch((err) => console.error("Gagal load reports:", err));
   }, [activeFilter]);
   return (
-    <>
+    <div className="w-full relative">
       <MapHeader onFilterChange={handleFilter} activeFilter={activeFilter} />
 
       <Map data={items} />
-    </>
+    </div>
   );
 }
