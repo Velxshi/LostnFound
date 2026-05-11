@@ -25,12 +25,16 @@ export default function CategorySection() {
   }, [search]);
   const [items, setItems] = useState<ItemsResponse | null>(null);
 
-  useEffect(() => {
-    fetch(`/api/categories?search=${search}`)
+const refreshData = () => {
+    fetch(`/api/categories?search=${debouncedSearch}`)
       .then((res) => res.json())
       .then((data) => setItems(data))
       .catch((err) => console.error("Gagal load reports: ", err));
-  }, [search]);
+  };
+
+  useEffect(() => {
+    refreshData();
+  }, [debouncedSearch]);
 
   const totalItems = items?.totalItems || 0;
   const totalCategories = items?.totalCategories || 0;
@@ -54,6 +58,7 @@ export default function CategorySection() {
 
   const handleEdit = (category: CategoryItemProps) => {
     setcategoryDipilih(category);
+    
     setEditOpen(true);
   };
 
@@ -69,7 +74,9 @@ export default function CategorySection() {
   const handleSuccessAction = (message: string, color: string) => {
     setToastMessage(message);
     setToastWarna(color);
+    refreshData();
     setShowToast(true);
+
   };
 
   const [popup, setPopup] = useState(false);
