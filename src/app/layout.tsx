@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
-import { Poppins, Plus_Jakarta_Sans } from 'next/font/google'
+import { Poppins, Plus_Jakarta_Sans, Inter } from 'next/font/google'
 import '@/styles/globals.css'
 import AuthProvider from '@/components/providers/session-provider'
+import { cn } from "@/lib/utils";
+
+const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -28,7 +31,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${poppins.variable} ${plusJakartaSans.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", poppins.variable, plusJakartaSans.variable, "font-sans", inter.variable)}
     >
       <body className="min-h-full flex flex-col">
         <AuthProvider>{children}</AuthProvider>

@@ -5,6 +5,7 @@ import CardItem from "../common/CardItem";
 import { useEffect, useState } from "react";
 import { CardItemProps } from "@/types/reportItems.types";
 import CardStatistik from "./CardStatistik";
+import { ChartGraphic } from "./Dashboard/ChartGraphic";
 
 export default function DashboardSection() {
   const [items, setItems] = useState<CardItemProps[]>([]);
@@ -77,8 +78,8 @@ export default function DashboardSection() {
           </div>
 
           <div className="mt-3">
-            <div className="bg-white p-4 rounded-xl shadow-sm h-74.5">
-              <img src="https://www.jaspersoft.com/content/dam/jaspersoft/images/graphics/infographics/column-chart-example.svg" alt="grafik" className="w-full h-full object-contain" />
+            <div className="bg-cream-light p-4 rounded-xl shadow-sm h-74.5">
+              <ChartGraphic />
             </div>
           </div>
         </BlurFade>
