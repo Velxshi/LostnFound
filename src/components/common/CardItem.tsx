@@ -19,7 +19,7 @@ export default function CardItem({ data, openDetail }: CardProps) {
       <div className={`absolute left-3 top-3 rounded-lg ${statusColor[data.status.name]} px-2 py-1 shadow`}>
         <p className="font-jakarta font-bold text-caption text-dark">{data.status.name}</p>
       </div>
-      <Image src="https://picsum.photos/id/6/5000/3333" alt="profile" className="object-cover rounded-t-xl  w-full h-auto aspect-video" width={167} height={94} />
+      <Image src={data.image} alt="profile" className="object-cover rounded-t-xl  w-full h-auto aspect-video" width={167} height={94} />
 
       <div className="flex flex-col px-3 pb-3 gap-2">
         <h5 className="font-poppins font-bold text-body text-dark">{data.title}</h5>
