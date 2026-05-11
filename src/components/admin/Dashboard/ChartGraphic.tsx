@@ -2,15 +2,7 @@
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-
-const chartData = [
-  { month: "January", hilang: 186, temuan: 100, selesai: 50 },
-  { month: "February", hilang: 305, temuan: 200, selesai: 4 },
-  { month: "March", hilang: 237, temuan: 120, selesai: 1 },
-  { month: "April", hilang: 73, temuan: 300, selesai: 10 },
-  { month: "May", hilang: 209, temuan: 260, selesai: 90 },
-  { month: "June", hilang: 214, temuan: 140, selesai: 8 },
-];
+import { useEffect, useState } from "react";
 
 const chartConfig = {
   hilang: {
@@ -28,11 +20,23 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartGraphic() {
+  const [chartData, setChartData] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/stats")
+      .then((res) => res.json())
+      .then((data) => {setChartData(data.chart_data); 
+      })
+      .catch((err) => console.error("Gagal load reports:", err));
+  }, []);
+
   return (
     <ChartContainer config={chartConfig} className="font-jakarta">
       <AreaChart accessibilityLayer data={chartData} margin={{ left: 12, right: 12 }}>
         <CartesianGrid vertical={false} />
-        <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => value.slice(0, 3)} />
+        <XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} 
+        tickFormatter={(value) => value.slice(0, 3)
+        } />
         <YAxis tickLine={false} axisLine={false} tickMargin={8} width={40} domain={["auto", "auto"]} />
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
         <defs>
@@ -49,9 +53,9 @@ export function ChartGraphic() {
             <stop offset="95%" stopColor="#05DF72" stopOpacity={0.1} />
           </linearGradient>
         </defs>
-        <Area dataKey="hilang" type="linear" fill="url(#fillhilang)" fillOpacity={0.4} stroke="#FF6467" stackId="a" />
-        <Area dataKey="temuan" type="linear" fill="url(#filltemuan)" fillOpacity={0.4} stroke="#FCC800" stackId="b" />
-        <Area dataKey="selesai" type="linear" fill="url(#fillselesai)" fillOpacity={0.4} stroke="#05DF72" stackId="c" />
+        <Area dataKey="lost" type="linear" fill="url(#fillhilang)" fillOpacity={0.4} stroke="#FF6467" stackId="a" />
+        <Area dataKey="found" type="linear" fill="url(#filltemuan)" fillOpacity={0.4} stroke="#FCC800" stackId="b" />
+        <Area dataKey="done" type="linear" fill="url(#fillselesai)" fillOpacity={0.4} stroke="#05DF72" stackId="c" />
       </AreaChart>
     </ChartContainer>
   );
