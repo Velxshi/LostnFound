@@ -39,3 +39,24 @@ export interface StatistikLaporan {
   totalTemuan: number;
   totalDikembalikan: number;
 }
+
+export type ItemDetail = {
+  id: number;
+  image: string;
+  title: string;
+  status: ItemStatus;
+  category: ItemCategory;
+  desc: string;
+  itemDetails: unknown | null;
+  characteristics: string;
+  note: string;
+  locationDetail: string;
+  ditemukanPada: string;
+  diunggah: string;
+};
+
+export type ItemDetailResponse = {
+  success: boolean;
+  message: string;
+  data: ItemDetail;
+};
