@@ -19,16 +19,16 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ChartGraphic() {
+export function ChartGraphic({ periode }: { periode: string }) {
   const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
-    fetch("/api/stats")
+    fetch(`/api/stats?period=${periode}`)
       .then((res) => res.json())
       .then((data) => {setChartData(data.chart_data); 
       })
       .catch((err) => console.error("Gagal load reports:", err));
-  }, []);
+  }, [periode]);
 
   return (
     <ChartContainer config={chartConfig} className="font-jakarta">
