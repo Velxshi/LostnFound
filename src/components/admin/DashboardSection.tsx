@@ -1,15 +1,16 @@
 import { BlurFade } from "../ui/blur-fade";
-import Periodeselect from "./Dashboard/Periodeselect";
 import DetailItem from "./detail/detailitem";
 import CardItem from "../common/CardItem";
 import { useEffect, useState } from "react";
 import { CardItemProps } from "@/types/reportItems.types";
 import CardStatistik from "./CardStatistik";
 import { ChartGraphic } from "./Dashboard/ChartGraphic";
+import Periodeselect from "./Dashboard/Periodeselect";
 
 export default function DashboardSection() {
   const [items, setItems] = useState<CardItemProps[]>([]);
   const [stats, setStats] = useState<any>(null);
+  const [periode, setPeriode] = useState<string>("7");
   useEffect(() => {
     fetch("/api/items")
       .then((res) => res.json())
@@ -23,14 +24,14 @@ export default function DashboardSection() {
 
 
   useEffect(() => {
-    fetch("/api/stats")
+    fetch(`/api/stats?period=${periode}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("Data dari STATS:", data),
         setStats(data)}
         )
       .catch((err) => console.error("Gagal load reports:", err));
-  }, []);
+  }, [periode]);
 
   const totaldata = stats?.summary?.total_reports || 0;
 
@@ -91,17 +92,16 @@ export default function DashboardSection() {
         </BlurFade>
         <BlurFade delay={0.55} inView>
           <div className="mt-5 flex flex-row items-center justify-between">
-            <h1 className="font-poppins font-bold text-title2 text-dark  lg:text-h5">Laporan 7 Hari Terakhir</h1>
-            <Periodeselect />
+            <h1 className="font-poppins font-bold text-title2 text-dark  lg:text-h5">Laporan {periode === "7" ? "7 Hari" : "30 Hari"} Terakhir</h1>
+            <Periodeselect value={periode} onChange={setPeriode} />
           </div>
 
           <div className="mt-3">
             <div className="bg-cream-light p-4 rounded-xl shadow-sm h-74.5">
-              <ChartGraphic />
+              <ChartGraphic periode={periode} />
             </div>
           </div>
         </BlurFade>
-
         <BlurFade delay={0.55} inView>
           <div className="mt-5 flex flex-row items-center justify-between">
             <h1 className="font-poppins font-bold text-title2 lg:text-h5 text-dark">Laporan Terbaru</h1>
