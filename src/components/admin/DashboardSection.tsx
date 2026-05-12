@@ -1,35 +1,43 @@
 import { BlurFade } from "../ui/blur-fade";
-import DetailItem from "./detail/detailitem";
+import DetailItem from "./detail/detailItem";
 import CardItem from "../common/CardItem";
 import { useEffect, useState } from "react";
 import { CardItemProps } from "@/types/reportItems.types";
 import CardStatistik from "./CardStatistik";
 import { ChartGraphic } from "./Dashboard/ChartGraphic";
 import Periodeselect from "./Dashboard/Periodeselect";
+import { AdminStatsResponse } from "@/types/statsDashboard.types";
+import DashboardSkeleton from "./Dashboard/DashboardSkeleton";
 
 export default function DashboardSection() {
   const [items, setItems] = useState<CardItemProps[]>([]);
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<AdminStatsResponse>();
   const [periode, setPeriode] = useState<string>("7");
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch("/api/items")
-      .then((res) => res.json())
-      .then((data) => {
-      console.log("Data dari API:", data); 
-      setItems(data.data);
-    })
+    const fetchItems = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch("/api/items");
+        if (!res.ok) throw new Error("Gagal fetch data");
+        const data = await res.json();
+        setItems(data.data);
+      } catch (err) {
+        console.error("Gagal load reports:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      .catch((err) => console.error("Gagal load reports:", err));
+    fetchItems();
   }, []);
-
 
   useEffect(() => {
     fetch(`/api/stats?period=${periode}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("Data dari STATS:", data),
-        setStats(data)}
-        )
+        setStats(data);
+      })
       .catch((err) => console.error("Gagal load reports:", err));
   }, [periode]);
 
@@ -40,7 +48,7 @@ export default function DashboardSection() {
   const totalTemuan = stats?.summary?.active_found_items || 0;
 
   const totalDikembalikan = stats?.summary?.returned_items || 0;
-  
+
   const statistikItem = [
     {
       label: "Total Laporan",
@@ -64,11 +72,11 @@ export default function DashboardSection() {
     },
   ];
 
-  const [selectedItem, setSelectedItem] = useState<CardItemProps | null>(null);
+  const [selectedItem, setSelectedItem] = useState<number | null>(null);
   const [popupOpen, setPopupOpen] = useState(false);
 
   function openDetail(item: CardItemProps) {
-    setSelectedItem(item);
+    setSelectedItem(item.id);
     setPopupOpen(true);
   }
 
@@ -77,48 +85,48 @@ export default function DashboardSection() {
     setSelectedItem(null);
   }
 
+  if (loading) return <DashboardSkeleton />;
+
   return (
-    <>
-      <div className="container flex flex-col">
-        <BlurFade delay={0.15} inView>
-          <h1 className="font-poppins font-bold text-title1 text-dark md:text-h4 lg:text-h3">Statistik Laporan</h1>
-        </BlurFade>
-        <BlurFade delay={0.45} inView>
-          <div className="card-container grid grid-cols-2 lg:grid-cols-4 lg:gap-16 gap-3 mt-3">
-            {statistikItem.map((item) => (
-              <CardStatistik key={item.label} icon={item.icon} label={item.label} total={item.total} />
-            ))}
-          </div>
-        </BlurFade>
-        <BlurFade delay={0.55} inView>
-          <div className="mt-5 flex flex-row items-center justify-between">
-            <h1 className="font-poppins font-bold text-title2 text-dark  lg:text-h5">Laporan {periode === "7" ? "7 Hari" : "30 Hari"} Terakhir</h1>
-            <Periodeselect value={periode} onChange={setPeriode} />
-          </div>
+    <div className="container flex flex-col relative">
+      <BlurFade delay={0.15} inView>
+        <h1 className="font-poppins font-bold text-title1 text-dark md:text-h4 lg:text-h3">Statistik Laporan</h1>
+      </BlurFade>
+      <BlurFade delay={0.45} inView>
+        <div className="card-container grid grid-cols-2 lg:grid-cols-4 lg:gap-16 gap-3 mt-3">
+          {statistikItem.map((item) => (
+            <CardStatistik key={item.label} icon={item.icon} label={item.label} total={item.total} />
+          ))}
+        </div>
+      </BlurFade>
+      <BlurFade delay={0.55} inView>
+        <div className="mt-5 flex flex-row items-center justify-between">
+          <h1 className="font-poppins font-bold text-title2 text-dark  lg:text-h5">Laporan {periode === "7" ? "7 Hari" : "30 Hari"} Terakhir</h1>
+          <Periodeselect value={periode} onChange={setPeriode} />
+        </div>
 
-          <div className="mt-3">
-            <div className="bg-cream-light p-4 rounded-xl shadow-sm h-74.5">
-              <ChartGraphic periode={periode} />
-            </div>
+        <div className="mt-3">
+          <div className="bg-cream-light p-4 rounded-xl shadow-sm h-74.5">
+            <ChartGraphic periode={periode} />
           </div>
-        </BlurFade>
-        <BlurFade delay={0.55} inView>
-          <div className="mt-5 flex flex-row items-center justify-between">
-            <h1 className="font-poppins font-bold text-title2 lg:text-h5 text-dark">Laporan Terbaru</h1>
-            <a href="/admin/report" className="font-poppins text-body lg:text-title2 font-semibold text-[#2848B7]">
-              Lihat Semua
-            </a>
-          </div>
+        </div>
+      </BlurFade>
+      <BlurFade delay={0.55} inView>
+        <div className="mt-5 flex flex-row items-center justify-between">
+          <h1 className="font-poppins font-bold text-title2 lg:text-h5 text-dark">Laporan Terbaru</h1>
+          <a href="/admin/report" className="font-poppins text-body lg:text-title2 font-semibold text-[#2848B7]">
+            Lihat Semua
+          </a>
+        </div>
 
-          <div className="grid grid-cols-2 gap-3 mt-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
-            {items.map((item) => (
-              <CardItem data={item} key={item.id} openDetail={openDetail} />
-            ))}
-          </div>
-        </BlurFade>
+        <div className="grid grid-cols-2 gap-3 mt-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
+          {items.map((item) => (
+            <CardItem data={item} key={item.id} openDetail={openDetail} />
+          ))}
+        </div>
+      </BlurFade>
 
-        <DetailItem isOpen={popupOpen} onClose={closeDetail} item={selectedItem} />
-      </div>
-    </>
+      <DetailItem isOpen={popupOpen} onClose={closeDetail} id={selectedItem} />
+    </div>
   );
 }

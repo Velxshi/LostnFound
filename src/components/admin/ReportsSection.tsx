@@ -6,7 +6,7 @@ import Urutstatus from "@/components/common/button/urutStatus";
 import Kategori from "@/components/common/button/kategori";
 import { CardItemProps, ItemsResponse } from "@/types/reportItems.types";
 import CardItem from "../common/CardItem";
-import DetailItem from "./detail/detailitem";
+import DetailItem from "./detail/detailItem";
 
 export default function ReportSection() {
   const [search, setSearch] = useState("");

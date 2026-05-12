@@ -4,11 +4,19 @@ import { Icon } from "@iconify/react";
 import { useRouter, usePathname } from "next/navigation";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { signOut, useSession } from "next-auth/react";
-import { ProfilePicture } from "../ui/profile-picture";
-export default function CardProfile() {
+import { ProfilePicture } from "../../ui/profile-picture";
+import ProfileSkeleton from "./ProfileSkeleton";
+
+type Props = {
+  isLoading?: boolean;
+};
+
+export default function CardProfile({ isLoading }: Props) {
   const router = useRouter();
   const path = usePathname();
   const { data: session } = useSession();
+
+  if (isLoading) return <ProfileSkeleton />;
 
   function isAdmin() {
     return path.startsWith("/admin");

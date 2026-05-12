@@ -248,13 +248,36 @@
   .bg-cream-active {
     background: var(--cream-active);
   }
+  .bg-cream-dark {
+    background: var(--cream-dark);
+  }
+  .bg-cream-dark-hover {
+    background: var(--cream-dark-hover);
+  }
+  .bg-cream-dark-active {
+    background: var(--cream-dark-active);
+  }
+  .bg-cream-darker {
+    background: var(--cream-darker);
+  }
   .bg-dark {
     background: var(--charcoal);
+  }
+  .bg-dark-hover {
+    background: var(--charcoal-hover);
+  }
+  .bg-dark-active {
+    background: var(--charcoal-active);
   }
 }
 
 * {
   line-height: 120%;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: none;
 }
 
 input,

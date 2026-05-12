@@ -1,6 +1,6 @@
 "use client";
 
-import CardProfile from "@/components/common/CardProfile";
+import CardProfile from "@/components/common/profile/CardProfile";
 
 export default function Profile() {
   return (
