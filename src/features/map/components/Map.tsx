@@ -9,6 +9,7 @@ import MapClickHandler from "./MapClickHandler";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 import { MarkerProps } from "@/types/marker.types";
+import { Loading } from "@/components/admin/loading";
 
 L.Icon.Default.mergeOptions({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
@@ -44,7 +45,7 @@ export default function Map({ data }: MarkerItems) {
     }
   }, [draft]);
 
-  if (!userPosition) return <p>Loading...</p>;
+  if (!userPosition) return <Loading />;;
 
   const lostIcon = new L.Icon({
     iconUrl: "/assets/icons/marker-red.svg",

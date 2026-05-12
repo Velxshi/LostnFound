@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const statusColor: Record<Status, string> = {
+const statusColor: Record< string, string> = {
   LOST: "bg-[#FF6467]",
   FOUND: "bg-[#FCC800]",
   DONE: "bg-[#05DF72]",

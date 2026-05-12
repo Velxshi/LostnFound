@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import CardStatistik from "./CardStatistik";
 import { CategoryItemProps, ItemsResponse } from "@/types/categoryItems.types";
 import CategoryItem from "./CategoryItem";
-import Toast from "./Category/Toast/Toast";
+
 import ModalAdd from "./Category/Modals/modalAdd";
 import ModalEdit from "./Category/Modals/modalEdit";
 import ModalDelete from "./Category/Modals/modalDelete";
+import { toast } from "sonner";
 
 // function CardStatistik
-
 export default function CategorySection() {
   const [search, setSearch] = useState("");
 
@@ -67,22 +67,18 @@ const refreshData = () => {
     setDeleteOpen(true);
   };
 
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastWarna, setToastWarna] = useState("");
 
-  const handleSuccessAction = (message: string, color: string) => {
-    setToastMessage(message);
-    setToastWarna(color);
+  const handleSuccessAction = (message: string) => {
+    toast(message, { className: "font-poppins !bg-[#D1E7DD] !rounded-xl !text-[#0F5132] !w-fit !min-w-[200px] !max-w-[90vw] !ml-auto !mr-5 md:!mr-0",
+    position: "top-right"});
     refreshData();
-    setShowToast(true);
 
   };
 
   const [popup, setPopup] = useState(false);
   return (
     <div className="w-full min-h-screen p-6 md:p-9">
-      {showToast && <Toast message={toastMessage} onClose={() => setShowToast(false)} warna={toastWarna} />}
+
 
       <div className="w-full">
         <h1 className="text-2xl font-bold text-dark font-poppins">Kelola Kategori</h1>
@@ -114,7 +110,7 @@ const refreshData = () => {
         </div>
       </div>
 
-      <ModalAdd isOpen={popup} onClose={() => setPopup(false)} onSuccess={() => handleSuccessAction("Berhasil ditambahkan", "#D1E7DD")} />
+      <ModalAdd isOpen={popup} onClose={() => setPopup(false)} onSuccess={() => handleSuccessAction("Berhasil ditambahkan")} />
 
       <ModalEdit
         isOpen={editOpen}
@@ -123,10 +119,10 @@ const refreshData = () => {
           setcategoryDipilih(null);
         }}
         category={categoryDipilih}
-        onSuccess={() => handleSuccessAction("Berhasil Diubah", "#D1E7DD")}
+        onSuccess={() => handleSuccessAction("Berhasil Diubah")}
       />
 
-      <ModalDelete isOpen={DeleteOpen} onClose={() => setDeleteOpen(false)} category={categoryDipilih} onSuccess={() => handleSuccessAction("Berhasil Dihapus", "#D1E7DD")} />
+      <ModalDelete isOpen={DeleteOpen} onClose={() => setDeleteOpen(false)} category={categoryDipilih} onSuccess={() => handleSuccessAction("Berhasil Dihapus")} />
     </div>
   );
 }
