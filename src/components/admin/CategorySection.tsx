@@ -9,6 +9,7 @@ import ModalAdd from "./Category/Modals/modalAdd";
 import ModalEdit from "./Category/Modals/modalEdit";
 import ModalDelete from "./Category/Modals/modalDelete";
 import { toast } from "sonner";
+import { BlurFade } from "../ui/blur-fade";
 
 // function CardStatistik
 export default function CategorySection() {
@@ -79,7 +80,7 @@ const refreshData = () => {
   return (
     <div className="w-full min-h-screen p-6 md:p-9">
 
-
+ <BlurFade delay={0.45} inView>
       <div className="w-full">
         <h1 className="text-2xl font-bold text-dark font-poppins">Kelola Kategori</h1>
 
@@ -109,7 +110,7 @@ const refreshData = () => {
           </div>
         </div>
       </div>
-
+</BlurFade>
       <ModalAdd isOpen={popup} onClose={() => setPopup(false)} onSuccess={() => handleSuccessAction("Berhasil ditambahkan")} />
 
       <ModalEdit
