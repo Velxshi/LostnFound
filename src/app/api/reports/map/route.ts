@@ -35,6 +35,7 @@ export async function GET(req: Request) {
         const items = await prisma.item.findMany({
         select: {
             id: true,
+            userId: true,
             latitude: true,
             longitude: true,
             status: {
@@ -55,6 +56,7 @@ export async function GET(req: Request) {
             id: item.status.id,
             name: item.status.name,
         },
+        isMe: item.userId === Number(userId),
         }))
 
         return successResponse(

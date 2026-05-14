@@ -17,6 +17,8 @@ export async function GET(req: Request) {
     const limit = 12
     const skip = (page - 1) * limit
 
+    const userId = Number(auth.token.id)
+
     const sort = searchParams.get('sort') || 'terbaru'
     const statusId = searchParams.get('statusId')
     const categoryId = searchParams.get('categoryId')
@@ -74,6 +76,7 @@ export async function GET(req: Request) {
         id: item.category.id,
         name: item.category.name,
       },
+      isMe: item.userId === userId,
       time: timeAgo(item.createdAt),
     }))
 
