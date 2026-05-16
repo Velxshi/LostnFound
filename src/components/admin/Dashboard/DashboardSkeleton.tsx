@@ -10,7 +10,7 @@ export default function DashboardSkeleton() {
         ))}
       </div>
 
-      <div className="mt-5 flex flex-row items-center justify-between mb-3">
+      <div className="mt-5 flex flex-row items-center justify-between mb-3 gap-4">
         <Skeleton className="h-6 w-48" />
         <Skeleton className="h-9 w-28 rounded-lg" />
       </div>

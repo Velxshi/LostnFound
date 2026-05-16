@@ -42,6 +42,7 @@ export interface StatistikLaporan {
 
 export type ItemDetail = {
   id: number;
+  isMe: boolean;
   image: string;
   title: string;
   status: ItemStatus;

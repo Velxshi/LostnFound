@@ -3,6 +3,8 @@ import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
+import { Loading } from "../loading";
+import { toast } from "sonner";
 
 const chartConfig = {
   hilang: {
@@ -21,22 +23,33 @@ const chartConfig = {
 
 export function ChartGraphic({ periode }: { periode: string }) {
   const [chartData, setChartData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/stats?period=${periode}`)
-      .then((res) => res.json())
-      .then((data) => {setChartData(data.chart_data); 
-      })
-      .catch((err) => console.error("Gagal load reports:", err));
+    const fetchChart = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`/api/stats?period=${periode}`);
+        if (!res.ok) throw new Error("Gagal fetch data");
+        const data = await res.json();
+        setChartData(data.chart_data);
+      } catch (err) {
+        toast.error("Gagal load", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchChart();
   }, [periode]);
+
+  if (loading) return <Loading />;
 
   return (
     <ChartContainer config={chartConfig} className="font-jakarta">
       <AreaChart accessibilityLayer data={chartData} margin={{ left: 12, right: 12 }}>
         <CartesianGrid vertical={false} />
-        <XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} 
-        tickFormatter={(value) => value.slice(0, 3)
-        } />
+        <XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => value.slice(0, 3)} />
         <YAxis tickLine={false} axisLine={false} tickMargin={8} width={40} domain={["auto", "auto"]} />
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
         <defs>
