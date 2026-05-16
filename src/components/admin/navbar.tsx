@@ -19,11 +19,10 @@ const SidebarNavbar = () => {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-998 border-t pb-3 pt-3 px-4 
+      className="fixed bottom-0 left-0 right-0 z-998 border-t py-3 px-4 
       lg:sticky lg:top-0 lg:flex lg:flex-col lg:h-screen lg:w-64 
       lg:border-t-0 lg:border-r lg:pt-8 lg:px-6 
-      
-      bg-white border-gray-300"
+      bg-cream-light-hover border-[#F3F4F6] border w-screen"
     >
       <div className="hidden lg:flex items-center gap-3 mb-10 px-2">
         <div className="relative h-10 w-10">
@@ -38,11 +37,9 @@ const SidebarNavbar = () => {
 
           return (
             <Link key={item.name} href={item.link} className="flex flex-1 flex-col items-center gap-1 transition-all duration-200 active:scale-95 lg:flex-row lg:w-full lg:gap-4 lg:py-3 lg:px-4 lg:rounded-lg">
-              <div className={`relative h-6 w-6 transition-all duration-200 ${isActive ? "" : "grayscale opacity-40"}`}>
-                <Icon icon={isActive ? item.iconactive : item.icon} className="text-[28px] text-primary" />
-              </div>
+              <Icon icon={isActive ? item.iconactive : item.icon} className={` h-5 md:h-7 w-auto transition-all duration-200 ${isActive ? "text-primary" : "text-cream-dark"}`} />
 
-              <span className={`text-xs  md:text-base  transition-colors ${isActive ? "text-primary font-bold" : "text-gray-400"}`}>{item.name}</span>
+              <span className={`text-caption  md:text-title1  transition-colors ${isActive ? "text-primary font-bold" : "text-cream-dark"}`}>{item.name}</span>
             </Link>
           );
         })}

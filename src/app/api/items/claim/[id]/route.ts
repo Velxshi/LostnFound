@@ -1,41 +1,32 @@
-import { requireAuth } from '@/lib/helper/auth-helper'
-import { prisma } from '@/lib/prisma'
-import { errorResponse, successResponse } from '@/lib/response'
-const nodemailer = require('nodemailer')
+import { requireAuth } from "@/lib/helper/auth-helper";
+import { prisma } from "@/lib/prisma";
+import { errorResponse, successResponse } from "@/lib/response";
+import nodemailer from "nodemailer";
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const auth = await requireAuth(req)
+    const auth = await requireAuth(req);
     if (!auth.authorized || !auth.token) {
-      return auth.response
+      return auth.response;
     }
 
-    const { id } = await params
-    const itemId = Number(id)
-    const body = await req.json()
+    const { id } = await params;
+    const itemId = Number(id);
+    const body = await req.json();
 
-    const {
-      warnaBarang,
-      lokasiTerakhir,
-      isiBarang,
-      ciriKhusus,
-      pesanTambahan,
-    } = body
+    const { warnaBarang, lokasiTerakhir, isiBarang, ciriKhusus, pesanTambahan } = body;
 
     const item = await prisma.item.findUnique({
       where: { id: itemId },
       include: { user: true },
-    })
+    });
 
     if (!item) {
-      return errorResponse('Data barang tidak ditemukan', 404)
+      return errorResponse("Data barang tidak ditemukan", 404);
     }
 
     if (item.statusId !== 2) {
-      return errorResponse('Barang ini sudah tidak dalam status temuan.', 400)
+      return errorResponse("Barang ini sudah tidak dalam status temuan.", 400);
     }
 
     await prisma.notification.create({
@@ -46,20 +37,20 @@ export async function POST(
         message: `${auth.token.name} mengklaim bahwa "${item.title}" adalah miliknya.`,
         isRead: false,
       },
-    })
+    });
 
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
-    })
+    });
 
     await transporter.sendMail({
       from: `"Klaim Kepemilikan - LostnFound" <${process.env.EMAIL_USER}>`,
       to: item.user.email, // Email si Penemu
-      replyTo: auth.token.email, // Email si Pemilik (agar bisa dibalas langsung)
+      replyTo: auth.token.email ?? undefined, // Email si Pemilik (agar bisa dibalas langsung)
       subject: `Seseorang Mengklaim Barang yang Anda Temukan: ${item.title}`,
       html: `
         <div style="font-family: sans-serif; line-height: 1.6;">
@@ -73,7 +64,7 @@ export async function POST(
             <tr><td><b>Lokasi Terakhir Merasa Hilang</b></td><td>: ${lokasiTerakhir}</td></tr>
             <tr style="background: #fdf2f2;"><td><b>Isi di Dalam Barang</b></td><td>: ${isiBarang}</td></tr>
             <tr style="background: #fdf2f2;"><td><b>Ciri-Ciri Khusus</b></td><td>: ${ciriKhusus}</td></tr>
-            <tr><td><b>Pesan Tambahan</b></td><td>: ${pesanTambahan || '-'}</td></tr>
+            <tr><td><b>Pesan Tambahan</b></td><td>: ${pesanTambahan || "-"}</td></tr>
           </table>
           
           <div style="margin-top: 20px; padding: 15px; border-left: 4px solid #ef4444; background: #fff5f5;">
@@ -83,10 +74,10 @@ export async function POST(
           </div>
         </div>
       `,
-    })
+    });
 
-    return successResponse(null, 'Form klaim berhasil dikirim ke email pemilik')
+    return successResponse(null, "Form klaim berhasil dikirim ke email pemilik");
   } catch {
-    return errorResponse('Gagal mengirim form klaim')
+    return errorResponse("Gagal mengirim form klaim");
   }
 }

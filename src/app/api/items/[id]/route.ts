@@ -13,6 +13,8 @@ export async function GET(
       return auth.response
     }
 
+    const userId = Number(auth.token.id)
+
     const { id } = await params
     const itemId = Number(id)
 
@@ -30,6 +32,7 @@ export async function GET(
 
     const formatted = {
       id: item.id,
+      isMe: item.userId === userId,
       image: item.category.linkImage,
       title: item.title,
       status: {
