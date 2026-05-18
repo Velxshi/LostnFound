@@ -3,10 +3,12 @@
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function LoginPage() {
   const [isExiting, setIsExiting] = useState(false);
   const [isRemoved, setIsRemoved] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const t1 = setTimeout(() => setIsExiting(true), 2000);
@@ -38,14 +40,22 @@ export default function LoginPage() {
       <div className="flex flex-col items-center justify-center min-h-screen text-center px-4">
         <Image alt="logo" src="/assets/logo/Logo.svg" className="w-30 md:w-45 mb-10" width={120} height={120} />
 
-        <h1 className="text-[#2848b7] text-2xl md:text-4xl font-bold mb-6">Lost n Found</h1>
+        <h1 className="text-primary text-2xl md:text-4xl font-bold mb-6">Lost n Found</h1>
 
-        <div className="bg-white w-[320px] md:w-105 p-8 rounded-2xl shadow-md flex flex-col items-center gap-8">
+        <div className="bg-cream-light w-[320px] md:w-105 p-8 rounded-2xl shadow-md flex flex-col items-center gap-8 ">
           <h2 className="text-lg md:text-xl font-semibold">Selamat Datang</h2>
 
-          <button onClick={() => signIn("google", { callbackUrl: "/" })} className="flex items-center justify-center gap-3 w-full cursor-pointer md:w-75 py-3 px-4 rounded-lg bg-white shadow hover:bg-gray-100 transition">
-            <Image alt="google" src="/assets/icons/google.png" className="w-5 h-5 md:w-6 md:h-6" width={20} height={20} />
-            <span className="text-sm md:text-base font-medium">Login dengan Google</span>
+          <button
+            onClick={async () => {
+              setLoading(true);
+              await signIn("google", { callbackUrl: "/" });
+              setLoading(false);
+            }}
+            disabled={loading}
+            className="flex items-center justify-center gap-3 w-full md:w-75 py-3 px-4 rounded-lg bg-cream-light shadow  disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:bg-cream-light-hover text-primary hover:scale-105 transition-all duration-300"
+          >
+            {loading ? <Spinner /> : <Image alt="google" src="/assets/icons/google.png" className="w-5 h-5 md:w-6 md:h-6" width={20} height={20} />}
+            <span className="text-sm md:text-base font-medium">{loading ? "Memproses..." : "Login dengan Google"}</span>
           </button>
         </div>
       </div>

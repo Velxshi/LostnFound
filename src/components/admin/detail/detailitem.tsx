@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import DetailItemSkeleton from "./detailItemSkeleton";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 const statusColor: Record<Status, string> = {
   LOST: "bg-[#FF6467]",
   FOUND: "bg-[#FCC800]",
@@ -68,6 +69,7 @@ export default function DetailItem({ isOpen, onClose, id }: Props) {
     const text = buttonText();
     if (!text) return;
 
+    setIsLoading(true);
     if (text === "Tandai Selesai") {
       fetch(`/api/items/${id}/done`, { method: "PATCH" })
         .then((res) => {
@@ -89,6 +91,8 @@ export default function DetailItem({ isOpen, onClose, id }: Props) {
     } else if (text === "Klaim Barang") {
       router.push(`/form/klaim?id=${id}`);
     }
+
+    setIsLoading(false);
   }
 
   const formatDate = (dateString: string) => {
@@ -102,7 +106,7 @@ export default function DetailItem({ isOpen, onClose, id }: Props) {
     });
   };
   return (
-    <div className="fixed inset-0 z-999 flex items-end justify-center md:justify-start h-min-screen">
+    <div className="fixed inset-0 z-1001 flex items-end justify-center md:justify-start h-min-screen">
       <div className="fixed inset-0 bg-[#1e1e1e]/50 backdrop-blur-[2px] transition-opacity" onClick={onClose} />
       <div
         className=" w-full lg:max-w-md bg-cream-light rounded-t-2xl md:rounded-none shadow-2xl animate-in slide-in-from-bottom md:animate-in md:slide-in-from-left duration-1000 z-10 flex flex-col justify-between md:h-screen md:w-125 p-6 gap-10"
@@ -141,9 +145,16 @@ export default function DetailItem({ isOpen, onClose, id }: Props) {
             </div>
 
             {buttonText() && (
-              <div className="w-full bg-primary shadow rounded-lg flex items-center justify-center py-3 hover:scale-105 transition-all duration-300 cursor-pointer" onClick={handleButton}>
-                <p className="font-jakarta font-bold text-body md:text-title2 text-cream">{buttonText()}</p>
-              </div>
+              <button
+                disabled={loading}
+                className="w-full bg-primary shadow rounded-lg flex items-center justify-center py-3 hover:scale-105 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
+                onClick={handleButton}
+              >
+                <div className="flex items-center justify-center gap-2">
+                  {loading && <Spinner className="size-6 text-cream" />}
+                  <p className="font-jakarta font-bold text-body md:text-title2 text-cream">{loading ? "Memproses..." : buttonText()}</p>
+                </div>
+              </button>
             )}
           </>
         )}
