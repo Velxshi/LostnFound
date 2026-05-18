@@ -4,7 +4,7 @@ import { CardItemProps, Status } from "@/types/reportItems.types";
 
 interface CardProps {
   data: CardItemProps;
-  openDetail: (item: CardItemProps) => void;
+  openDetail: (item: number) => void;
 }
 
 const statusColor: Record<Status, string> = {
@@ -15,7 +15,7 @@ const statusColor: Record<Status, string> = {
 
 export default function CardItem({ data, openDetail }: CardProps) {
   return (
-    <div className="flex flex-col relative rounded-xl bg-cream-light pb-3 gap-3 cursor-pointer" onClick={() => openDetail(data)}>
+    <div className="flex flex-col relative rounded-xl bg-cream-light pb-3 gap-3 cursor-pointer" onClick={() => openDetail(data.id)}>
       <div className={`absolute left-3 top-3 rounded-lg ${statusColor[data.status.name]} px-2 py-1 shadow`}>
         <p className="font-jakarta font-bold text-caption text-dark">{data.status.name}</p>
       </div>

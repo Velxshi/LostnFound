@@ -1,6 +1,6 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -10,6 +10,7 @@ import MapClickHandler from "./MapClickHandler";
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 import { MarkerProps } from "@/types/marker.types";
 import { Loading } from "@/components/admin/loading";
+import DetailItem from "@/components/admin/detail/detailItem";
 
 L.Icon.Default.mergeOptions({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
@@ -28,6 +29,17 @@ interface MarkerItems {
 
 export default function Map({ data }: MarkerItems) {
   const [userPosition, setUserPosition] = useState<[number, number] | null>(null);
+  const [selectedItem, setSelectedItem] = useState<number | null>(null);
+  const [popupOpen, setPopupOpen] = useState(false);
+  function openDetail(id: number) {
+    setSelectedItem(id);
+    setPopupOpen(true);
+  }
+
+  function closeDetail() {
+    setPopupOpen(false);
+    setSelectedItem(null);
+  }
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -45,7 +57,7 @@ export default function Map({ data }: MarkerItems) {
     }
   }, [draft]);
 
-  if (!userPosition) return <Loading />;;
+  if (!userPosition) return <Loading />;
 
   const lostIcon = new L.Icon({
     iconUrl: "/assets/icons/marker-red.svg",
@@ -77,14 +89,18 @@ export default function Map({ data }: MarkerItems) {
       <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
       {data?.map((report) => (
-        <Marker key={report.id} position={[report.latitude, report.longitude]} icon={getMarkerIcon(report.status.name)}>
-          <Popup>
-            <p>{report.status.name}</p>
-          </Popup>
-        </Marker>
+        <Marker
+          key={report.id}
+          position={[report.latitude, report.longitude]}
+          icon={getMarkerIcon(report.status.name)}
+          eventHandlers={{
+            click: () => openDetail(report.id),
+          }}
+        ></Marker>
       ))}
 
       <MapClickHandler draft={draft} setDraft={setDraft} />
+      <DetailItem isOpen={popupOpen} onClose={closeDetail} id={selectedItem} />
     </MapContainer>
   );
 }

@@ -75,8 +75,8 @@ export default function DashboardSection() {
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
   const [popupOpen, setPopupOpen] = useState(false);
 
-  function openDetail(item: CardItemProps) {
-    setSelectedItem(item.id);
+  function openDetail(id: number) {
+    setSelectedItem(id);
     setPopupOpen(true);
   }
 
@@ -114,7 +114,7 @@ export default function DashboardSection() {
       <BlurFade delay={0.55} inView>
         <div className="mt-5 flex flex-row items-center justify-between">
           <h1 className="font-poppins font-bold text-title2 lg:text-h5 text-dark">Laporan Terbaru</h1>
-          <a href="/admin/report" className="font-poppins text-body lg:text-title2 font-semibold text-[#2848B7]">
+          <a href="/admin/reports" className="font-poppins text-body lg:text-title2 font-semibold text-[#2848B7]">
             Lihat Semua
           </a>
         </div>

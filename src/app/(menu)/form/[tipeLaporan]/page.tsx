@@ -6,6 +6,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ItemDetailResponse } from "@/types/reportItems.types";
+import { Spinner } from "@/components/ui/spinner";
 
 function LabelInput({ title }: { title: string }) {
   return <h5 className="font-poppins font-semibold text-body text-cream-darker md:text-title2">{title}</h5>;
@@ -31,6 +32,7 @@ export default function Reports() {
   const lat = useSearchParams().get("lat");
   const lng = useSearchParams().get("lng");
   const [detailData, setDetailData] = useState<ItemDetailResponse | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     namaBarang: "",
@@ -84,7 +86,7 @@ export default function Reports() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
+    setLoading(true);
     if (lat && lng) {
       try {
         const response = await fetch(apiType, {
@@ -167,6 +169,8 @@ export default function Reports() {
         console.error(err);
       }
     }
+
+    setLoading(false);
   }
 
   const isHilang = pathname === "/form/hilang" || pathname === "/form/temuan";
@@ -184,7 +188,7 @@ export default function Reports() {
               <div className="flex flex-col gap-2">
                 <LabelInput title="Nama Barang" />
                 <WrapperInput id="namaBarang">
-                  <input id="namaBarang" name="namaBarang" type="text" className="w-full placeholder:font-normal placeholder:text-(--cream-dark)" placeholder="Contoh: Macbook Air M2" onChange={handleChange} />
+                  <input id="namaBarang" name="namaBarang" type="text" className="w-full placeholder:font-normal placeholder:text-(--cream-dark) " placeholder="Contoh: Macbook Air M2" onChange={handleChange} />
                 </WrapperInput>
               </div>
               <div className="flex flex-col gap-2">
@@ -312,8 +316,15 @@ export default function Reports() {
           )}
 
           <div className="flex flex-col gap-9 pt-8 items-center w-full">
-            <button onClick={handleSubmit} className="bg-primary rounded-lg py-4 text-body text-cream font-jakarta font-bold w-full shadow hover:scale-105 transform-all duration-300 cursor-pointer">
-              Laporkan
+            <button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="bg-primary rounded-lg py-4 text-body text-cream font-jakarta font-bold w-full shadow hover:scale-105 transform-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
+            >
+              <div className="flex items-center justify-center gap-2">
+                {loading && <Spinner className="size-6 text-cream" />}
+                <span>{loading ? "Memproses..." : isKlaim ? "Klaim" : "Laporkan"}</span>
+              </div>
             </button>
 
             <p className="font-jakarta font-bold text-title2 text-dark">Batalkan</p>

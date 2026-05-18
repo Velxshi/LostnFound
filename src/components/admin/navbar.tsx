@@ -11,7 +11,7 @@ const SidebarNavbar = () => {
 
   const navItems = [
     { name: "Dashboard", icon: "ri:dashboard-line", link: "/admin", iconactive: "ri:dashboard-fill" },
-    { name: "Reports", icon: "mdi:file-outline", link: "/admin/report", iconactive: "mdi:file" },
+    { name: "Reports", icon: "mdi:file-outline", link: "/admin/reports", iconactive: "mdi:file" },
     { name: "Map", icon: "mdi:compass-outline", link: "/admin/map", iconactive: "mdi:compass" },
     { name: "Category", icon: "tabler:tag", link: "/admin/category", iconactive: "tabler:tag-filled" },
     { name: "Profile", icon: "ic:outline-account-circle", link: "/admin/profile", iconactive: "ic:round-account-circle" },
