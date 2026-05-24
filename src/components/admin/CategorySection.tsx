@@ -98,7 +98,7 @@ const refreshData = () => {
             <div className="lg:flex hidden w-full">
               <SearchComponent onSearch={setSearch} />
             </div>
-            <button className="bg-primary hover:bg-primary-hover text-cream font-bold py-2 px-4 rounded-lg w-full h-13.25 font-poppins cursor-pointer lg:w-80 active:scale-95  duration-150 transition-colors" onClick={() => setPopup(true)}>
+            <button className="bg-primary hover:bg-primary-hover text-cream font-bold py-2 px-4 rounded-lg w-full h-13.25 font-poppins cursor-pointer lg:w-80 active:scale-95  duration-150 transition-all ease-in-out" onClick={() => setPopup(true)}>
               Tambah Kategori
             </button>
           </div>
