@@ -20,16 +20,16 @@ export async function GET(req: Request) {
             latitude: { not: null },
             longitude: { not: null },
             status: {
-                name: { not: 'DONE' }
+                name: { not: 'SELESAI' }
             },
         }
 
         if (filter === 'laporan-saya') {
             where.userId = userId
         } else if (filter === 'hilang') {
-            where.status = { name: 'LOST' }
+            where.status = { name: 'HILANG' }
         } else if (filter === 'temuan') {
-            where.status = { name: 'FOUND' }
+            where.status = { name: 'DITEMUKAN' }
         }
 
         const items = await prisma.item.findMany({

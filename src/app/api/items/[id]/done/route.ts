@@ -4,63 +4,58 @@ import { requireAuth } from '@/lib/helper/auth-helper'
 
 export async function PATCH(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const auth = await requireAuth(req)
 
         if (!auth.authorized || !auth.token) {
-            return auth.response
+        return auth.response
         }
 
         const userId = Number(auth.token.id)
-        const itemId = Number(params.id)
 
-        // Cari item
+        const { id } = await params
+        const itemId = Number(id)
+
         const item = await prisma.item.findUnique({
-            where: { id: itemId },
-            include: {
-                status: true,
-            },
+        where: { id: itemId },
         })
 
         if (!item) {
-            return errorResponse('Item tidak ditemukan', 404)
+        return errorResponse('Item tidak ditemukan', 404)
         }
 
-        // Cek ownership
         if (item.userId !== userId) {
-            return errorResponse(
-                'Kamu tidak punya akses untuk item ini',
-                403
-            )
+        return errorResponse(
+            'Kamu tidak punya akses untuk item ini',
+            403
+        )
         }
 
-        // Cari status DONE
         const doneStatus = await prisma.status.findUnique({
-            where: {
-                name: 'DONE',
-            },
+        where: {
+            name: 'SELESAI',
+        },
         })
 
         if (!doneStatus) {
-            return errorResponse('Status DONE tidak ditemukan', 404)
+        return errorResponse('Status SELESAI tidak ditemukan', 404)
         }
 
-        // Update status item
         await prisma.item.update({
         where: { id: itemId },
-            data: {
-                statusId: doneStatus.id,
-            },
+        data: {
+            statusId: doneStatus.id,
+        },
         })
 
         return successResponse(
-            null,
-            'Item berhasil ditandai selesai'
+        null,
+        'Item berhasil ditandai selesai'
         )
     } catch (error) {
         console.error(error)
-        return errorResponse('Gagal tandai item selesai')
+        return errorResponse('Gagal tandai item')
     }
 }

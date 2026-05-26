@@ -6,7 +6,7 @@ export async function seedItems(prisma: PrismaClient, userIds: number[]) {
 
   // 1. Seed Status sesuai request
   const statuses = await Promise.all(
-    ['LOST', 'FOUND', 'DONE'].map((name) =>
+    ['HILANG', 'DITEMUKAN', 'SELESAI'].map((name) =>
       prisma.status.upsert({
         where: { name }, // pakai unique field
         update: {},
