@@ -65,11 +65,11 @@ export default function MapClickHandler({ draft, setDraft }: MapClickHandlerProp
       <Popup closeButton={false}>
         <div className="w-full flex flex-col ">
           <div onClick={() => goToForm("hilang")} className="w-full flex p-4 items-center justify-center cursor-pointer group">
-            <p className="font-poppins font-semibold text-body text-dark group-hover:scale-105 transition-all duration-300">Laporkan Kehilangan</p>
+            <p className="font-poppins font-semibold text-body text-dark group-hover:scale-105 transisi">Laporkan Kehilangan</p>
           </div>
           <hr />
           <div onClick={() => goToForm("temuan")} className="w-full flex p-4  items-center justify-center cursor-pointer group">
-            <p className="font-poppins font-semibold text-body text-dark group-hover:scale-105 transition-all duration-300">Laporkan Temuan</p>
+            <p className="font-poppins font-semibold text-body text-dark group-hover:scale-105 transisi">Laporkan Temuan</p>
           </div>
         </div>
       </Popup>

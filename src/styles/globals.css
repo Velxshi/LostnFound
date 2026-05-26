@@ -221,6 +221,9 @@
   .bg-primary-light-hover {
     background: var(--royale-light-hover);
   }
+  .bg-primary-light-active {
+    background: var(--royale-light-active);
+  }
   .bg-primary {
     background: var(--royale);
   }
@@ -269,6 +272,10 @@
   .bg-dark-active {
     background: var(--charcoal-active);
   }
+}
+
+.transisi {
+  transition: all 0.2s cubic-bezier(0.25, 0, 0, 1);
 }
 
 * {

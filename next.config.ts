@@ -10,15 +10,16 @@ const nextConfig: NextConfig = {
         hostname: "i.pinimg.com",
         port: "",
         pathname: "/**",
-      },{
-        protocol: 'https',
-        hostname: 'lh3.googleusercontent.com',
-        port: '',
-        pathname: '/a/**',
       },
       {
         protocol: "https",
-        hostname: "i.etsystatic.com",
+        hostname: "lh3.googleusercontent.com",
+        port: "",
+        pathname: "/a/**",
+      },
+      {
+        protocol: "https",
+        hostname: "raw.githubusercontent.com",
         port: "",
         pathname: "/**",
       },

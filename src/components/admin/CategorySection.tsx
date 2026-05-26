@@ -38,11 +38,12 @@ export default function CategorySection() {
       }
 
       const res = await fetch(`/api/categories?search=${debouncedSearch}`);
-      if (!res.ok) toast.error("Gagal load kategori", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
+      if (!res.ok)
+        toast.error("Gagal mengambil data, silakan memuat ulang", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
       const data = await res.json();
       setItems(data);
     } catch (err) {
-      toast.error("Gagal load kategori", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
+      toast.error("Gagal mengambil data, silakan memuat ulang", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
     } finally {
       setLoading(false);
       setSearching(false);
@@ -113,7 +114,7 @@ export default function CategorySection() {
               <div className="lg:flex hidden w-full">
                 <SearchComponent onSearch={setSearch} />
               </div>
-              <button className="bg-primary hover:bg-primary-hover text-cream font-bold py-2 px-4 rounded-lg w-full h-13.25 font-poppins cursor-pointer lg:w-80 active:scale-95  duration-150 transition-colors" onClick={() => setPopup(true)}>
+              <button className="bg-primary hover:bg-primary-hover text-cream font-bold py-2 px-4 rounded-lg w-full h-13.25 font-poppins cursor-pointer lg:w-80 active:scale-95  transisi" onClick={() => setPopup(true)}>
                 Tambah Kategori
               </button>
             </div>

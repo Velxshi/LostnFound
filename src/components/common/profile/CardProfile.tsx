@@ -105,13 +105,13 @@ export default function CardProfile({ isLoading }: Props) {
                     <Icon icon={menu.icon} width="24" height="24" className="h-full w-auto text-primary" />
                   </div>
 
-                  <div className="flex flex-col gap-1 transition group-hover:scale-105  duration-300">
+                  <div className="flex flex-col gap-1 transisi group-hover:scale-105  ">
                     <h3 className="text-dark font-poppins text-body font-medium">{menu.title}</h3>
                     {menu.hint && <h5 className="text-cream-dark font-jakarta text-caption ">{menu.hint}</h5>}
                   </div>
                 </div>
 
-                <Icon icon="weui:arrow-outlined" width="6.98" height="11.68" className="h-6 w-auto text-cream-dark transition group-hover:scale-150  duration-300" />
+                <Icon icon="weui:arrow-outlined" width="6.98" height="11.68" className="h-6 w-auto text-cream-dark transisi group-hover:scale-150  " />
               </div>
             );
           })}

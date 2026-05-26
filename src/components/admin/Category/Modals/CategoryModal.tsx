@@ -1,5 +1,7 @@
+import { Spinner } from "@/components/ui/spinner";
 import { CategoryItemProps } from "@/types/categoryItems.types";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 type Props = {
   isOpen: boolean;
@@ -13,6 +15,7 @@ export default function CategoryModal({ isOpen, onClose, onSuccess, category }: 
 
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isEdit && isOpen) {
@@ -33,6 +36,7 @@ export default function CategoryModal({ isOpen, onClose, onSuccess, category }: 
     const dataCategory = { name, linkImage: image };
 
     try {
+      setLoading(true);
       const response = await fetch(isEdit ? `/api/categories/${category.id}` : "/api/categories", {
         method: isEdit ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
@@ -43,17 +47,18 @@ export default function CategoryModal({ isOpen, onClose, onSuccess, category }: 
         if (onSuccess) onSuccess();
         onClose();
       } else {
-        alert("Gagal menyimpan data ke server.");
+        toast.error("Gagal menyimpan data, silakan coba lagi", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
       }
     } catch (error) {
-      console.error("Gagal:", error);
-      alert("Terjadi kesalahan koneksi.");
+      toast.error("Gagal menyimpan data, silakan coba lagi", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
     }
+
+    setLoading(false);
   };
 
   return (
-    <div className="fixed inset-0 z-9999 flex items-center justify-center bg-[#1e1e1e]/50 bg-opacity-50 p-8 outline-none focus:outline-none">
-      <div className="mx-auto w-full max-w-lg">
+    <div className="fixed inset-0 z-9999 flex items-center justify-center bg-[#1e1e1e]/50 bg-opacity-50 p-8 outline-none focus:outline-none" onClick={onClose}>
+      <div className="mx-auto w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
         <div className="flex w-full flex-col rounded-4xl border-0 bg-cream-light shadow-xl outline-none focus:outline-none">
           <div className="flex flex-col rounded-t-4xl gap-1 p-8 pb-0">
             <h3 className="text-h5 font-bold font-poppins text-dark md:justify-center md:items-center flex">{isEdit ? "Edit Kategori" : "Tambah Kategori"}</h3>
@@ -85,13 +90,16 @@ export default function CategoryModal({ isOpen, onClose, onSuccess, category }: 
             </div>
             <div className="flex flex-col items-center justify-end gap-3 px-8 py-5">
               <button
-                className="rounded-xl bg-primary w-full h-12 px-6 py-2 text-body font-semibold font-poppins text-cream-light shadow cursor-pointer hover:bg-primary-hover hover:shadow-lg focus:outline-none active:bg-primary-active active:scale-95 transition-all duration-150"
+                disabled={loading}
+                className="rounded-xl bg-primary w-full h-12 px-6 py-2 text-body font-semibold font-poppins text-cream-light shadow cursor-pointer hover:bg-primary-hover hover:shadow-lg focus:outline-none active:bg-primary-active active:scale-95 transisi flex items-center justify-center gap-3"
                 type="submit"
               >
-                {isEdit ? "Simpan Perubahan" : "Simpan Kategori"}
+                {loading && <Spinner />}
+                {loading ? "Menyimpan data..." : isEdit ? "Simpan Perubahan" : "Simpan Kategori"}
               </button>
               <button
-                className="rounded-xl w-full h-12 px-6 py-2 text-body font-semibold font-poppins text-primary transition-all hover:bg-primary-hover outline-none focus:outline-none cursor-pointer active:scale-95 duration-150"
+                disabled={loading}
+                className="rounded-xl w-full h-12 px-6 py-2 text-body font-semibold font-poppins text-primary  hover:bg-primary-hover outline-none focus:outline-none cursor-pointer active:scale-95 transisi"
                 type="button"
                 onClick={onClose}
               >

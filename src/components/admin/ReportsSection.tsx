@@ -9,6 +9,7 @@ import CardItem from "../common/CardItem";
 import DetailItem from "./detail/detailItem";
 import { usePathname } from "next/navigation";
 import ReportsSkeleton from "./Reports/ReportsSkeleton";
+import { toast } from "sonner";
 
 export default function ReportSection() {
   const [search, setSearch] = useState("");
@@ -36,7 +37,9 @@ export default function ReportSection() {
     fetch(`/api/items?page=${currentPage}${type}&search=${search}&categoryId=${selectCategory}&sort=${sort}&statusId=${status}`)
       .then((res) => res.json())
       .then((data) => setItems(data))
-      .catch((err) => console.error("Gagal load reports: ", err))
+      .catch((err) =>
+        toast.error("Gagal mengambil data, silakan memuat ulang", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" }),
+      )
       .finally(() => setLoading(false));
   }, [currentPage, search, selectCategory, sort, status, isAdmin]);
   const [selectedItem, setSelectedItem] = useState<number | null>(null);

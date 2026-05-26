@@ -41,11 +41,12 @@ export default function DetailItem({ isOpen, onClose, id }: Props) {
       try {
         setIsLoading(true);
         const res = await fetch(`/api/items/${id}`);
-        if (!res.ok) throw new Error("Gagal fetch data");
+        if (!res.ok)
+          toast.error("Gagal mengambil data, silakan memuat ulang", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
         const data: ItemDetailResponse = await res.json();
         setDetailData(data);
       } catch (error) {
-        console.error(error);
+        toast.error("Gagal mengambil data, silakan memuat ulang", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
       } finally {
         setIsLoading(false);
       }
@@ -73,7 +74,7 @@ export default function DetailItem({ isOpen, onClose, id }: Props) {
     if (text === "Tandai Selesai") {
       fetch(`/api/items/${id}/done`, { method: "PATCH" })
         .then((res) => {
-          if (!res.ok) throw new Error("Gagal tandai selesai");
+          if (!res.ok) toast.error("Gagal menandai selesai", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
           onClose();
           toast.success("Berhasil menandai selesai", { className: "font-poppins !text-center !bg-[#D1E7DD] !border !border-[#BADBCC] !rounded-xl !text-[#0F5132] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
 
@@ -147,7 +148,7 @@ export default function DetailItem({ isOpen, onClose, id }: Props) {
             {buttonText() && (
               <button
                 disabled={loading}
-                className="w-full bg-primary shadow rounded-lg flex items-center justify-center py-3 hover:scale-105 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
+                className="w-full bg-primary shadow rounded-lg flex items-center justify-center py-3 hover:scale-105 transisi cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
                 onClick={handleButton}
               >
                 <div className="flex items-center justify-center gap-2">

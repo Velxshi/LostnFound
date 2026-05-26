@@ -1,16 +1,25 @@
 import { Icon } from "@iconify/react";
-import { useEffect, useState } from "react";
+import { CategoryItemProps } from "@/types/categoryItems.types";
+import { toast } from "sonner";
+import { useState } from "react";
+import { Spinner } from "@/components/ui/spinner";
+interface ModalDeleteProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess?: () => void;
+  category: CategoryItemProps | null;
+}
 
-export default function ModalDelete({ isOpen, onClose, onSuccess,category }: any) {
-
-const handledelete = async (e: any) => {
+export default function ModalDelete({ isOpen, onClose, onSuccess, category }: ModalDeleteProps) {
+  const [loading, setLoading] = useState(false);
+  const handledelete = async (e: React.FormEvent) => {
     e.preventDefault();
-if (!category) return;
-
+    if (!category) return;
 
     try {
+      setLoading(true);
       const response = await fetch(`/api/categories/${category.id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       const result = await response.json();
@@ -19,64 +28,58 @@ if (!category) return;
         if (onSuccess) onSuccess();
         onClose();
       } else {
-
-        alert(result.message || "Gagal menghapus kategori.");
+        toast.error("Gagal menghapus data, silakan coba lagi", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
       }
     } catch (error) {
-      console.error("Gagal:", error);
-      alert("Terjadi kesalahan koneksi.");
-    } 
+      toast.error("Gagal menghapus data, silakan coba lagi", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
+    }
+    setLoading(false);
   };
-if (!isOpen) return null;
+  if (!isOpen) return null;
 
-    return (
-    <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/50 bg-opacity-50 p-8 outline-none focus:outline-none">
-    <div className=" mx-auto w-full max-w-lg">
-        <div className=" flex w-full flex-col rounded-4xl border-0 bg-white shadow-xl outline-none focus:outline-none">
-        
-
-        <div className="flex flex-col rounded-t-4xl gap-1 p-8 pb-0 justify-center items-center">
+  return (
+    <div className="fixed inset-0 z-9999 flex items-center justify-center bg-[#1e1e1e]/50 bg-opacity-50 p-8 outline-none focus:outline-none" onClick={onClose}>
+      <div className=" mx-auto w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
+        <div className=" flex w-full flex-col rounded-4xl border-0 bg-cream-light shadow-xl outline-none focus:outline-none">
+          <div className="flex flex-col rounded-t-4xl gap-1 p-8 pb-0 justify-center items-center">
             <div className="rounded-full bg-[#FFDAD6] flex items-center justify-center w-16 h-16">
-                <Icon icon="mdi:alert" className="text-[#C10007]" width="30" height="30"/>
+              <Icon icon="mdi:alert" className="text-[#C10007]" width="30" height="30" />
             </div>
-            <h3 className="text-[25px] font-bold font-poppins text-slate-800 md:justify-center md:items-center flex">Hapus Kategori?</h3>
-            <p className="text-[13px] font-normal font-poppins text-slate-800 text-center">Tindakan ini tidak dapat dibatalkan.<br/>
-                Menghapus kategori ini akan <br/>
-                mempengaruhi relasi data barang terkait.a</p>
-            </div>
-        <form onSubmit={handledelete}>
+            <h3 className="text-[25px] font-bold font-poppins text-dark md:justify-center md:items-center flex">Hapus Kategori?</h3>
+            <p className="text-[13px] font-normal font-poppins text-dark text-center">
+              Tindakan ini tidak dapat dibatalkan.
+              <br />
+              Menghapus kategori ini akan <br />
+              mempengaruhi relasi data barang terkait.
+            </p>
+          </div>
+          <form onSubmit={handledelete}>
             <div className="flex flex-col px-8 pt-6">
-            <div className="mb-4 w-full bg-[#F1EDEA] h-18.5 rounded-xl flex items-center justify-start px-8 py-4 gap-4">
-                <div className="w-2 h-10 bg-[#BA1A1A] rounded">
-
+              <div className="mb-4 w-full bg-[#F1EDEA] h-18.5 rounded-xl flex items-center justify-start px-8 py-4 gap-4">
+                <div className="w-2 h-10 bg-[#BA1A1A] rounded"></div>
+                <div className="flex flex-col">
+                  <p className="font-poppins uppercase font-semibold text-caption text-[#BA1A1A]">Target Penghapusan</p>
+                  <p className="font-poppins font-bold text-title2">Kategori: {category?.name}</p>
                 </div>
-                    <div className="flex flex-col">
-                    <p className="font-poppins uppercase font-semibold text-caption text-[#BA1A1A]">Target Penghapusan</p>
-                    <p className="font-poppins font-bold text-title2">Kategori: {category.name}</p>
-                    </div>
-                </div>
+              </div>
             </div>
 
             <div className="flex flex-col items-center justify-end gap-3 px-8 pb-5 p">
-                <button
-                className="rounded-xl bg-[#BA1A1A] w-full h-12 px-6 py-2 text-sm font-semibold font-poppins text-white shadow cursor-pointer  hover:bg-red-700 hover:shadow-lg focus:outline-none active:bg-red-800 active:scale-95 transition-all duration-150"
+              <button
+                disabled={loading}
+                className="rounded-xl bg-[#BA1A1A] w-full h-12 px-6 py-2 text-sm font-semibold font-poppins text-cream shadow cursor-pointer  hover:bg-red-700 hover:shadow-lg focus:outline-none active:bg-red-800 active:scale-95  transisi flex items-center justify-center gap-3"
                 type="submit"
               >
-                Hapus
+                {loading && <Spinner />}
+                {loading ? "Menghapus..." : "Hapus"}
               </button>
-              <button
-                className="rounded-xl w-full h-12 px-6 py-2 text-sm font-semibold font-poppins text-[#BA1A1A] transition-all hover:bg-red-50 outline-none focus:outline-none cursor-pointer active:scale-95  duration-150"
-                type="button"
-                
-                onClick={onClose}
-              >
+              <button className="rounded-xl w-full h-12 px-6 py-2 text-sm font-semibold font-poppins text-[#BA1A1A]  hover:bg-red-50 outline-none focus:outline-none cursor-pointer active:scale-95  transisi" type="button" onClick={onClose}>
                 Batal
               </button>
-            
             </div>
           </form>
         </div>
       </div>
     </div>
-    );
+  );
 }

@@ -52,10 +52,10 @@ export default function LoginPage() {
               setLoading(false);
             }}
             disabled={loading}
-            className="flex items-center justify-center gap-3 w-full md:w-75 py-3 px-4 rounded-lg bg-cream-light shadow  disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:bg-cream-light-hover text-primary hover:scale-105 transition-all duration-300"
+            className="flex items-center justify-center gap-3 w-full md:w-75 py-3 px-4 rounded-lg bg-cream-light shadow  disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:bg-cream-light-hover text-primary hover:scale-105 transisi"
           >
             {loading ? <Spinner /> : <Image alt="google" src="/assets/icons/google.png" className="w-5 h-5 md:w-6 md:h-6" width={20} height={20} />}
-            <span className="text-sm md:text-base font-medium">{loading ? "Memproses..." : "Login dengan Google"}</span>
+            <span className="text-sm md:text-base font-medium">{loading ? "Memproses..." : "Masuk dengan Google"}</span>
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
 import { Icon } from "@iconify/react";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function MenuLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -33,6 +34,7 @@ export default function MenuLayout({ children }: { children: React.ReactNode }) 
       </header>
 
       <main className="flex-1 p-6 md:p-9 ">{children}</main>
+      <Toaster position="top-right" />
     </div>
   );
 }
