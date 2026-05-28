@@ -4,14 +4,16 @@ import { BlurFade } from "../ui/blur-fade";
 import SearchInput from "@/components/common/button/Search";
 import Urutstatus from "@/components/common/button/urutStatus";
 import Kategori from "@/components/common/button/kategori";
-import { CardItemProps, ItemsResponse } from "@/types/reportItems.types";
+import { ItemsResponse } from "@/types/reportItems.types";
 import CardItem from "../common/CardItem";
-import DetailItem from "./detail/detailitem";
+import DetailItem from "@/components/admin/detail/detailitem";
+import { usePathname } from "next/navigation";
+import ReportsSkeleton from "./Reports/ReportsSkeleton";
 
 export default function ReportSection() {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-
+  const pathname = usePathname();
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
@@ -25,19 +27,23 @@ export default function ReportSection() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectCategory, setSelectCategory] = useState("");
   const [items, setItems] = useState<ItemsResponse | null>(null);
+  const isAdmin = pathname === "/admin/reports";
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/items?page=${currentPage}&search=${search}&categoryId=${selectCategory}&sort=${sort}&statusId=${status}`)
+    const type = isAdmin ? "" : "&type=me";
+
+    fetch(`/api/items?page=${currentPage}${type}&search=${search}&categoryId=${selectCategory}&sort=${sort}&statusId=${status}`)
       .then((res) => res.json())
       .then((data) => setItems(data))
-      .catch((err) => console.error("Gagal load reports: ", err));
-  }, [currentPage, search, selectCategory, sort, status]);
-
-  const [selectedItem, setSelectedItem] = useState<CardItemProps | null>(null);
+      .catch((err) => console.error("Gagal load reports: ", err))
+      .finally(() => setLoading(false));
+  }, [currentPage, search, selectCategory, sort, status, isAdmin]);
+  const [selectedItem, setSelectedItem] = useState<number | null>(null);
   const [popupOpen, setPopupOpen] = useState(false);
 
-  function openDetail(item: CardItemProps) {
-    setSelectedItem(item);
+  function openDetail(id: number) {
+    setSelectedItem(id);
     setPopupOpen(true);
   }
 
@@ -45,6 +51,8 @@ export default function ReportSection() {
     setPopupOpen(false);
     setSelectedItem(null);
   }
+
+  if (loading) return <ReportsSkeleton />;
   return (
     <div className="w-full">
       <div className="flex flex-col w-full mx-auto">
@@ -124,7 +132,7 @@ export default function ReportSection() {
           )}
         </BlurFade>
       </div>
-      <DetailItem isOpen={popupOpen} onClose={closeDetail} item={selectedItem} />
+      <DetailItem isOpen={popupOpen} onClose={closeDetail} id={selectedItem} />
     </div>
   );
 }

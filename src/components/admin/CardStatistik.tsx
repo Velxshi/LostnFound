@@ -9,7 +9,7 @@ export default function CardStatistik({ total, label, icon }: { total: number; l
       <p className="font-poppins text-title2 lg:text-h5 font-bold">
         <CountText target={total} />
       </p>
-      <p className="text-caption lg:text-body text-[#B9B6B4] font-poppins">{label}</p>
+      <p className="text-caption text-center md:text-body text-[#B9B6B4] font-poppins">{label}</p>
     </div>
   );
 }

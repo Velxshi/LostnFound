@@ -1,90 +1,118 @@
-"use client";
+'use client'
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+import { MapContainer, TileLayer, Marker } from 'react-leaflet'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
 
-import { useState, useEffect, useRef } from "react";
-import MapClickHandler from "./MapClickHandler";
+import { useState, useEffect, useRef } from 'react'
+import MapClickHandler from './MapClickHandler'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-import { MarkerProps } from "@/types/marker.types";
-import { Loading } from "@/components/admin/loading";
+delete (L.Icon.Default.prototype as any)._getIconUrl
+import { MarkerProps } from '@/types/marker.types'
+import { Loading } from '@/components/admin/loading'
+import DetailItem from '@/components/admin/detail/detailitem'
 
 L.Icon.Default.mergeOptions({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-});
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  iconRetinaUrl:
+    'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+})
 
 interface DraftReport {
-  latitude: number;
-  longitude: number;
+  latitude: number
+  longitude: number
 }
 
 interface MarkerItems {
-  data: MarkerProps[];
+  data: MarkerProps[]
 }
 
 export default function Map({ data }: MarkerItems) {
-  const [userPosition, setUserPosition] = useState<[number, number] | null>(null);
+  const [userPosition, setUserPosition] = useState<[number, number] | null>(
+    null,
+  )
+  const [selectedItem, setSelectedItem] = useState<number | null>(null)
+  const [popupOpen, setPopupOpen] = useState(false)
+  function openDetail(id: number) {
+    setSelectedItem(id)
+    setPopupOpen(true)
+  }
+
+  function closeDetail() {
+    setPopupOpen(false)
+    setSelectedItem(null)
+  }
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
-      const { latitude, longitude } = position.coords;
-      setUserPosition([latitude, longitude]);
-    });
-  }, []);
+      const { latitude, longitude } = position.coords
+      setUserPosition([latitude, longitude])
+    })
+  }, [])
 
-  const [draft, setDraft] = useState<DraftReport | null>(null);
-  const draftMarkerRef = useRef<L.Marker | null>(null);
+  const [draft, setDraft] = useState<DraftReport | null>(null)
+  const draftMarkerRef = useRef<L.Marker | null>(null)
 
   useEffect(() => {
     if (draft && draftMarkerRef.current) {
-      draftMarkerRef.current.openPopup();
+      draftMarkerRef.current.openPopup()
     }
-  }, [draft]);
+  }, [draft])
 
-  if (!userPosition) return <Loading />;;
+  if (!userPosition) return <Loading />
 
   const lostIcon = new L.Icon({
-    iconUrl: "/assets/icons/marker-red.svg",
-    shadowUrl: "/assets/icons/marker-shadow.svg",
+    iconUrl: '/assets/icons/marker-red.svg',
+    shadowUrl: '/assets/icons/marker-shadow.svg',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
     shadowSize: [41, 41],
     shadowAnchor: [12, 41],
-  });
+  })
 
   const foundIcon = new L.Icon({
-    iconUrl: "/assets/icons/marker-yellow.svg",
-    shadowUrl: "/assets/icons/marker-shadow.svg",
+    iconUrl: '/assets/icons/marker-yellow.svg',
+    shadowUrl: '/assets/icons/marker-shadow.svg',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
     shadowSize: [41, 41],
     shadowAnchor: [12, 41],
-  });
+  })
   function getMarkerIcon(status: string) {
-    if (status === "LOST") return lostIcon;
-    if (status === "FOUND") return foundIcon;
-    return lostIcon;
+    if (status === 'LOST') return lostIcon
+    if (status === 'FOUND') return foundIcon
+    return lostIcon
   }
 
   return (
-    <MapContainer center={userPosition} zoom={17} style={{ height: "100vh", width: "100%" }} zoomControl={false} attributionControl={false}>
-      <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+    <MapContainer
+      center={userPosition}
+      zoom={17}
+      style={{ height: '100vh', width: '100%' }}
+      zoomControl={false}
+      attributionControl={false}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
 
       {data?.map((report) => (
-        <Marker key={report.id} position={[report.latitude, report.longitude]} icon={getMarkerIcon(report.status.name)}>
-          <Popup>
-            <p>{report.status.name}</p>
-          </Popup>
-        </Marker>
+        <Marker
+          key={report.id}
+          position={[report.latitude, report.longitude]}
+          icon={getMarkerIcon(report.status.name)}
+          eventHandlers={{
+            click: () => openDetail(report.id),
+          }}
+        ></Marker>
       ))}
 
       <MapClickHandler draft={draft} setDraft={setDraft} />
+      <DetailItem isOpen={popupOpen} onClose={closeDetail} id={selectedItem} />
     </MapContainer>
-  );
+  )
 }

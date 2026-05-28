@@ -248,13 +248,36 @@
   .bg-cream-active {
     background: var(--cream-active);
   }
+  .bg-cream-dark {
+    background: var(--cream-dark);
+  }
+  .bg-cream-dark-hover {
+    background: var(--cream-dark-hover);
+  }
+  .bg-cream-dark-active {
+    background: var(--cream-dark-active);
+  }
+  .bg-cream-darker {
+    background: var(--cream-darker);
+  }
   .bg-dark {
     background: var(--charcoal);
+  }
+  .bg-dark-hover {
+    background: var(--charcoal-hover);
+  }
+  .bg-dark-active {
+    background: var(--charcoal-active);
   }
 }
 
 * {
   line-height: 120%;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: none;
 }
 
 input,
@@ -270,6 +293,16 @@ textarea:active,
 textarea:focus {
   outline: none !important;
   border: none !important;
+  background-color: transparent;
+}
+
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  box-shadow: 0 0 0 1000px #edede8 inset !important;
+  -webkit-box-shadow: 0 0 0 1000px #edede8 inset !important;
+  -webkit-text-fill-color: #245456 !important;
+  transition: background-color 9999s ease-in-out 0s;
 }
 
 .leaflet-popup-content-wrapper .leaflet-popup-content {
