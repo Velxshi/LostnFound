@@ -57,7 +57,7 @@ export default function ReportSection() {
     <div className="w-full">
       <div className="flex flex-col w-full mx-auto">
         <BlurFade delay={0.15} inView>
-          <SearchInput onSearch={(value: string) => setSearch(value)} />
+          <SearchInput onSearch={(value: string) => setSearch(value)} placeholder="Cari Laporan..." />
         </BlurFade>
         <div className="pt-5 relative z-20">
           <BlurFade delay={0.45} inView>

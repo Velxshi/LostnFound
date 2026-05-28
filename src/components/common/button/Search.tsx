@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 
-export default function SearchComponent({ onSearch }: { onSearch: (value: string) => void }) {
+export default function SearchComponent({ onSearch,placeholder }: { onSearch: (value: string) => void; placeholder: string }) {
   return (
     <div className="relative rounded-2xl bg-cream-light w-full">
       <div className="absolute  inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -11,7 +11,7 @@ export default function SearchComponent({ onSearch }: { onSearch: (value: string
         type="text"
         name="search"
         className="text-[13px] font-extralight font-poppins w-full pl-12 pr-4 py-4 bg-white outline-none rounded-2xl shadow-sm text-dark placeholder-gray-400 "
-        placeholder="Cari laporan..."
+        placeholder={placeholder || 'Cari Laporan...'}
       />
     </div>
   );
