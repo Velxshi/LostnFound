@@ -49,8 +49,19 @@ export default function MapClickHandler({ draft, setDraft }: MapClickHandlerProp
 
     router.push(`/form/${type}?lat=${latitude}&lng=${longitude}`);
   }
+
+  const defaultIcon = new L.Icon({
+    iconUrl: "/assets/icons/marker-default.svg",
+    shadowUrl: "/assets/icons/marker-shadow.svg",
+    iconSize: [42, 49],
+    iconAnchor: [21, 49],
+    popupAnchor: [1, -40],
+    shadowSize: [60, 60],
+    shadowAnchor: [15, 60],
+  });
   return (
     <Marker
+      icon={defaultIcon}
       position={[draft.latitude, draft.longitude]}
       ref={markerRef}
       eventHandlers={{

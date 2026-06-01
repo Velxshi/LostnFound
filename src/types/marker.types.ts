@@ -6,4 +6,5 @@ export interface MarkerProps {
     id: number;
     name: string;
   };
+  isMe: boolean;
 }

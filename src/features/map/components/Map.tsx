@@ -60,25 +60,36 @@ export default function Map({ data }: MarkerItems) {
   if (!userPosition) return <Loading />;
 
   const lostIcon = new L.Icon({
-    iconUrl: "/assets/icons/marker-red.svg",
+    iconUrl: "/assets/icons/marker-lost.svg",
     shadowUrl: "/assets/icons/marker-shadow.svg",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-    shadowAnchor: [12, 41],
+    iconSize: [42, 49],
+    iconAnchor: [21, 49],
+    popupAnchor: [1, -40],
+    shadowSize: [60, 60],
+    shadowAnchor: [15, 60],
   });
 
   const foundIcon = new L.Icon({
-    iconUrl: "/assets/icons/marker-yellow.svg",
+    iconUrl: "/assets/icons/marker-found.svg",
     shadowUrl: "/assets/icons/marker-shadow.svg",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-    shadowAnchor: [12, 41],
+    iconSize: [42, 49],
+    iconAnchor: [21, 49],
+    popupAnchor: [1, -40],
+    shadowSize: [60, 60],
+    shadowAnchor: [15, 60],
   });
-  function getMarkerIcon(status: string) {
+  const selfIcon = new L.Icon({
+    iconUrl: "/assets/icons/marker-self.svg",
+    shadowUrl: "/assets/icons/marker-shadow.svg",
+    iconSize: [42, 49],
+    iconAnchor: [21, 49],
+    popupAnchor: [1, -40],
+    shadowSize: [60, 60],
+    shadowAnchor: [15, 60],
+  });
+
+  function getMarkerIcon(status: string, isMe: boolean) {
+    if (isMe) return selfIcon;
     if (status === "LOST") return lostIcon;
     if (status === "FOUND") return foundIcon;
     return lostIcon;
@@ -92,7 +103,7 @@ export default function Map({ data }: MarkerItems) {
         <Marker
           key={report.id}
           position={[report.latitude, report.longitude]}
-          icon={getMarkerIcon(report.status.name)}
+          icon={getMarkerIcon(report.status.name, report.isMe)}
           eventHandlers={{
             click: () => openDetail(report.id),
           }}
