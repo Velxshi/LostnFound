@@ -50,6 +50,8 @@ export type ItemDetail = {
   desc: string;
   itemDetails: unknown | null;
   characteristics: string;
+  latitude: number;
+  longitude: number;
   note: string;
   locationDetail: string;
   ditemukanPada: string;

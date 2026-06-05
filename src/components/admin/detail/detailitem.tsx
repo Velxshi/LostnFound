@@ -1,18 +1,19 @@
+"use client";
 import { ItemDetailResponse, Status } from "@/types/reportItems.types";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import DetailItemSkeleton from "./detailItemSkeleton";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 import { AnimatePresence, motion } from "motion/react";
+import "leaflet/dist/leaflet.css";
+import { useRouter, usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
 
-const statusColor: Record<Status, string> = {
-  LOST: "bg-[#FF6467]",
-  FOUND: "bg-[#FCC800]",
-  DONE: "bg-[#05DF72]",
-};
+const MapItem = dynamic(() => import("@/components/common/MapItem"), {
+  ssr: false,
+});
 
 type Props = {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export default function DetailItem({ isOpen, onClose, id }: Props) {
   const [detailData, setDetailData] = useState<ItemDetailResponse | null>(null);
   const [loading, setIsLoading] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (isOpen) {
@@ -50,6 +52,7 @@ export default function DetailItem({ isOpen, onClose, id }: Props) {
           });
         const data: ItemDetailResponse = await res.json();
         setDetailData(data);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         toast.error("Gagal mengambil data, silakan memuat ulang", {
           className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]",
@@ -135,7 +138,7 @@ export default function DetailItem({ isOpen, onClose, id }: Props) {
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
           >
-            <PanelContent loading={loading} detailData={detailData} formatDate={formatDate} buttonText={buttonText} handleButton={handleButton} />
+            <PanelContent loading={loading} detailData={detailData} formatDate={formatDate} buttonText={buttonText} handleButton={handleButton} pathname={pathname} />
           </motion.div>
 
           {/* Desktop: slide from left */}
@@ -147,7 +150,7 @@ export default function DetailItem({ isOpen, onClose, id }: Props) {
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
           >
-            <PanelContent loading={loading} detailData={detailData} formatDate={formatDate} buttonText={buttonText} handleButton={handleButton} />
+            <PanelContent loading={loading} detailData={detailData} formatDate={formatDate} buttonText={buttonText} handleButton={handleButton} pathname={pathname} />
           </motion.div>
         </div>
       )}
@@ -161,9 +164,10 @@ type PanelContentProps = {
   formatDate: (date: string) => string;
   buttonText: () => string | null;
   handleButton: () => void;
+  pathname: string;
 };
 
-function PanelContent({ loading, detailData, formatDate, buttonText, handleButton }: PanelContentProps) {
+function PanelContent({ loading, detailData, formatDate, buttonText, handleButton, pathname }: PanelContentProps) {
   const statusColor: Record<Status, string> = {
     LOST: "bg-[#FF6467]",
     FOUND: "bg-[#FCC800]",
@@ -175,7 +179,9 @@ function PanelContent({ loading, detailData, formatDate, buttonText, handleButto
   return (
     <>
       <div className="overflow-y-auto custom-scrollbar">
-        <div className="w-full aspect-video rounded-2xl overflow-hidden mb-5">{detailData?.data.image && <Image src={detailData.data.image} className="w-full h-full object-cover" alt="image" width={500} height={500} loading="lazy" />}</div>
+        <div className="w-full aspect-video rounded-2xl overflow-hidden mb-5">
+          {detailData?.data.image && <Image src={detailData.data.image} className="w-full h-full object-cover" alt="image" width={500} height={500} loading="eager" />}
+        </div>
 
         <div className="flex justify-between items-start gap-4 mb-2">
           <h2 className="text-title1 md:text-h5 font-bold font-poppins text-dark">{detailData?.data.title}</h2>
@@ -198,6 +204,12 @@ function PanelContent({ loading, detailData, formatDate, buttonText, handleButto
         </div>
 
         <p className="text-dark mt-4 font-jakarta text-caption text-justify">{detailData?.data.desc}</p>
+
+        {(pathname === "/reports" || pathname === "/admin/reports" || pathname === "/admin") && (
+          <div className="w-full h-48 min-h-48 rounded-2xl overflow-hidden shadow-sm border border-gray-200 mt-2 z-0">
+            <MapItem lat={detailData?.data.latitude ?? 0} lng={detailData?.data.longitude ?? 0} status={detailData?.data.status.name ?? "LOST"} isMe={detailData?.data.isMe ?? false} />
+          </div>
+        )}
       </div>
 
       {buttonText() && (

@@ -3,7 +3,7 @@
 import { Icon } from "@iconify/react";
 import { useRouter, usePathname } from "next/navigation";
 import { BlurFade } from "@/components/ui/blur-fade";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { ProfilePicture } from "../../ui/profile-picture";
 import ProfileSkeleton from "./ProfileSkeleton";
 import { useState } from "react";
@@ -21,9 +21,13 @@ export default function CardProfile({ isLoading }: Props) {
 
   if (isLoading) return <ProfileSkeleton />;
 
-  function isAdmin() {
+  function isAdminPage() {
     return path.startsWith("/admin");
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const userRole = (session?.user as any)?.roleName;
+
   function handlePush(link: string) {
     router.push(link);
   }
@@ -43,13 +47,17 @@ export default function CardProfile({ isLoading }: Props) {
       hint: null,
       link: "/notifications",
     },
-    {
-      id: 3,
-      title: isAdmin() ? "Masuk ke Mode Pengguna" : "Masuk Ke Mode Admin",
-      icon: "material-symbols:change-circle-outline",
-      hint: null,
-      link: isAdmin() ? "/?mode=public" : "/admin",
-    },
+    ...(userRole === "ADMIN"
+      ? [
+          {
+            id: 3,
+            title: isAdminPage() ? "Masuk ke Mode Pengguna" : "Masuk Ke Mode Admin",
+            icon: "material-symbols:change-circle-outline",
+            hint: null,
+            link: isAdminPage() ? "/?mode=public" : "/admin",
+          },
+        ]
+      : []),
     {
       id: 4,
       title: "Mengenai Website Kami",

@@ -11,10 +11,10 @@ export default function MenuLayout({ children }: { children: React.ReactNode }) 
     "/about": "Tentang Website Kami",
     "/notifications": "Notifikasi",
     "/reports": "Laporan Saya",
-    "/form/temuan": "Laporkan Barang Temuan",
-    "/form/hilang": "Laporkan Barang Hilang",
-    "/form/klaim": "Form Klaim Barang",
-    "/form/informasi": "Form Informasi Penemuan",
+    "/form/temuan": "Saya Menemukan Barang",
+    "/form/hilang": "Saya Kehilangan Barang",
+    "/form/klaim": "Saya Ingin Klaim Barang",
+    "/form/informasi": "Saya Punya Informasi",
   };
 
   const title = titleMap[pathname] || pathname.split("/").pop();
