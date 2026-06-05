@@ -6,7 +6,7 @@ import Urutstatus from "@/components/common/button/urutStatus";
 import Kategori from "@/components/common/button/kategori";
 import { ItemsResponse } from "@/types/reportItems.types";
 import CardItem from "../common/CardItem";
-import DetailItem from "./detail/detailItem";
+import DetailItem from "./detail/detailitem";
 import { usePathname } from "next/navigation";
 import ReportsSkeleton from "./Reports/ReportsSkeleton";
 import { toast } from "sonner";

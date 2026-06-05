@@ -10,7 +10,7 @@ import MapClickHandler from "./MapClickHandler";
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 import { MarkerProps } from "@/types/marker.types";
 import { Loading } from "@/components/admin/loading";
-import DetailItem from "@/components/admin/detail/detailItem";
+import DetailItem from "@/components/admin/detail/detailitem";
 
 L.Icon.Default.mergeOptions({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",

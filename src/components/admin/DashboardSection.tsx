@@ -1,5 +1,5 @@
 import { BlurFade } from "../ui/blur-fade";
-import DetailItem from "./detail/detailItem";
+import DetailItem from "./detail/detailitem";
 import CardItem from "../common/CardItem";
 import { useEffect, useState } from "react";
 import { CardItemProps } from "@/types/reportItems.types";
