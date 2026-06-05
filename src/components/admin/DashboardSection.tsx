@@ -8,6 +8,7 @@ import { ChartGraphic } from "./Dashboard/ChartGraphic";
 import Periodeselect from "./Dashboard/Periodeselect";
 import { AdminStatsResponse } from "@/types/statsDashboard.types";
 import DashboardSkeleton from "./Dashboard/DashboardSkeleton";
+import { toast } from "sonner";
 
 export default function DashboardSection() {
   const [items, setItems] = useState<CardItemProps[]>([]);
@@ -19,11 +20,18 @@ export default function DashboardSection() {
       try {
         setLoading(true);
         const res = await fetch("/api/items");
-        if (!res.ok) throw new Error("Gagal fetch data");
+        if (!res.ok)
+          toast.error("Gagal mengambil data barang, silakan memuat ulang", {
+            className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]",
+            position: "top-right",
+          });
         const data = await res.json();
         setItems(data.data);
       } catch (err) {
-        console.error("Gagal load reports:", err);
+        toast.error("Gagal mengambil data barang, silakan memuat ulang", {
+          className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]",
+          position: "top-right",
+        });
       } finally {
         setLoading(false);
       }
@@ -38,7 +46,12 @@ export default function DashboardSection() {
       .then((data) => {
         setStats(data);
       })
-      .catch((err) => console.error("Gagal load reports:", err));
+      .catch((err) =>
+        toast.error("Gagal mengambil data statistik, silakan memuat ulang", {
+          className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]",
+          position: "top-right",
+        }),
+      );
   }, [periode]);
 
   const totaldata = stats?.summary?.total_reports || 0;
@@ -105,10 +118,8 @@ export default function DashboardSection() {
           <Periodeselect value={periode} onChange={setPeriode} />
         </div>
 
-        <div className="mt-3">
-          <div className="bg-cream-light p-4 rounded-xl shadow-sm h-74.5">
-            <ChartGraphic periode={periode} />
-          </div>
+        <div className="mt-3bg-cream-light p-4 rounded-xl shadow-sm h-74.5">
+          <ChartGraphic periode={periode} />
         </div>
       </BlurFade>
       <BlurFade delay={0.55} inView>

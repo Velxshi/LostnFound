@@ -49,8 +49,19 @@ export default function MapClickHandler({ draft, setDraft }: MapClickHandlerProp
 
     router.push(`/form/${type}?lat=${latitude}&lng=${longitude}`);
   }
+
+  const defaultIcon = new L.Icon({
+    iconUrl: "/assets/icons/marker-default.svg",
+    shadowUrl: "/assets/icons/marker-shadow.svg",
+    iconSize: [42, 49],
+    iconAnchor: [21, 49],
+    popupAnchor: [1, -40],
+    shadowSize: [60, 60],
+    shadowAnchor: [15, 60],
+  });
   return (
     <Marker
+      icon={defaultIcon}
       position={[draft.latitude, draft.longitude]}
       ref={markerRef}
       eventHandlers={{
@@ -65,11 +76,11 @@ export default function MapClickHandler({ draft, setDraft }: MapClickHandlerProp
       <Popup closeButton={false}>
         <div className="w-full flex flex-col ">
           <div onClick={() => goToForm("hilang")} className="w-full flex p-4 items-center justify-center cursor-pointer group">
-            <p className="font-poppins font-semibold text-body text-dark group-hover:scale-105 transition-all duration-300">Laporkan Kehilangan</p>
+            <p className="font-poppins font-semibold text-body text-dark group-hover:scale-105 transisi">Laporkan Kehilangan</p>
           </div>
           <hr />
           <div onClick={() => goToForm("temuan")} className="w-full flex p-4  items-center justify-center cursor-pointer group">
-            <p className="font-poppins font-semibold text-body text-dark group-hover:scale-105 transition-all duration-300">Laporkan Temuan</p>
+            <p className="font-poppins font-semibold text-body text-dark group-hover:scale-105 transisi">Laporkan Temuan</p>
           </div>
         </div>
       </Popup>

@@ -30,11 +30,18 @@ export function ChartGraphic({ periode }: { periode: string }) {
       try {
         setLoading(true);
         const res = await fetch(`/api/stats?period=${periode}`);
-        if (!res.ok) throw new Error("Gagal fetch data");
+        if (!res.ok)
+          toast.error("Gagal mengambil data grafik, silakan memuat ulang", {
+            className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]",
+            position: "top-right",
+          });
         const data = await res.json();
         setChartData(data.chart_data);
       } catch (err) {
-        toast.error("Gagal load", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
+        toast.error("Gagal mengambil data grafik, silakan memuat ulang", {
+          className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]",
+          position: "top-right",
+        });
       } finally {
         setLoading(false);
       }
@@ -44,6 +51,17 @@ export function ChartGraphic({ periode }: { periode: string }) {
   }, [periode]);
 
   if (loading) return <Loading />;
+
+  const isEmpty = chartData.every(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (d: any) => d.lost === 0 && d.found === 0 && d.done === 0,
+  );
+  if (isEmpty)
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <p className="text-center text-body text-cream-darker">Tidak ada laporan dalam 7 hari terakhir</p>
+      </div>
+    );
 
   return (
     <ChartContainer config={chartConfig} className="font-jakarta">

@@ -13,10 +13,7 @@ type FilterButtonProps = {
 
 function FilterButton({ title, active, onClick }: FilterButtonProps) {
   return (
-    <button
-      onClick={onClick}
-      className={`w-fit p-2.5 rounded-2xl  font-jakarta text-caption shadow h-fit cursor-pointer hover:scale-105 transition-all duration-300 ${active ? "bg-[#DAF3FF] border border-[#2196F3] text-[#2196F3]" : "bg-cream-light"}`}
-    >
+    <button onClick={onClick} className={`w-fit p-2.5 rounded-2xl  font-jakarta text-caption shadow h-fit cursor-pointer hover:scale-105 transisi ${active ? "bg-[#DAF3FF] border border-[#2196F3] text-[#2196F3]" : "bg-cream-light"}`}>
       <p>{title}</p>
     </button>
   );
@@ -39,7 +36,7 @@ export default function MapHeader({ activeFilter, onFilterChange }: MapHeaderPro
       </div>
 
       {pathName === "/" && (
-        <div className="flex hover:ring-4 hover:ring-(--royale) transition-all duration-300 rounded-full ">
+        <div className="flex hover:ring-4 hover:ring-(--royale) transisi rounded-full ">
           <div onClick={goToProfile}>
             <ProfilePicture />
           </div>

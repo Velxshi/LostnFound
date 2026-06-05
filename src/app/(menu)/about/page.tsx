@@ -7,22 +7,22 @@ export default function About() {
     {
       nama: "Bintang Kurniawan",
       role: "Lead Developer",
-      img: "https://i.pinimg.com/1200x/e3/6b/c6/e36bc6a279e7cc29547dd0bb84d65939.jpg",
+      img: "https://raw.githubusercontent.com/Velxshi/my-media/refs/heads/master/lostnfound/b.jpeg",
     },
     {
       nama: "Ikhsan Nurul Haq",
       role: "Backend Developer",
-      img: "https://i.etsystatic.com/41741243/r/isla/c99b5d/60995380/isla_500x500.60995380_7htk44zi.jpg",
+      img: "https://raw.githubusercontent.com/Velxshi/my-media/refs/heads/master/lostnfound/i.jpeg",
     },
     {
       nama: "M. Nawwaf Yazid Ikromi",
       role: "Project Manager",
-      img: "https://i.etsystatic.com/41741243/r/isla/c99b5d/60995380/isla_500x500.60995380_7htk44zi.jpg",
+      img: "https://raw.githubusercontent.com/Velxshi/my-media/refs/heads/master/lostnfound/y.jpeg",
     },
     {
       nama: "Zahran Faiz Salman",
       role: "Backend Developer",
-      img: "https://i.etsystatic.com/41741243/r/isla/c99b5d/60995380/isla_500x500.60995380_7htk44zi.jpg",
+      img: "https://raw.githubusercontent.com/Velxshi/my-media/refs/heads/master/lostnfound/z.jpeg",
     },
   ];
 
@@ -37,7 +37,7 @@ export default function About() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="bg-cream-light rounded-3xl flex p-8">
               <div className="flex flex-col gap-3">
-                <Image src="/logo/Logo.svg" width={57} height={52} alt="logo" />
+                <Image src="/assets/logo/Logo.svg" width={57} height={52} alt="logo" />
                 <h3 className="font-poppins font-bold text-title1 text-dark">Lost n Found</h3>
                 <p className="font-jakarta text-body text-dark-active">Proyek ini dibangun bukan hanya sekadar untuk memenuhi tugas UAS Mata Kuliah Pemrograman Web, tetapi juga kami ingin berdampak bagi masyarakat.</p>
               </div>
@@ -67,7 +67,7 @@ export default function About() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {devs.map((dev, index) => (
               <div className="flex flex-col p-6 gap-3 rounded-3xl bg-cream-light" key={index}>
-                <Image src={dev.img} alt="Developer" width={200} height={200} className="w-full h-auto object-cover aspect-square" />
+                <Image src={dev.img} alt="Developer" width={200} height={200} className="w-full h-auto object-cover aspect-square" loading="eager" />
 
                 <div className="flex flex-col gap-1">
                   <h4 className="font-poppins font-bold text-title2 text-dark">{dev.nama}</h4>

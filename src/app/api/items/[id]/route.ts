@@ -1,22 +1,19 @@
-import { prisma } from '@/lib/prisma'
-import { successResponse, errorResponse } from '@/lib/response'
-import { timeAgo } from '@/lib/helper/time'
-import { requireAuth } from '@/lib/helper/auth-helper'
+import { prisma } from "@/lib/prisma";
+import { successResponse, errorResponse } from "@/lib/response";
+import { timeAgo } from "@/lib/helper/time";
+import { requireAuth } from "@/lib/helper/auth-helper";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const auth = await requireAuth(req)
+    const auth = await requireAuth(req);
     if (!auth.authorized || !auth.token) {
-      return auth.response
+      return auth.response;
     }
 
-    const userId = Number(auth.token.id)
+    const userId = Number(auth.token.id);
 
-    const { id } = await params
-    const itemId = Number(id)
+    const { id } = await params;
+    const itemId = Number(id);
 
     const item = await prisma.item.findUnique({
       where: { id: itemId },
@@ -24,10 +21,10 @@ export async function GET(
         status: true,
         category: true,
       },
-    })
+    });
 
     if (!item) {
-      return errorResponse('Item tidak ditemukan', 404)
+      return errorResponse("Item tidak ditemukan", 404);
     }
 
     const formatted = {
@@ -44,17 +41,19 @@ export async function GET(
         name: item.category.name,
       },
       desc: item.desc,
+      latitude: item.latitude,
+      longitude: item.longitude,
       itemDetails: item.itemDetails,
       characteristics: item.characteristics,
       note: item.note,
       locationDetail: item.locationDetail,
-      ditemukanPada: item.createdAt.toISOString().split('T')[0],
+      ditemukanPada: item.createdAt.toISOString().split("T")[0],
       diunggah: timeAgo(item.createdAt),
-    }
+    };
 
-    return successResponse({ data: formatted }, 'Berhasil ambil detail item')
+    return successResponse({ data: formatted }, "Berhasil ambil detail item");
   } catch (error) {
-    console.error(error)
-    return errorResponse('Gagal ambil detail item')
+    console.error(error);
+    return errorResponse("Gagal ambil detail item");
   }
 }

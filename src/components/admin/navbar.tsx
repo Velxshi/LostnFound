@@ -36,8 +36,8 @@ const SidebarNavbar = () => {
           const isActive = pathname === item.link;
 
           return (
-            <Link key={item.name} href={item.link} className="flex flex-1 flex-col items-center gap-1 transition-all duration-200 active:scale-95 lg:flex-row lg:w-full lg:gap-4 lg:py-3 lg:px-4 lg:rounded-lg">
-              <Icon icon={isActive ? item.iconactive : item.icon} className={` h-5 md:h-7 w-auto transition-all duration-200 ${isActive ? "text-primary" : "text-cream-dark"}`} />
+            <Link key={item.name} href={item.link} className="flex flex-1 flex-col items-center gap-1 transisi active:scale-95 lg:flex-row lg:w-full lg:gap-4 lg:py-3 lg:px-4 lg:rounded-lg">
+              <Icon icon={isActive ? item.iconactive : item.icon} className={` h-5 md:h-7 w-auto transisi ${isActive ? "text-primary" : "text-cream-dark"}`} />
 
               <span className={`text-caption  md:text-title1  transition-colors ${isActive ? "text-primary font-bold" : "text-cream-dark"}`}>{item.name}</span>
             </Link>
