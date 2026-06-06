@@ -9,6 +9,16 @@ import { ItemDetailResponse } from '@/types/reportItems.types'
 import { Spinner } from '@/components/ui/spinner'
 import { toast } from 'sonner'
 import { AnimatePresence, motion } from 'motion/react'
+import { format } from 'date-fns'
+import { ChevronDownIcon } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
+import { Input } from '@/components/ui/input'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 
 function LabelInput({ title }: { title: string }) {
   return (
@@ -126,6 +136,15 @@ export default function Reports() {
     lokasiTerakhir: '',
     isiBarang: '',
     ciriKhusus: '',
+  })
+
+  const [open, setOpen] = React.useState(false)
+  const [date, setDate] = React.useState<Date | undefined>(undefined)
+  const [time, setTime] = useState(() => {
+    const now = new Date()
+    const hours = String(now.getHours()).padStart(2, '0')
+    const minutes = String(now.getMinutes()).padStart(2, '0')
+    return `${hours}:${minutes}`
   })
 
   const isHilang = pathname === '/form/hilang' || pathname === '/form/temuan'
@@ -329,13 +348,71 @@ export default function Reports() {
                     }
                   />
                   <WrapperInput id="tanggal">
-                    <input
-                      type="datetime-local"
-                      name="tanggalHilang"
-                      id="tanggal"
-                      className="w-full"
-                      onChange={handleChange}
-                    />
+                    <div className="flex w-full items-center gap-3 divide-x divide-(--cream-dark)">
+                      {/* Date Picker */}
+                      <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild>
+                          <button
+                            type="button"
+                            className="flex flex-1 items-center justify-between text-left font-normal text-dark outline-none bg-transparent cursor-pointer"
+                          >
+                            <span>
+                              {date
+                                ? format(date, 'dd MMMM yyyy')
+                                : 'Pilih tanggal'}
+                            </span>
+                            <ChevronDownIcon className="h-4 w-4 text-cream-dark ml-2" />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          className="w-auto overflow-hidden p-0"
+                          align="start"
+                        >
+                          <Calendar
+                            mode="single"
+                            selected={date}
+                            captionLayout="dropdown"
+                            defaultMonth={date}
+                            onSelect={(date) => {
+                              setDate(date)
+                              setOpen(false)
+                              // Opsional: sinkronisasikan ke formData jika diperlukan
+                              if (date) {
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  tanggalHilang: `${format(date, 'yyyy-MM-dd')}T${time}`,
+                                }))
+                              }
+                            }}
+                          />
+                        </PopoverContent>
+                      </Popover>
+
+                      {/* Time Picker */}
+                      <div className="flex items-center gap-2 pl-3 w-32">
+                        <Icon
+                          icon="material-symbols:access-time-outline"
+                          className="text-cream-dark"
+                          width="20"
+                          height="20"
+                        />
+                        <input
+                          type="time"
+                          id="time-picker-optional"
+                          value={time}
+                          onChange={(e) => {
+                            setTime(e.target.value)
+                            if (date) {
+                              setFormData((prev) => ({
+                                ...prev,
+                                tanggalHilang: `${format(date, 'yyyy-MM-dd')}T${e.target.value}`,
+                              }))
+                            }
+                          }}
+                          className="bg-transparent text-dark font-normal outline-none w-full cursor-pointer scheme-light"
+                        />
+                      </div>
+                    </div>
                   </WrapperInput>
                 </div>
                 <div className="flex flex-col gap-2">
