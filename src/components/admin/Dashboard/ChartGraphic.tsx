@@ -54,7 +54,7 @@ export function ChartGraphic({ periode }: { periode: string }) {
 
   const isEmpty = chartData.every(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (d: any) => d.hilang === 0 && d.temuan === 0 && d.selesai === 0,
+    (d: any) => d.lost === 0 && d.found === 0 && d.done === 0,
   );
   if (isEmpty)
     return (
@@ -84,9 +84,9 @@ export function ChartGraphic({ periode }: { periode: string }) {
             <stop offset="95%" stopColor="#05DF72" stopOpacity={0.1} />
           </linearGradient>
         </defs>
-        <Area dataKey="hilang" type="linear" fill="url(#fillhilang)" fillOpacity={0.4} stroke="#FF6467" stackId="a" />
-        <Area dataKey="temuan" type="linear" fill="url(#filltemuan)" fillOpacity={0.4} stroke="#FCC800" stackId="b" />
-        <Area dataKey="selesai" type="linear" fill="url(#fillselesai)" fillOpacity={0.4} stroke="#05DF72" stackId="c" />
+        <Area dataKey="lost" type="linear" fill="url(#fillhilang)" fillOpacity={0.4} stroke="#FF6467" stackId="a" />
+        <Area dataKey="found" type="linear" fill="url(#filltemuan)" fillOpacity={0.4} stroke="#FCC800" stackId="b" />
+        <Area dataKey="done" type="linear" fill="url(#fillselesai)" fillOpacity={0.4} stroke="#05DF72" stackId="c" />
       </AreaChart>
     </ChartContainer>
   );
