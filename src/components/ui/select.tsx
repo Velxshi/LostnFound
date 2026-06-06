@@ -49,7 +49,7 @@ function SelectContent({ className, children, position = "popper", ...props }: R
       <SelectPrimitive.Content
         data-slot="select-content"
         className={cn(
-          "relative z-50 min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-2xl bg-cream-light shadow-lg",
+          "relative z-50 min-w-[var(--radix-select-trigger-width)] max-h-60 overflow-hidden rounded-2xl bg-cream-light shadow-lg",
           "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
           "data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2",
@@ -60,7 +60,7 @@ function SelectContent({ className, children, position = "popper", ...props }: R
         {...props}
       >
         <SelectScrollUpButton />
-        <SelectPrimitive.Viewport className={cn("py-1", position === "popper" && "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]")}>{children}</SelectPrimitive.Viewport>
+        <SelectPrimitive.Viewport className="py-1">{children}</SelectPrimitive.Viewport>
         <SelectScrollDownButton />
       </SelectPrimitive.Content>
     </SelectPrimitive.Portal>
