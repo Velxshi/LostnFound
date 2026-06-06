@@ -242,14 +242,14 @@ export default function Reports() {
     return () => setDetailData(null)
   }, [id])
 
-  useEffect(() => {
-    if (date) {
-      setFormData((prev) => ({
-        ...prev,
-        tanggalHilang: `${format(date, 'yyyy-MM-dd')}T${time}`,
-      }))
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (date) {
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       tanggalHilang: `${format(date, 'yyyy-MM-dd')}T${time}`,
+  //     }))
+  //   }
+  // }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
