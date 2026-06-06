@@ -32,12 +32,12 @@ export async function PATCH(
 
     const doneStatus = await prisma.status.findUnique({
       where: {
-        name: 'DONE',
+        name: 'SELESAI',
       },
     })
 
     if (!doneStatus) {
-      return errorResponse('Status DONE tidak ditemukan', 404)
+      return errorResponse('Status SELESAI tidak ditemukan', 404)
     }
 
     await prisma.item.update({
