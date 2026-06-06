@@ -29,6 +29,8 @@ export const authOptions: NextAuthOptions = {
           where: { id: Number(user.id) },
           include: { role: true },
         });
+        token.roleId = userWithRole?.roleId ?? null;
+
         token.roleName = userWithRole?.role?.roleName ?? null;
       }
       return token;
