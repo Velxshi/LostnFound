@@ -8,9 +8,9 @@ interface CardProps {
 }
 
 const statusColor: Record<Status, string> = {
-  LOST: "bg-[#FF6467]",
-  FOUND: "bg-[#FCC800]",
-  DONE: "bg-[#05DF72]",
+  HILANG: "bg-[#FF6467]",
+  TEMUAN: "bg-[#FCC800]",
+  SELESAI: "bg-[#05DF72]",
 };
 
 export default function CardItem({ data, openDetail }: CardProps) {

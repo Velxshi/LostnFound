@@ -71,9 +71,9 @@ export default function DetailItem({ isOpen, onClose, id }: Props) {
   }, [isOpen, id]);
 
   function buttonText() {
-    if (detailData?.data.status.name === "DONE") return null;
+    if (detailData?.data.status.name === "SELESAI") return null;
     if (detailData?.data.isMe) return "Tandai Selesai";
-    return detailData?.data.status.name === "LOST" ? "Kirim Informasi Penemuan" : "Klaim Barang";
+    return detailData?.data.status.name === "HILANG" ? "Kirim Informasi Penemuan" : "Klaim Barang";
   }
 
   function handleButton() {
@@ -169,9 +169,9 @@ type PanelContentProps = {
 
 function PanelContent({ loading, detailData, formatDate, buttonText, handleButton, pathname }: PanelContentProps) {
   const statusColor: Record<Status, string> = {
-    LOST: "bg-[#FF6467]",
-    FOUND: "bg-[#FCC800]",
-    DONE: "bg-[#05DF72]",
+    HILANG: "bg-[#FF6467]",
+    TEMUAN: "bg-[#FCC800]",
+    SELESAI: "bg-[#05DF72]",
   };
 
   if (loading) return <DetailItemSkeleton />;

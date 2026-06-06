@@ -34,8 +34,8 @@ export default function MapItem({ lat, lng, status, isMe }: { lat: number; lng: 
 
   function getMarkerIcon(status: string, isMe: boolean) {
     if (isMe) return selfIcon;
-    if (status === "LOST") return lostIcon;
-    if (status === "FOUND") return foundIcon;
+    if (status === "HILANG") return lostIcon;
+    if (status === "TEMUAN") return foundIcon;
     return lostIcon;
   }
 

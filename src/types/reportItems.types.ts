@@ -1,4 +1,4 @@
-export type Status = "LOST" | "FOUND" | "DONE";
+export type Status = "HILANG" | "TEMUAN" | "SELESAI";
 
 export interface ItemStatus {
   id: number;
