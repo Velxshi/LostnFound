@@ -14,6 +14,9 @@ export async function GET(req: Request) {
 
     const notif = await prisma.notification.findMany({
       where: { userId: userId },
+      orderBy: {
+        createdAt: 'desc',
+      },
       select: {
         id: true,
         isRead: true,

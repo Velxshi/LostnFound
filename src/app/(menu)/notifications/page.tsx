@@ -44,7 +44,7 @@ function CardNotif({
       >
         <Icon
           icon={
-            data.template.name === 'Hilang'
+            data.template.name?.toLowerCase() === 'hilang'
               ? 'material-symbols:person-search'
               : 'mdi:email'
           }
@@ -91,21 +91,26 @@ function groupByDay(notifications: Notification[]): GroupedNotif[] {
 
   const fmt = (d: Date) => d.toDateString()
 
-  const groups: Record<string, { label: string; items: Notification[] }> = {}
+  const groups: Record<string, GroupedNotif> = {
+    'Hari Ini': { label: 'Hari Ini', items: [] },
+    Kemarin: { label: 'Kemarin', items: [] },
+    'Lebih Lama Lagi': { label: 'Lebih Lama Lagi', items: [] },
+  }
 
   for (const notif of notifications) {
     const date = new Date(notif.createdAt)
     const key = fmt(date)
 
-    let label = 'Lebih Lama Lagi'
-    if (key === fmt(today)) label = 'Hari Ini'
-    else if (key === fmt(yesterday)) label = 'Kemarin'
-
-    if (!groups[key]) groups[key] = { label, items: [] }
-    groups[key].items.push(notif)
+    if (key === fmt(today)) {
+      groups['Hari Ini'].items.push(notif)
+    } else if (key === fmt(yesterday)) {
+      groups['Kemarin'].items.push(notif)
+    } else {
+      groups['Lebih Lama Lagi'].items.push(notif)
+    }
   }
 
-  return Object.values(groups)
+  return Object.values(groups).filter((group) => group.items.length > 0)
 }
 
 export default function Notif() {
@@ -183,7 +188,7 @@ export default function Notif() {
     )
 
   return (
-    <div className="flex flex-col gap-6 items-center">
+    <div className="flex flex-col gap-6 p-4 md:p-9 items-center">
       {grouped.map((group, i) => (
         <BlurFade key={`${group.label}-${i}`} delay={0.25 * (i + 1)} inView>
           <div className="flex flex-col gap-3 max-w-2xl">
