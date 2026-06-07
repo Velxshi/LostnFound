@@ -1,7 +1,7 @@
 import { requireAuth } from '@/lib/helper/auth-helper'
 import { prisma } from '@/lib/prisma'
 import { errorResponse, successResponse } from '@/lib/response'
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 
 export async function POST(
   req: Request,
@@ -53,16 +53,10 @@ export async function POST(
       },
     })
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    })
+    const resend = new Resend(process.env.RESEND_API_KEY)
 
-    await transporter.sendMail({
-      from: `"LostnFound" <${process.env.EMAIL_USER}>`,
+    await resend.emails.send({
+      from: 'LostnFound Temuan <temuan@lostnfound-s4tgas.my.id>',
       to: item.user.email,
       replyTo: auth.token.email ?? undefined,
       subject: `[Info Penemuan] ${item.title}`,
