@@ -269,7 +269,7 @@ export default function Reports() {
     <>
       <div className="flex flex-col items-center">
         <div className="w-full max-w-2xl">
-          <div className="flex flex-col gap-6 w-full">
+          <div className="flex flex-col gap-6 py-6 w-full">
             {isHilang && (
               <>
                 <div className="flex flex-col gap-2">
@@ -487,7 +487,7 @@ export default function Reports() {
               </>
             )}
 
-            <div className="flex gap-9 pt-8 items-center w-full">
+            <div className="flex gap-9 pt-4 items-center w-full">
               <button
                 disabled={loading}
                 type="button"
