@@ -90,13 +90,11 @@ export default function DetailItem({ isOpen, onClose, id }: Props) {
               position: "top-right",
             });
           onClose();
-          toast.success("Berhasil menandai selesai", {
-            className: "font-poppins !text-center !bg-[#D1E7DD] !border !border-[#BADBCC] !rounded-xl !text-[#0F5132] !w-fit !min-w-[200px] !max-w-[90vw]",
-            position: "top-right",
-          });
+
+          sessionStorage.setItem("showSuccessToast", "done");
           setTimeout(() => {
             window.location.reload();
-          }, 800);
+          }, 100);
         })
         .catch((err) => console.error(err));
       return;
@@ -178,7 +176,7 @@ function PanelContent({ loading, detailData, formatDate, buttonText, handleButto
 
   return (
     <>
-      <div className="overflow-y-auto custom-scrollbar">
+      <div className="overflow-y-auto">
         <div className="w-full aspect-video rounded-2xl overflow-hidden mb-5">
           {detailData?.data.image && <Image src={detailData.data.image} className="w-full h-full object-cover" alt="image" width={500} height={500} loading="eager" />}
         </div>
@@ -203,7 +201,7 @@ function PanelContent({ loading, detailData, formatDate, buttonText, handleButto
           <span className="bg-[#EAEDF8] flex justify-center items-center font-jakarta font-medium text-bold px-3 py-2 rounded-lg text-caption md:text-body shadow-sm capitalize">{detailData?.data.category.name}</span>
         </div>
 
-        <p className="text-dark mt-4 font-jakarta text-caption text-justify">{detailData?.data.desc}</p>
+        <p className="text-dark my-4 font-jakarta text-caption md:text-body text-justify">{detailData?.data.desc}</p>
 
         {(pathname === "/reports" || pathname === "/admin/reports" || pathname === "/admin") && (
           <div className="w-full h-48 min-h-48 rounded-2xl overflow-hidden shadow-sm border border-gray-200 mt-2 z-0">

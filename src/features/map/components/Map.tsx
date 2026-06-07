@@ -96,7 +96,7 @@ export default function Map({ data }: MarkerItems) {
   }
 
   return (
-    <MapContainer center={userPosition} zoom={17} style={{ height: "100vh", width: "100%" }} zoomControl={false}>
+    <MapContainer center={userPosition} zoom={17} style={{ height: "100vh", width: "100%" }} minZoom={10} zoomControl={false}>
       <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
       {data?.map((report) => (
@@ -110,7 +110,7 @@ export default function Map({ data }: MarkerItems) {
         ></Marker>
       ))}
 
-      <MapClickHandler draft={draft} setDraft={setDraft} />
+      <MapClickHandler draft={draft} setDraft={setDraft} disabled={popupOpen} />
       <DetailItem isOpen={popupOpen} onClose={closeDetail} id={selectedItem} />
     </MapContainer>
   );

@@ -1,40 +1,26 @@
-'use client'
+"use client";
 
-import Kategori from '@/components/common/button/kategori'
-import { Icon } from '@iconify/react'
-import Image from 'next/image'
-import React, { useEffect, useState, useCallback } from 'react'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { ItemDetailResponse } from '@/types/reportItems.types'
-import { Spinner } from '@/components/ui/spinner'
-import { toast } from 'sonner'
-import { AnimatePresence, motion } from 'motion/react'
-import { format } from 'date-fns'
-import { ChevronDownIcon } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
-import { Input } from '@/components/ui/input'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+import Kategori from "@/components/common/button/kategori";
+import { Icon } from "@iconify/react";
+import Image from "next/image";
+import React, { useEffect, useState, useCallback } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ItemDetailResponse } from "@/types/reportItems.types";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
+import { AnimatePresence, motion } from "motion/react";
+import { format } from "date-fns";
+import { ChevronDownIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 function LabelInput({ title }: { title: string }) {
-  return (
-    <h5 className="font-poppins font-semibold text-body text-cream-darker md:text-title2">
-      {title}
-    </h5>
-  )
+  return <h5 className="font-poppins font-semibold text-body text-cream-darker md:text-title2">{title}</h5>;
 }
 
-function WrapperInput({
-  id,
-  children,
-}: {
-  id: string
-  children: React.ReactNode
-}) {
+function WrapperInput({ id, children }: { id: string; children: React.ReactNode }) {
   return (
     <label
       id={id}
@@ -43,29 +29,14 @@ function WrapperInput({
     >
       {children}
     </label>
-  )
+  );
 }
 
-function ModalBatal({
-  isOpen,
-  onClose,
-  onConfirm,
-}: {
-  isOpen: boolean
-  onClose: () => void
-  onConfirm: () => void
-}) {
+function ModalBatal({ isOpen, onClose, onConfirm }: { isOpen: boolean; onClose: () => void; onConfirm: () => void }) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          className="fixed inset-0 z-9999 flex items-center justify-center bg-[#1e1e1e]/50 p-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          onClick={onClose}
-        >
+        <motion.div className="fixed inset-0 z-9999 flex items-center justify-center bg-[#1e1e1e]/50 p-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} onClick={onClose}>
           <motion.div
             className="mx-auto w-full max-w-lg"
             initial={{ opacity: 0, scale: 0.95, y: 16 }}
@@ -77,20 +48,10 @@ function ModalBatal({
             <div className="flex w-full flex-col rounded-4xl bg-cream-light shadow-xl">
               <div className="flex flex-col gap-1 p-8 pb-0 justify-center items-center">
                 <div className="rounded-full bg-[#FFF3CD] flex items-center justify-center w-16 h-16">
-                  <Icon
-                    icon="material-symbols:warning-outline"
-                    className="text-[#B45309]"
-                    width="30"
-                    height="30"
-                  />
+                  <Icon icon="material-symbols:warning-outline" className="text-[#B45309]" width="30" height="30" />
                 </div>
-                <h3 className="text-[25px] font-bold font-poppins text-dark flex mt-1">
-                  Tinggalkan Halaman?
-                </h3>
-                <p className="text-[13px] font-normal font-poppins text-dark text-center">
-                  Pengisian informasi belum diselesaikan. Anda harus
-                  memasukkannya kembali jika meninggalkan halaman.
-                </p>
+                <h3 className="text-[25px] font-bold font-poppins text-dark flex mt-1">Tinggalkan Halaman?</h3>
+                <p className="text-[13px] font-normal font-poppins text-dark text-center">Pengisian informasi belum diselesaikan. Anda harus memasukkannya kembali jika meninggalkan halaman.</p>
               </div>
               <div className="flex items-center gap-3 px-8 py-6">
                 <button
@@ -111,136 +72,118 @@ function ModalBatal({
         </motion.div>
       )}
     </AnimatePresence>
-  )
+  );
 }
 
 export default function Reports() {
-  const pathname = usePathname()
-  const router = useRouter()
-  const [selectCategory, setSelectCategory] = useState('')
-  const id = useSearchParams().get('id')
-  const lat = useSearchParams().get('lat')
-  const lng = useSearchParams().get('lng')
-  const [detailData, setDetailData] = useState<ItemDetailResponse | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [showBatalModal, setShowBatalModal] = useState(false)
+  const pathname = usePathname();
+  const router = useRouter();
+  const [selectCategory, setSelectCategory] = useState("");
+  const id = useSearchParams().get("id");
+  const lat = useSearchParams().get("lat");
+  const lng = useSearchParams().get("lng");
+  const [detailData, setDetailData] = useState<ItemDetailResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [showBatalModal, setShowBatalModal] = useState(false);
 
   const [formData, setFormData] = useState({
-    namaBarang: '',
-    kategori: '',
-    tanggalHilang: '',
-    deskripsi: '',
-    lokasiPenemuan: '',
-    tanggalPenemuan: '',
-    warnaBarang: '',
-    lokasiTerakhir: '',
-    isiBarang: '',
-    ciriKhusus: '',
-  })
+    namaBarang: "",
+    kategori: "",
+    tanggalHilang: "",
+    deskripsi: "",
+    lokasiPenemuan: "",
+    tanggalPenemuan: "",
+    warnaBarang: "",
+    lokasiTerakhir: "",
+    isiBarang: "",
+    ciriKhusus: "",
+  });
 
-  const [open, setOpen] = React.useState(false)
-  const [date, setDate] = React.useState<Date | undefined>(() => new Date())
+  const [open, setOpen] = React.useState(false);
+  const [date, setDate] = React.useState<Date | undefined>(() => new Date());
   const [time, setTime] = useState(() => {
-    const now = new Date()
-    const hours = String(now.getHours()).padStart(2, '0')
-    const minutes = String(now.getMinutes()).padStart(2, '0')
-    return `${hours}:${minutes}`
-  })
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    return `${hours}:${minutes}`;
+  });
 
-  const isHilang = pathname === '/form/hilang' || pathname === '/form/temuan'
-  const isInformasi = pathname === '/form/informasi'
-  const isKlaim = pathname === '/form/klaim'
+  const isHilang = pathname === "/form/hilang" || pathname === "/form/temuan";
+  const isInformasi = pathname === "/form/informasi";
+  const isKlaim = pathname === "/form/klaim";
 
   // Cek apakah minimal satu field terisi
-  const hasAnyInput =
-    Object.values(formData).some((v) => v.trim() !== '') ||
-    selectCategory !== ''
+  const hasAnyInput = Object.values(formData).some((v) => v.trim() !== "") || selectCategory !== "";
 
   // Cek apakah semua field wajib terisi per tipe form
   const isFormValid = (() => {
-    if (isHilang)
-      return (
-        formData.namaBarang.trim() !== '' &&
-        formData.tanggalHilang !== '' &&
-        formData.deskripsi.trim() !== ''
-      )
-    if (isInformasi)
-      return (
-        formData.lokasiPenemuan.trim() !== '' && formData.tanggalPenemuan !== ''
-      )
-    if (isKlaim)
-      return (
-        formData.warnaBarang.trim() !== '' &&
-        formData.lokasiTerakhir.trim() !== ''
-      )
-    return false
-  })()
+    if (isHilang) return formData.namaBarang.trim() !== "" && formData.tanggalHilang !== "" && formData.deskripsi.trim() !== "";
+    if (isInformasi) return formData.lokasiPenemuan.trim() !== "" && formData.tanggalPenemuan !== "";
+    if (isKlaim) return formData.warnaBarang.trim() !== "" && formData.lokasiTerakhir.trim() !== "";
+    return false;
+  })();
 
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
   function handleBatal() {
     if (hasAnyInput) {
-      setShowBatalModal(true)
+      setShowBatalModal(true);
     } else {
-      router.back()
+      router.back();
     }
   }
 
   function handleConfirmBatal() {
-    setShowBatalModal(false)
-    router.push('/')
+    setShowBatalModal(false);
+    router.push("/");
   }
 
   // Intercept tombol back browser
   useEffect(() => {
     const handlePopState = () => {
       if (hasAnyInput) {
-        window.history.pushState(null, '', window.location.href)
-        setShowBatalModal(true)
+        window.history.pushState(null, "", window.location.href);
+        setShowBatalModal(true);
       }
-    }
+    };
 
-    window.history.pushState(null, '', window.location.href)
-    window.addEventListener('popstate', handlePopState)
-    return () => window.removeEventListener('popstate', handlePopState)
-  }, [hasAnyInput])
+    window.history.pushState(null, "", window.location.href);
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [hasAnyInput]);
 
-  let apiType = '/api/items'
-  let type: number | null = null
-  if (pathname === '/form/hilang') type = 1
-  if (pathname === '/form/temuan') type = 2
-  if (pathname === '/form/informasi') apiType = `/api/items/found/${id}`
-  if (pathname === '/form/klaim') apiType = `/api/items/claim/${id}`
+  let apiType = "/api/items";
+  let type: number | null = null;
+  if (pathname === "/form/hilang") type = 1;
+  if (pathname === "/form/temuan") type = 2;
+  if (pathname === "/form/informasi") apiType = `/api/items/found/${id}`;
+  if (pathname === "/form/klaim") apiType = `/api/items/claim/${id}`;
 
   useEffect(() => {
-    if (!id) return
+    if (!id) return;
     const fetchDetail = async () => {
       try {
-        const res = await fetch(`/api/items/${id}`)
+        const res = await fetch(`/api/items/${id}`);
         if (!res.ok)
-          toast.error('Gagal mengambil data, silakan memuat ulang', {
-            className:
-              'font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]',
-            position: 'top-right',
-          })
-        const data: ItemDetailResponse = await res.json()
-        setDetailData(data)
+          toast.error("Gagal mengambil data, silakan memuat ulang", {
+            className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]",
+            position: "top-right",
+          });
+        const data: ItemDetailResponse = await res.json();
+        setDetailData(data);
       } catch (error) {
-        toast.error('Gagal mengambil data, silakan memuat ulang', {
-          className:
-            'font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]',
-          position: 'top-right',
-        })
+        toast.error("Gagal mengambil data, silakan memuat ulang", {
+          className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]",
+          position: "top-right",
+        });
       }
-    }
-    fetchDetail()
-    return () => setDetailData(null)
-  }, [id])
+    };
+    fetchDetail();
+    return () => setDetailData(null);
+  }, [id]);
 
   // useEffect(() => {
   //   if (date) {
@@ -252,13 +195,13 @@ export default function Reports() {
   // }, [])
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
     if (lat && lng) {
       try {
         const response = await fetch(apiType, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             title: formData.namaBarang,
             categoryId: Number(selectCategory) || 1,
@@ -268,38 +211,40 @@ export default function Reports() {
             latitude: lat,
             longitude: lng,
           }),
-        })
+        });
         if (response.ok) {
-          const result = await response.json()
-          Number(result.roleId) === 1
-            ? router.replace('/?mode=public')
-            : router.replace('/')
+          const result = await response.json();
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          Number(result.roleId) === 1 ? router.replace("/?mode=public") : router.replace("/");
+
+          sessionStorage.setItem("showSuccessToast", "1");
+          console.log("set:", sessionStorage.getItem("showSuccessToast"));
         }
       } catch (err) {
-        console.error(err)
+        sessionStorage.setItem("showErrorToast", "0");
+        console.error(err);
       }
     } else if (id) {
       try {
-        if (pathname === '/form/informasi') {
+        if (pathname === "/form/informasi") {
           const response = await fetch(apiType, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               locationDetail: formData.lokasiPenemuan,
               dateFound: formData.tanggalPenemuan,
               additionalNote: formData.deskripsi,
             }),
-          })
+          });
           if (response.ok) {
-            const result = await response.json()
-            Number(result.roleId) === 1
-              ? router.replace('/?mode=public')
-              : router.replace('/')
+            const result = await response.json();
+            Number(result.roleId) === 1 ? router.replace("/?mode=public") : router.replace("/");
+            sessionStorage.setItem("showSuccessToast", "1");
           }
-        } else if (pathname === '/form/klaim') {
+        } else if (pathname === "/form/klaim") {
           const response = await fetch(apiType, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               warnaBarang: formData.warnaBarang,
               lokasiTerakhir: formData.lokasiTerakhir,
@@ -307,19 +252,19 @@ export default function Reports() {
               ciriKhusus: formData.ciriKhusus,
               pesanTambahan: formData.deskripsi,
             }),
-          })
+          });
           if (response.ok) {
-            const result = await response.json()
-            Number(result.roleId) === 1
-              ? router.replace('/?mode=public')
-              : router.replace('/')
+            const result = await response.json();
+            Number(result.roleId) === 1 ? router.replace("/?mode=public") : router.replace("/");
+            sessionStorage.setItem("showSuccessToast", "1");
           }
         }
       } catch (err) {
-        console.error(err)
+        sessionStorage.setItem("showErrorToast", "0");
+        console.error(err);
       }
     }
-    setLoading(false)
+    setLoading(false);
   }
 
   return (
@@ -332,63 +277,38 @@ export default function Reports() {
                 <div className="flex flex-col gap-2">
                   <LabelInput title="Nama Barang" />
                   <WrapperInput id="namaBarang">
-                    <input
-                      id="namaBarang"
-                      name="namaBarang"
-                      type="text"
-                      className="w-full placeholder:font-normal placeholder:text-(--cream-dark)"
-                      placeholder="Contoh: Macbook Air M2"
-                      onChange={handleChange}
-                    />
+                    <input id="namaBarang" name="namaBarang" type="text" className="w-full placeholder:font-normal placeholder:text-(--cream-dark)" placeholder="Contoh: Macbook Air M2" onChange={handleChange} />
                   </WrapperInput>
                 </div>
                 <div className="flex flex-col gap-2">
                   <LabelInput title="Kategori" />
-                  <Kategori
-                    onCategoryChange={(cat: string) => setSelectCategory(cat)}
-                  />
+                  <Kategori onCategoryChange={(cat: string) => setSelectCategory(cat)} />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <LabelInput
-                    title={
-                      pathname === '/form/temuan'
-                        ? 'Tanggal Ditemukan'
-                        : 'Tanggal Kehilangan'
-                    }
-                  />
+                  <LabelInput title={pathname === "/form/temuan" ? "Tanggal Ditemukan" : "Tanggal Kehilangan"} />
                   <WrapperInput id="tanggal">
                     <div className="flex w-full items-center gap-3 divide-x divide-(--cream-dark)">
                       <Popover open={open} onOpenChange={setOpen}>
                         <PopoverTrigger asChild>
-                          <button
-                            type="button"
-                            className="flex flex-1 items-center justify-between text-left font-normal text-dark outline-none bg-transparent cursor-pointer"
-                          >
-                            <span>
-                              {date
-                                ? format(date, 'dd MMMM yyyy')
-                                : 'Pilih tanggal'}
-                            </span>
+                          <button type="button" className="flex flex-1 items-center justify-between text-left font-normal text-dark outline-none bg-transparent cursor-pointer">
+                            <span>{date ? format(date, "dd MMMM yyyy") : "Pilih tanggal"}</span>
                             <ChevronDownIcon className="h-4 w-4 text-cream-dark ml-2" />
                           </button>
                         </PopoverTrigger>
-                        <PopoverContent
-                          className="w-auto overflow-hidden p-0"
-                          align="start"
-                        >
+                        <PopoverContent className="w-auto overflow-hidden p-0" align="start">
                           <Calendar
                             mode="single"
                             selected={date}
                             captionLayout="dropdown"
                             defaultMonth={date}
                             onSelect={(date) => {
-                              setDate(date)
-                              setOpen(false)
+                              setDate(date);
+                              setOpen(false);
                               if (date) {
                                 setFormData((prev) => ({
                                   ...prev,
-                                  tanggalHilang: `${format(date, 'yyyy-MM-dd')}T${time}`,
-                                }))
+                                  tanggalHilang: `${format(date, "yyyy-MM-dd")}T${time}`,
+                                }));
                               }
                             }}
                           />
@@ -396,23 +316,18 @@ export default function Reports() {
                       </Popover>
 
                       <div className="flex items-center gap-2 pl-3 w-32">
-                        <Icon
-                          icon="material-symbols:access-time-outline"
-                          className="text-cream-dark"
-                          width="20"
-                          height="20"
-                        />
+                        <Icon icon="material-symbols:access-time-outline" className="text-cream-dark" width="20" height="20" />
                         <input
                           type="time"
                           id="time-picker-optional"
                           value={time}
                           onChange={(e) => {
-                            setTime(e.target.value)
+                            setTime(e.target.value);
                             if (date) {
                               setFormData((prev) => ({
                                 ...prev,
-                                tanggalHilang: `${format(date, 'yyyy-MM-dd')}T${e.target.value}`,
-                              }))
+                                tanggalHilang: `${format(date, "yyyy-MM-dd")}T${e.target.value}`,
+                              }));
                             }
                           }}
                           className="bg-transparent text-dark font-normal outline-none w-full cursor-pointer scheme-light"
@@ -439,23 +354,10 @@ export default function Reports() {
 
             {(isInformasi || isKlaim) && (
               <div className="flex items-center gap-4 p-4 bg-cream-light border border-(--cream-dark) rounded-xl">
-                {detailData?.data.image && (
-                  <Image
-                    src={detailData.data.image}
-                    alt="Barang"
-                    className="aspect-square h-full w-auto rounded-lg"
-                    width={64}
-                    height={64}
-                    loading="lazy"
-                  />
-                )}
+                {detailData?.data.image && <Image src={detailData.data.image} alt="Barang" className="aspect-square h-full w-auto rounded-lg" width={64} height={64} loading="lazy" />}
                 <div className="flex flex-col gap-1">
-                  <h4 className="font-jakarta font-medium text-caption text-cream-dark">
-                    Informasi Barang
-                  </h4>
-                  <h5 className="font-poppins font-bold text-title2 text-dark">
-                    {detailData?.data.title}
-                  </h5>
+                  <h4 className="font-jakarta font-medium text-caption text-cream-dark">Informasi Barang</h4>
+                  <h5 className="font-poppins font-bold text-title2 text-dark">{detailData?.data.title}</h5>
                 </div>
               </div>
             )}
@@ -465,20 +367,8 @@ export default function Reports() {
                 <div className="flex flex-col gap-2">
                   <LabelInput title="Lokasi Penemuan" />
                   <WrapperInput id="lokasi">
-                    <Icon
-                      icon="mdi:map-marker-outline"
-                      className="text-cream-dark"
-                      width={24}
-                      height={24}
-                    />
-                    <input
-                      type="text"
-                      name="lokasiPenemuan"
-                      id="lokasi"
-                      className="w-full placeholder:font-normal placeholder:text-(--cream-dark)"
-                      placeholder="Contoh: Kantin, Perpustakaan"
-                      onChange={handleChange}
-                    />
+                    <Icon icon="mdi:map-marker-outline" className="text-cream-dark" width={24} height={24} />
+                    <input type="text" name="lokasiPenemuan" id="lokasi" className="w-full placeholder:font-normal placeholder:text-(--cream-dark)" placeholder="Contoh: Kantin, Perpustakaan" onChange={handleChange} />
                   </WrapperInput>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -487,35 +377,25 @@ export default function Reports() {
                     <div className="flex w-full items-center gap-3 divide-x divide-(--cream-dark)">
                       <Popover open={open} onOpenChange={setOpen}>
                         <PopoverTrigger asChild>
-                          <button
-                            type="button"
-                            className="flex flex-1 items-center justify-between text-left font-normal text-dark outline-none bg-transparent cursor-pointer"
-                          >
-                            <span>
-                              {date
-                                ? format(date, 'dd MMMM yyyy')
-                                : 'Pilih tanggal'}
-                            </span>
+                          <button type="button" className="flex flex-1 items-center justify-between text-left font-normal text-dark outline-none bg-transparent cursor-pointer">
+                            <span>{date ? format(date, "dd MMMM yyyy") : "Pilih tanggal"}</span>
                             <ChevronDownIcon className="h-4 w-4 text-cream-dark ml-2" />
                           </button>
                         </PopoverTrigger>
-                        <PopoverContent
-                          className="w-auto overflow-hidden p-0"
-                          align="start"
-                        >
+                        <PopoverContent className="w-auto overflow-hidden p-0" align="start">
                           <Calendar
                             mode="single"
                             selected={date}
                             captionLayout="dropdown"
                             defaultMonth={date}
                             onSelect={(date) => {
-                              setDate(date)
-                              setOpen(false)
+                              setDate(date);
+                              setOpen(false);
                               if (date) {
                                 setFormData((prev) => ({
                                   ...prev,
-                                  tanggalPenemuan: `${format(date, 'yyyy-MM-dd')}T${time}`,
-                                }))
+                                  tanggalPenemuan: `${format(date, "yyyy-MM-dd")}T${time}`,
+                                }));
                               }
                             }}
                           />
@@ -523,23 +403,18 @@ export default function Reports() {
                       </Popover>
 
                       <div className="flex items-center gap-2 pl-3 w-32">
-                        <Icon
-                          icon="material-symbols:access-time-outline"
-                          className="text-cream-dark"
-                          width="20"
-                          height="20"
-                        />
+                        <Icon icon="material-symbols:access-time-outline" className="text-cream-dark" width="20" height="20" />
                         <input
                           type="time"
                           id="time-picker-optional"
                           value={time}
                           onChange={(e) => {
-                            setTime(e.target.value)
+                            setTime(e.target.value);
                             if (date) {
                               setFormData((prev) => ({
                                 ...prev,
-                                tanggalPenemuan: `${format(date, 'yyyy-MM-dd')}T${e.target.value}`,
-                              }))
+                                tanggalPenemuan: `${format(date, "yyyy-MM-dd")}T${e.target.value}`,
+                              }));
                             }
                           }}
                           className="bg-transparent text-dark font-normal outline-none w-full cursor-pointer scheme-light"
@@ -569,46 +444,20 @@ export default function Reports() {
                 <div className="flex flex-col gap-2">
                   <LabelInput title="Warna Barang" />
                   <WrapperInput id="warnaBarang">
-                    <input
-                      type="text"
-                      name="warnaBarang"
-                      id="warnaBarang"
-                      className="w-full placeholder:font-normal placeholder:text-(--cream-dark)"
-                      placeholder="Contoh: biru dongker, hitam"
-                      onChange={handleChange}
-                    />
+                    <input type="text" name="warnaBarang" id="warnaBarang" className="w-full placeholder:font-normal placeholder:text-(--cream-dark)" placeholder="Contoh: biru dongker, hitam" onChange={handleChange} />
                   </WrapperInput>
                 </div>
                 <div className="flex flex-col gap-2">
                   <LabelInput title="Lokasi Terakhir" />
                   <WrapperInput id="lokasiTerakhir">
-                    <Icon
-                      icon="mdi:map-marker-outline"
-                      className="text-cream-dark"
-                      width={24}
-                      height={24}
-                    />
-                    <input
-                      type="text"
-                      name="lokasiTerakhir"
-                      id="lokasiTerakhir"
-                      className="w-full placeholder:font-normal placeholder:text-(--cream-dark)"
-                      placeholder="Contoh: Kantin, Perpustakaan"
-                      onChange={handleChange}
-                    />
+                    <Icon icon="mdi:map-marker-outline" className="text-cream-dark" width={24} height={24} />
+                    <input type="text" name="lokasiTerakhir" id="lokasiTerakhir" className="w-full placeholder:font-normal placeholder:text-(--cream-dark)" placeholder="Contoh: Kantin, Perpustakaan" onChange={handleChange} />
                   </WrapperInput>
                 </div>
                 <div className="flex flex-col gap-2">
                   <LabelInput title="Isi Barang" />
                   <WrapperInput id="isiBarang">
-                    <textarea
-                      id="isiBarang"
-                      name="isiBarang"
-                      className="w-full resize-none placeholder:font-normal placeholder:text-(--cream-dark)"
-                      placeholder="Contoh: Isi tas (laptop, buku)."
-                      rows={6}
-                      onChange={handleChange}
-                    />
+                    <textarea id="isiBarang" name="isiBarang" className="w-full resize-none placeholder:font-normal placeholder:text-(--cream-dark)" placeholder="Contoh: Isi tas (laptop, buku)." rows={6} onChange={handleChange} />
                   </WrapperInput>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -656,9 +505,7 @@ export default function Reports() {
               >
                 <div className="flex items-center justify-center gap-2">
                   {loading && <Spinner className="size-6 text-cream" />}
-                  <span>
-                    {loading ? 'Memproses...' : isKlaim ? 'Klaim' : 'Laporkan'}
-                  </span>
+                  <span>{loading ? "Memproses..." : isKlaim ? "Klaim" : "Laporkan"}</span>
                 </div>
               </button>
             </div>
@@ -666,11 +513,7 @@ export default function Reports() {
         </div>
       </div>
 
-      <ModalBatal
-        isOpen={showBatalModal}
-        onClose={() => setShowBatalModal(false)}
-        onConfirm={handleConfirmBatal}
-      />
+      <ModalBatal isOpen={showBatalModal} onClose={() => setShowBatalModal(false)} onConfirm={handleConfirmBatal} />
     </>
-  )
+  );
 }

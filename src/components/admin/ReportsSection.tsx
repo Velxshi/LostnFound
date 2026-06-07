@@ -55,6 +55,19 @@ export default function ReportSection() {
     setSelectedItem(null);
   }
 
+  useEffect(() => {
+    const val = sessionStorage.getItem("showSuccessToast");
+    if (val === "done") {
+      setTimeout(() => {
+        toast.success("Berhasil menandai selesai", {
+          className: "font-poppins !text-center !bg-[#D1E7DD] !border !border-[#BADBCC] !rounded-xl !text-[#0F5132] !w-fit !min-w-[200px] !max-w-[90vw]",
+          position: "top-right",
+        });
+      }, 100);
+      sessionStorage.removeItem("showSuccessToast");
+    }
+  }, []);
+
   if (loading) return <ReportsSkeleton />;
   return (
     <div className="w-full">

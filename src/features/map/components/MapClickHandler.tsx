@@ -12,14 +12,16 @@ interface DraftReport {
 interface MapClickHandlerProps {
   draft: DraftReport | null;
   setDraft: (draft: DraftReport | null) => void;
+  disabled?: boolean;
 }
-export default function MapClickHandler({ draft, setDraft }: MapClickHandlerProps) {
+export default function MapClickHandler({ draft, setDraft, disabled }: MapClickHandlerProps) {
   const markerRef = useRef<L.Marker | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const router = useRouter();
 
   useMapEvents({
     click(e) {
+      if (disabled) return;
       if (isPopupOpen) {
         markerRef.current?.closePopup();
         setIsPopupOpen(false);

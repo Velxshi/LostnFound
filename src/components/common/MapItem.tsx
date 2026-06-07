@@ -40,7 +40,7 @@ export default function MapItem({ lat, lng, status, isMe }: { lat: number; lng: 
   }
 
   return (
-    <MapContainer center={[lat, lng]} zoom={17} style={{ height: "100%", width: "100%" }} zoomControl={false} attributionControl={false}>
+    <MapContainer center={[lat, lng]} zoom={17} minZoom={15} style={{ height: "100%", width: "100%" }} zoomControl={false} attributionControl={false}>
       <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <Marker position={[lat, lng]} icon={getMarkerIcon(status, isMe)} />
     </MapContainer>
