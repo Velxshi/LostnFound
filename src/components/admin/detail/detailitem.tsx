@@ -11,7 +11,7 @@ import "leaflet/dist/leaflet.css";
 import { useRouter, usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 
-const MapItem = dynamic(() => import("@/components/common/MapItem"), {
+const MapItem = dynamic(() => import("@/components/common/map/MapItem"), {
   ssr: false,
 });
 

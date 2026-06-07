@@ -1,6 +1,6 @@
 "use client";
 
-import MapSection from "@/components/common/MapSection";
+import MapSection from "@/components/common/map/MapSection";
 import { useEffect } from "react";
 import { toast } from "sonner";
 

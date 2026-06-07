@@ -1,5 +1,5 @@
 import { usePathname, useRouter } from "next/navigation";
-import { ProfilePicture } from "../ui/profile-picture";
+import { ProfilePicture } from "@/components/ui/profile-picture";
 
 type MapHeaderProps = {
   activeFilter: string | null;

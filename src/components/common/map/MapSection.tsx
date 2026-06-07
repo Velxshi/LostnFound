@@ -1,11 +1,11 @@
 "use client";
-import MapHeader from "@/components/common/MapHeader";
+import MapHeader from "@/components/common/map/MapHeader";
 import dynamic from "next/dynamic";
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-const Map = dynamic(() => import("@/features/map/components/Map"), {
+const Map = dynamic(() => import("@/components/common/map/Map"), {
   ssr: false,
 });
 
