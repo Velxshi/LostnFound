@@ -33,7 +33,7 @@ export default function MenuLayout({ children }: { children: React.ReactNode }) 
         </div>
       </header>
 
-      <main className="flex-1 p-6 md:p-9 ">{children}</main>
+      <main className="flex-1  ">{children}</main>
       <Toaster position="top-right" />
     </div>
   );

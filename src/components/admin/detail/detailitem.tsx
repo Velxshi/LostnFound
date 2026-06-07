@@ -129,7 +129,7 @@ export default function DetailItem({ isOpen, onClose, id }: Props) {
           {/* Mobile: slide from bottom */}
           <motion.div
             layout
-            className="md:hidden w-full bg-cream-light rounded-t-2xl shadow-2xl z-10 flex flex-col justify-between p-6 gap-10"
+            className="md:hidden w-full bg-cream-light rounded-t-2xl shadow-2xl z-10 flex flex-col justify-between p-4 gap-10"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
@@ -141,7 +141,7 @@ export default function DetailItem({ isOpen, onClose, id }: Props) {
 
           {/* Desktop: slide from left */}
           <motion.div
-            className="hidden md:flex w-125 bg-cream-light shadow-2xl z-10 flex-col justify-between md:h-screen p-6 gap-10"
+            className="hidden md:flex w-125 bg-cream-light shadow-2xl z-10 flex-col justify-between md:h-screen p-4 gap-10"
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
