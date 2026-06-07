@@ -4,7 +4,7 @@ import { CategoryItemProps } from "@/types/categoryItems.types";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export default function Kategori({ onCategoryChange }: { onCategoryChange: (category: string) => void }) {
+export default function Kategori({ value, onCategoryChange }: { value: string; onCategoryChange: (category: string) => void }) {
   const [categories, setCategories] = useState<CategoryItemProps[]>([]);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function Kategori({ onCategoryChange }: { onCategoryChange: (cate
   };
 
   return (
-    <Select onValueChange={handleChange}>
+    <Select value={value === "" ? undefined : value} onValueChange={handleChange}>
       <SelectTrigger className="w-full lg:h-12 rounded-xl bg-cream-light px-5 font-poppins text-body font-medium text-dark shadow-sm">
         <SelectValue placeholder="Kategori" />
       </SelectTrigger>

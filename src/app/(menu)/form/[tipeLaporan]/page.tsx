@@ -3,7 +3,7 @@
 import Kategori from "@/components/common/button/kategori";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ItemDetailResponse } from "@/types/reportItems.types";
 import { Spinner } from "@/components/ui/spinner";
@@ -11,9 +11,7 @@ import { toast } from "sonner";
 import { AnimatePresence, motion } from "motion/react";
 import { format } from "date-fns";
 import { ChevronDownIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 function LabelInput({ title }: { title: string }) {
@@ -99,8 +97,8 @@ export default function Reports() {
     ciriKhusus: "",
   });
 
-  const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState<Date | undefined>(() => new Date());
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState<Date | undefined>();
   const [time, setTime] = useState(() => {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, "0");
@@ -117,7 +115,7 @@ export default function Reports() {
 
   // Cek apakah semua field wajib terisi per tipe form
   const isFormValid = (() => {
-    if (isHilang) return formData.namaBarang.trim() !== "" && formData.tanggalHilang !== "" && formData.deskripsi.trim() !== "";
+    if (isHilang) return formData.namaBarang.trim() !== "" && formData.tanggalHilang !== "" && formData.deskripsi.trim() !== "" && selectCategory !== "";
     if (isInformasi) return formData.lokasiPenemuan.trim() !== "" && formData.tanggalPenemuan !== "";
     if (isKlaim) return formData.warnaBarang.trim() !== "" && formData.lokasiTerakhir.trim() !== "";
     return false;
@@ -282,7 +280,7 @@ export default function Reports() {
                 </div>
                 <div className="flex flex-col gap-2">
                   <LabelInput title="Kategori" />
-                  <Kategori onCategoryChange={(cat: string) => setSelectCategory(cat)} />
+                  <Kategori onCategoryChange={(cat: string) => setSelectCategory(cat)} value={selectCategory} />
                 </div>
                 <div className="flex flex-col gap-2">
                   <LabelInput title={pathname === "/form/temuan" ? "Tanggal Ditemukan" : "Tanggal Kehilangan"} />
