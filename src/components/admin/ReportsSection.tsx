@@ -92,6 +92,7 @@ export default function ReportSection() {
         <div className="pt-5 relative z-10">
           <BlurFade delay={0.45} inView>
             <Kategori
+              value={selectCategory}
               onCategoryChange={(cat: string) => {
                 setSelectCategory(cat);
                 setCurrentPage(1);
