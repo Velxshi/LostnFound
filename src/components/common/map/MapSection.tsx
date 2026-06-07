@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import MapLegend from "./MapLegend";
 
 const Map = dynamic(() => import("@/components/common/map/Map"), {
   ssr: false,
@@ -33,6 +34,8 @@ export default function MapSection() {
       <MapHeader onFilterChange={handleFilter} activeFilter={activeFilter} />
 
       <Map data={items} />
+
+      <MapLegend />
     </div>
   );
 }
