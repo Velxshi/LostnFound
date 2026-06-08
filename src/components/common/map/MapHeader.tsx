@@ -1,11 +1,12 @@
 import { usePathname, useRouter } from "next/navigation";
 import { ProfilePicture } from "@/components/ui/profile-picture";
-import SearchComponent from "../button/Search";
+import SearchComponent, { type SuggestionItem } from "../button/Search";
 
 type MapHeaderProps = {
   activeFilter: string | null;
   onFilterChange: (filter: string) => void;
   onSearch: (search: string) => void;
+  onSelectSuggestion: (item: SuggestionItem) => void;
 };
 type FilterButtonProps = {
   title: string;
@@ -21,7 +22,7 @@ function FilterButton({ title, active, onClick }: FilterButtonProps) {
   );
 }
 
-export default function MapHeader({ activeFilter, onFilterChange, onSearch }: MapHeaderProps) {
+export default function MapHeader({ activeFilter, onFilterChange, onSearch, onSelectSuggestion }: MapHeaderProps) {
   const router = useRouter();
   const pathName = usePathname();
 
@@ -30,22 +31,26 @@ export default function MapHeader({ activeFilter, onFilterChange, onSearch }: Ma
   }
 
   return (
-    <div className=" flex justify-between absolute h-fit top-6 left-6 right-6 z-1000 items-center md:top-9 md:left-9 md:right-9">
+    <div className="flex flex-col gap-3 absolute h-fit top-6 left-6 right-6 z-1000 md:top-9 md:left-9 md:right-9">
+      <div className="flex items-center gap-3">
+        <div className="flex-1">
+          <SearchComponent onSearch={onSearch} onSelectSuggestion={onSelectSuggestion} />
+        </div>
+
+        {pathName === "/" && (
+          <div className="shrink-0 hover:ring-4 hover:ring-(--royale) transisi rounded-full">
+            <div onClick={goToProfile}>
+              <ProfilePicture />
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="flex gap-2 text-cream-darker">
         <FilterButton title="Laporan Saya" onClick={() => onFilterChange("laporan-saya")} active={activeFilter === "laporan-saya"} />
         <FilterButton title="Hilang" onClick={() => onFilterChange("hilang")} active={activeFilter === "hilang"} />
         <FilterButton title="Temuan" onClick={() => onFilterChange("temuan")} active={activeFilter === "temuan"} />
       </div>
-
-      <SearchComponent onSearch={onSearch} />
-
-      {pathName === "/" && (
-        <div className="flex hover:ring-4 hover:ring-(--royale) transisi rounded-full ">
-          <div onClick={goToProfile}>
-            <ProfilePicture />
-          </div>
-        </div>
-      )}
     </div>
   );
 }

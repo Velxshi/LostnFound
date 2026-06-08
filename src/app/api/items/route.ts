@@ -1,58 +1,55 @@
-export const dynamic = 'force-dynamic'
-import { prisma } from '@/lib/prisma'
-import { successResponse, errorResponse } from '@/lib/response'
-import { timeAgo } from '@/lib/helper/time'
-import { requireAuth } from '@/lib/helper/auth-helper'
+export const dynamic = "force-dynamic";
+import { prisma } from "@/lib/prisma";
+import { successResponse, errorResponse } from "@/lib/response";
+import { timeAgo } from "@/lib/helper/time";
+import { requireAuth } from "@/lib/helper/auth-helper";
 
 export async function GET(req: Request) {
   try {
-    const auth = await requireAuth(req)
+    const auth = await requireAuth(req);
 
     if (!auth.authorized || !auth.token) {
-      return auth.response
+      return auth.response;
     }
 
-    const { searchParams } = new URL(req.url)
+    const { searchParams } = new URL(req.url);
 
-    const page = Number(searchParams.get('page')) || 1
-    const limit = 12
-    const skip = (page - 1) * limit
+    const page = Number(searchParams.get("page")) || 1;
+    const limit = 12;
+    const skip = (page - 1) * limit;
 
-    const userId = Number(auth.token.id)
+    const userId = Number(auth.token.id);
 
-    const sort = searchParams.get('sort') || 'terbaru'
-    const statusId = searchParams.get('statusId')
-    const categoryId = searchParams.get('categoryId')
-    const search = searchParams.get('search')?.trim()
-    const type = searchParams.get('type')
+    const sort = searchParams.get("sort") || "terbaru";
+    const statusId = searchParams.get("statusId");
+    const categoryId = searchParams.get("categoryId");
+    const search = searchParams.get("search")?.trim();
+    const type = searchParams.get("type");
 
-    const where: any = {}
+    const where: any = {};
 
-    if (type === 'me') {
-      where.userId = Number(auth.token.id)
+    if (type === "me") {
+      where.userId = Number(auth.token.id);
     }
 
     if (statusId) {
-      where.statusId = Number(statusId)
+      where.statusId = Number(statusId);
     }
 
     if (categoryId) {
-      where.categoryId = Number(categoryId)
+      where.categoryId = Number(categoryId);
     }
 
     if (search) {
       where.title = {
         contains: search,
-        mode: 'insensitive',
-      }
+        mode: "insensitive",
+      };
     }
 
-    const orderBy =
-      sort === 'terlama'
-        ? { createdAt: 'asc' as const }
-        : { createdAt: 'desc' as const }
+    const orderBy = sort === "terlama" ? { createdAt: "asc" as const } : { createdAt: "desc" as const };
 
-    const totalItems = await prisma.item.count({ where })
+    const totalItems = await prisma.item.count({ where });
 
     const items = await prisma.item.findMany({
       where,
@@ -63,12 +60,14 @@ export async function GET(req: Request) {
       orderBy,
       skip,
       take: limit,
-    })
+    });
 
     const formatted = items.map((item) => ({
       id: item.id,
       title: item.title,
       image: item.category.linkImage,
+      lat: item.latitude,
+      lng: item.longitude,
       status: {
         id: item.status.id,
         name: item.status.name,
@@ -79,7 +78,7 @@ export async function GET(req: Request) {
       },
       isMe: item.userId === userId,
       time: timeAgo(item.createdAt),
-    }))
+    }));
 
     return successResponse(
       {
@@ -91,24 +90,24 @@ export async function GET(req: Request) {
           perPage: limit,
         },
       },
-      'Berhasil ambil data items',
-    )
+      "Berhasil ambil data items",
+    );
   } catch (error) {
-    console.error(error)
-    return errorResponse('Gagal ambil data items')
+    console.error(error);
+    return errorResponse("Gagal ambil data items");
   }
 }
 
 export async function POST(req: Request) {
   try {
-    const auth = await requireAuth(req)
+    const auth = await requireAuth(req);
 
     if (!auth.authorized || !auth.token) {
-      return auth.response
+      return auth.response;
     }
 
-    const userId = auth.token.id
-    const body = await req.json()
+    const userId = auth.token.id;
+    const body = await req.json();
 
     const item = await prisma.item.create({
       data: {
@@ -125,19 +124,16 @@ export async function POST(req: Request) {
         itemDetails: body.itemDetails || null,
         characteristics: body.characteristics || null,
       },
-    })
+    });
 
     const user = await prisma.user.findUnique({
       where: { id: Number(userId) },
       select: { roleId: true },
-    })
+    });
 
-    return successResponse(
-      { id: item.id, roleId: user?.roleId },
-      'Berhasil laporkan item',
-    )
+    return successResponse({ id: item.id, roleId: user?.roleId }, "Berhasil laporkan item");
   } catch (error) {
-    console.error(error)
-    return errorResponse('Gagal laporkan item')
+    console.error(error);
+    return errorResponse("Gagal laporkan item");
   }
 }

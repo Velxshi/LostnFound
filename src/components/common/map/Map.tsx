@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, ZoomControl, useMap, Circle } from "re
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import MapClickHandler from "./MapClickHandler";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -19,6 +19,10 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
+export interface MapHandle {
+  flyTo: (lat: number, lng: number, zoom?: number) => void;
+}
+
 interface DraftReport {
   latitude: number;
   longitude: number;
@@ -26,6 +30,23 @@ interface DraftReport {
 
 interface MarkerItems {
   data: MarkerProps[];
+}
+
+function MapController({ controlRef }: { controlRef: React.MutableRefObject<MapHandle | null> }) {
+  const map = useMap();
+
+  useEffect(() => {
+    controlRef.current = {
+      flyTo(lat, lng, zoom = 17) {
+        map.flyTo([lat, lng], zoom, { animate: true, duration: 1.2 });
+      },
+    };
+    return () => {
+      controlRef.current = null;
+    };
+  }, [map, controlRef]);
+
+  return null;
 }
 
 function CenterButton() {
@@ -56,10 +77,18 @@ function CenterButton() {
   );
 }
 
-export default function Map({ data }: MarkerItems) {
+const Map = forwardRef<MapHandle, MarkerItems>(({ data }, ref) => {
   const [userPosition, setUserPosition] = useState<[number, number] | null>(null);
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
   const [popupOpen, setPopupOpen] = useState(false);
+  const controlRef = useRef<MapHandle | null>(null);
+
+  useImperativeHandle(ref, () => ({
+    flyTo(lat, lng, zoom = 17) {
+      controlRef.current?.flyTo(lat, lng, zoom);
+    },
+  }));
+
   function openDetail(id: number) {
     setSelectedItem(id);
     setPopupOpen(true);
@@ -107,6 +136,7 @@ export default function Map({ data }: MarkerItems) {
     shadowSize: [60, 60],
     shadowAnchor: [15, 60],
   });
+
   const selfIcon = new L.Icon({
     iconUrl: "/assets/icons/marker-self.svg",
     shadowUrl: "/assets/icons/marker-shadow.svg",
@@ -115,6 +145,12 @@ export default function Map({ data }: MarkerItems) {
     popupAnchor: [1, -40],
     shadowSize: [60, 60],
     shadowAnchor: [15, 60],
+  });
+
+  const currIcon = new L.Icon({
+    iconUrl: "/assets/icons/marker-position.svg",
+    iconSize: [50, 50],
+    iconAnchor: [21, 50],
   });
 
   function getMarkerIcon(status: string, isMe: boolean) {
@@ -134,26 +170,21 @@ export default function Map({ data }: MarkerItems) {
   return (
     <MapContainer center={userPosition} zoom={18} style={{ height: "100vh", width: "100%" }} minZoom={10} zoomControl={false}>
       <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
-      <Marker position={userPosition}></Marker>
-
+      <MapController controlRef={controlRef} />
+      <Marker position={userPosition} icon={currIcon} />
       {data?.map((report) => (
         <div key={report.id}>
-          <Marker
-            position={[report.latitude, report.longitude]}
-            icon={getMarkerIcon(report.status.name, report.isMe)}
-            eventHandlers={{
-              click: () => openDetail(report.id),
-            }}
-          ></Marker>
+          <Marker position={[report.latitude, report.longitude]} icon={getMarkerIcon(report.status.name, report.isMe)} eventHandlers={{ click: () => openDetail(report.id) }} />
           <Circle center={[report.latitude, report.longitude]} radius={50} pathOptions={{ color: getRadiusColor(report.status.name, report.isMe) }} />
         </div>
       ))}
-
       <CenterButton />
       <ZoomControl position="bottomright" />
       <MapClickHandler draft={draft} setDraft={setDraft} disabled={popupOpen} />
       <DetailItem isOpen={popupOpen} onClose={closeDetail} id={selectedItem} />
     </MapContainer>
   );
-}
+});
+
+Map.displayName = "Map";
+export default Map;

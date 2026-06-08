@@ -1,11 +1,12 @@
 "use client";
 import MapHeader from "@/components/common/map/MapHeader";
 import dynamic from "next/dynamic";
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { toast } from "sonner";
 import MapLegend from "./MapLegend";
 
+import { type MapHandle } from "@/components/common/map/Map";
+import { type SuggestionItem } from "../button/Search";
 const Map = dynamic(() => import("@/components/common/map/Map"), {
   ssr: false,
 });
@@ -15,6 +16,7 @@ export default function MapSection() {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const mapRef = useRef<MapHandle>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -26,6 +28,12 @@ export default function MapSection() {
 
   function handleFilter(filter: string) {
     setActiveFilter((prev) => (prev === filter ? null : filter));
+  }
+
+  function handleSelectSuggestion(item: SuggestionItem) {
+    if (item.lat && item.lng) {
+      mapRef.current?.flyTo(item.lat, item.lng, 17);
+    }
   }
 
   useEffect(() => {
@@ -41,9 +49,9 @@ export default function MapSection() {
   }, [activeFilter, debouncedSearch]);
   return (
     <div className="w-full h-screen relative">
-      <MapHeader onFilterChange={handleFilter} activeFilter={activeFilter} onSearch={setSearch} />
+      <MapHeader onFilterChange={handleFilter} activeFilter={activeFilter} onSearch={setSearch} onSelectSuggestion={handleSelectSuggestion} />
 
-      <Map data={items} />
+      <Map data={items} ref={mapRef} />
 
       <MapLegend />
     </div>
