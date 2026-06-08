@@ -16,6 +16,8 @@ export async function GET(req: Request) {
 
     const filter = searchParams.get('filter') || 'all'
 
+    const search = searchParams.get('search')
+
     const where: any = {
       latitude: { not: null },
       longitude: { not: null },
@@ -32,9 +34,17 @@ export async function GET(req: Request) {
       where.status = { name: 'TEMUAN' }
     }
 
+    if (search) {
+      where.title = {
+        contains: search,
+        mode: 'insensitive',
+      }
+    }
+
     const items = await prisma.item.findMany({
       select: {
         id: true,
+        title: true,
         userId: true,
         latitude: true,
         longitude: true,
@@ -50,6 +60,7 @@ export async function GET(req: Request) {
 
     const markers = items.map((item) => ({
       id: item.id,
+      title: item.title,
       latitude: Number(item.latitude),
       longitude: Number(item.longitude),
       status: {

@@ -1,6 +1,6 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, ZoomControl, useMap, Circle } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -11,6 +11,7 @@ delete (L.Icon.Default.prototype as any)._getIconUrl;
 import { MarkerProps } from "@/types/marker.types";
 import { Loading } from "@/components/admin/loading";
 import DetailItem from "@/components/admin/detail/detailitem";
+import { Icon } from "@iconify/react";
 
 L.Icon.Default.mergeOptions({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
@@ -25,6 +26,34 @@ interface DraftReport {
 
 interface MarkerItems {
   data: MarkerProps[];
+}
+
+function CenterButton() {
+  const map = useMap();
+  const buttonRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (buttonRef.current) {
+      L.DomEvent.disableClickPropagation(buttonRef.current);
+    }
+  }, []);
+
+  function handleCenter() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords;
+      map.flyTo([latitude, longitude], 18);
+    });
+  }
+
+  return (
+    <div ref={buttonRef} className="leaflet-bottom leaflet-right" style={{ marginBottom: "90px" }}>
+      <div className="leaflet-control">
+        <button className="bg-white p-2 rounded-sm cursor-pointer shadow" onClick={handleCenter}>
+          <Icon icon="streamline:target-3-remix" height={20} />
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export default function Map({ data }: MarkerItems) {
@@ -95,21 +124,34 @@ export default function Map({ data }: MarkerItems) {
     return lostIcon;
   }
 
+  function getRadiusColor(status: string, isMe: boolean) {
+    if (isMe) return "purple";
+    if (status === "HILANG") return "red";
+    if (status === "TEMUAN") return "green";
+    return "red";
+  }
+
   return (
-    <MapContainer center={userPosition} zoom={17} style={{ height: "100vh", width: "100%" }} minZoom={10} zoomControl={false}>
+    <MapContainer center={userPosition} zoom={18} style={{ height: "100vh", width: "100%" }} minZoom={10} zoomControl={false}>
       <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
+      <Marker position={userPosition}></Marker>
+
       {data?.map((report) => (
-        <Marker
-          key={report.id}
-          position={[report.latitude, report.longitude]}
-          icon={getMarkerIcon(report.status.name, report.isMe)}
-          eventHandlers={{
-            click: () => openDetail(report.id),
-          }}
-        ></Marker>
+        <div key={report.id}>
+          <Marker
+            position={[report.latitude, report.longitude]}
+            icon={getMarkerIcon(report.status.name, report.isMe)}
+            eventHandlers={{
+              click: () => openDetail(report.id),
+            }}
+          ></Marker>
+          <Circle center={[report.latitude, report.longitude]} radius={50} pathOptions={{ color: getRadiusColor(report.status.name, report.isMe) }} />
+        </div>
       ))}
 
+      <CenterButton />
+      <ZoomControl position="bottomright" />
       <MapClickHandler draft={draft} setDraft={setDraft} disabled={popupOpen} />
       <DetailItem isOpen={popupOpen} onClose={closeDetail} id={selectedItem} />
     </MapContainer>

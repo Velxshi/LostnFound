@@ -1,9 +1,11 @@
 import { usePathname, useRouter } from "next/navigation";
 import { ProfilePicture } from "@/components/ui/profile-picture";
+import SearchComponent from "../button/Search";
 
 type MapHeaderProps = {
   activeFilter: string | null;
   onFilterChange: (filter: string) => void;
+  onSearch: (search: string) => void;
 };
 type FilterButtonProps = {
   title: string;
@@ -19,7 +21,7 @@ function FilterButton({ title, active, onClick }: FilterButtonProps) {
   );
 }
 
-export default function MapHeader({ activeFilter, onFilterChange }: MapHeaderProps) {
+export default function MapHeader({ activeFilter, onFilterChange, onSearch }: MapHeaderProps) {
   const router = useRouter();
   const pathName = usePathname();
 
@@ -34,6 +36,8 @@ export default function MapHeader({ activeFilter, onFilterChange }: MapHeaderPro
         <FilterButton title="Hilang" onClick={() => onFilterChange("hilang")} active={activeFilter === "hilang"} />
         <FilterButton title="Temuan" onClick={() => onFilterChange("temuan")} active={activeFilter === "temuan"} />
       </div>
+
+      <SearchComponent onSearch={onSearch} />
 
       {pathName === "/" && (
         <div className="flex hover:ring-4 hover:ring-(--royale) transisi rounded-full ">
