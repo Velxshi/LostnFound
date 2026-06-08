@@ -13,13 +13,23 @@ const Map = dynamic(() => import("@/components/common/map/Map"), {
 export default function MapSection() {
   const [items, setItems] = useState([]);
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [search]);
 
   function handleFilter(filter: string) {
     setActiveFilter((prev) => (prev === filter ? null : filter));
   }
 
   useEffect(() => {
-    fetch(`/api/reports/map?filter=${activeFilter}`)
+    fetch(`/api/reports/map?filter=${activeFilter ?? ""}&search=${debouncedSearch}`)
       .then((res) => res.json())
       .then((data) => setItems(data.data))
       .catch((err) =>
@@ -28,10 +38,10 @@ export default function MapSection() {
           position: "top-right",
         }),
       );
-  }, [activeFilter]);
+  }, [activeFilter, debouncedSearch]);
   return (
     <div className="w-full h-screen relative">
-      <MapHeader onFilterChange={handleFilter} activeFilter={activeFilter} />
+      <MapHeader onFilterChange={handleFilter} activeFilter={activeFilter} onSearch={setSearch} />
 
       <Map data={items} />
 
