@@ -1,21 +1,52 @@
-"use client";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+'use client'
+import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
-import Logo from "../../../public/assets/logo/Logo.svg";
-import { Icon } from "@iconify/react";
+import Logo from '../../../public/assets/logo/Logo.svg'
+import { Icon } from '@iconify/react'
 
 const SidebarNavbar = () => {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   const navItems = [
-    { name: "Dashboard", icon: "ri:dashboard-line", link: "/admin", iconactive: "ri:dashboard-fill" },
-    { name: "Reports", icon: "mdi:file-outline", link: "/admin/reports", iconactive: "mdi:file" },
-    { name: "Map", icon: "mdi:compass-outline", link: "/admin/map", iconactive: "mdi:compass" },
-    { name: "Category", icon: "tabler:tag", link: "/admin/category", iconactive: "tabler:tag-filled" },
-    { name: "Profile", icon: "ic:outline-account-circle", link: "/admin/profile", iconactive: "ic:round-account-circle" },
-  ];
+    {
+      name: 'Dashboard',
+      icon: 'ri:dashboard-line',
+      link: '/admin',
+      iconactive: 'ri:dashboard-fill',
+    },
+    {
+      name: 'Reports',
+      icon: 'mdi:file-outline',
+      link: '/admin/reports',
+      iconactive: 'mdi:file',
+    },
+    {
+      name: 'Map',
+      icon: 'mdi:compass-outline',
+      link: '/admin/map',
+      iconactive: 'mdi:compass',
+    },
+    {
+      name: 'Category',
+      icon: 'tabler:tag',
+      link: '/admin/category',
+      iconactive: 'tabler:tag-filled',
+    },
+    {
+      name: 'Users',
+      icon: 'solar:users-group-two-rounded-linear',
+      link: '/admin/users',
+      iconactive: 'solar:users-group-two-rounded-bold',
+    },
+    {
+      name: 'Profile',
+      icon: 'ic:outline-account-circle',
+      link: '/admin/profile',
+      iconactive: 'ic:round-account-circle',
+    },
+  ]
 
   return (
     <nav
@@ -28,24 +59,37 @@ const SidebarNavbar = () => {
         <div className="relative h-10 w-10">
           <Image src={Logo} alt="Logo" fill className="object-contain" />
         </div>
-        <span className="text-primary font-bold text-title1 font-poppins">Lost n Found</span>
+        <span className="text-primary font-bold text-title1 font-poppins">
+          Lost n Found
+        </span>
       </div>
 
       <div className="w-full flex  items-center justify-between lg:flex-col lg:max-w-none lg:items-start lg:gap-4">
         {navItems.map((item) => {
-          const isActive = pathname === item.link;
+          const isActive = pathname === item.link
 
           return (
-            <Link key={item.name} href={item.link} className="flex flex-1 flex-col items-center gap-1 transisi active:scale-95 lg:flex-row lg:w-full lg:gap-4 lg:py-3 lg:px-4 lg:rounded-lg">
-              <Icon icon={isActive ? item.iconactive : item.icon} className={` h-5 md:h-7 w-auto transisi ${isActive ? "text-primary" : "text-cream-dark"}`} />
+            <Link
+              key={item.name}
+              href={item.link}
+              className="flex flex-1 flex-col items-center gap-1 transisi active:scale-95 lg:flex-row lg:w-full lg:gap-4 lg:py-3 lg:px-4 lg:rounded-lg"
+            >
+              <Icon
+                icon={isActive ? item.iconactive : item.icon}
+                className={` h-5 md:h-7 w-auto transisi ${isActive ? 'text-primary' : 'text-cream-dark'}`}
+              />
 
-              <span className={`text-caption  md:text-title1  transition-colors ${isActive ? "text-primary font-bold" : "text-cream-dark"}`}>{item.name}</span>
+              <span
+                className={`text-caption  md:text-title1  transition-colors ${isActive ? 'text-primary font-bold' : 'text-cream-dark'}`}
+              >
+                {item.name}
+              </span>
             </Link>
-          );
+          )
         })}
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default SidebarNavbar;
+export default SidebarNavbar

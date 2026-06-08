@@ -1,46 +1,59 @@
 // src/middleware.ts
-import { withAuth } from "next-auth/middleware";
-import { NextResponse } from "next/server";
+import { withAuth } from 'next-auth/middleware'
+import { NextResponse } from 'next/server'
 
 export default withAuth(
   function proxy(req) {
-    const token = req.nextauth.token;
-    const pathname = req.nextUrl.pathname;
-    const { searchParams } = req.nextUrl;
+    const token = req.nextauth.token
+    const pathname = req.nextUrl.pathname
+    const { searchParams } = req.nextUrl
 
-    const isManualVisit = searchParams.get("mode") === "public";
+    const isManualVisit = searchParams.get('mode') === 'public'
 
-    if (pathname === "/" && token?.roleId === 1 && !isManualVisit) {
-      return NextResponse.redirect(new URL("/admin", req.url));
+    // Redirect jika admin mengakses root '/'
+    if (pathname === '/' && token?.roleId === 1 && !isManualVisit) {
+      return NextResponse.redirect(new URL('/admin', req.url))
     }
 
-    if (pathname.startsWith("/admin") && token?.roleId !== 1) {
-      return NextResponse.redirect(new URL("/", req.url));
+    // Blokir jika user non-admin mencoba mengakses halaman /admin
+    if (pathname.startsWith('/admin') && token?.roleId !== 1) {
+      return NextResponse.redirect(new URL('/forbidden', req.url))
     }
 
-    return NextResponse.next();
+    return NextResponse.next()
   },
   {
     callbacks: {
       authorized: ({ token, req }) => {
-        const { pathname } = req.nextUrl;
+        const { pathname } = req.nextUrl
 
-        if (pathname.startsWith("/api") && !token) {
-          return false;
+        // PROTEKSI API: Jika mencoba hit API statistik admin tapi bukan admin (roleId !== 1)
+        if (pathname.startsWith('/api/stats') && token?.roleId !== 1) {
+          return false // Mengembalikan HTTP 401/403 otomatis
         }
 
-        return !!token;
+        // Proteksi API umum jika tidak login
+        if (pathname.startsWith('/api') && !token) {
+          return false
+        }
+
+        return !!token
       },
     },
     pages: {
-      signIn: "/login",
+      signIn: '/login',
     },
   },
-);
+)
 
 export const config = {
-  // matcher: [
-  //   '/((?!api/auth|login|_next/static|_next/image|favicon.ico|public|images).*)',
-  // ],
-  matcher: ["/admin/:path*", "/profile/:path*", "/notifications/:path*", "/reports/:path*", "/about/:path*", "/"],
-};
+  matcher: [
+    '/admin/:path*',
+    '/profile/:path*',
+    '/notifications/:path*',
+    '/reports/:path*',
+    '/about/:path*',
+    '/',
+    '/api/stats',
+  ],
+}

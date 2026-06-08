@@ -10,97 +10,59 @@ export async function GET(req: Request) {
       return auth.response
     }
 
-    const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: {
-          select: {
-            id: true,
-            roleName: true,
+    const { searchParams } = new URL(req.url)
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10))
+    const limit = Math.max(1, parseInt(searchParams.get('limit') || '10', 10))
+    const search = searchParams.get('search') || ''
+
+    const skip = (page - 1) * limit
+
+    const whereCondition = search
+      ? {
+          OR: [
+            { name: { contains: search, mode: 'insensitive' as const } },
+            { email: { contains: search, mode: 'insensitive' as const } },
+          ],
+        }
+      : {}
+
+    const [users, totalUsers] = await prisma.$transaction([
+      prisma.user.findMany({
+        where: whereCondition,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: {
+            select: {
+              id: true,
+              roleName: true,
+            },
           },
         },
-      },
-      orderBy: { id: 'asc' },
-    })
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.user.count({ where: whereCondition }),
+    ])
+
+    const totalPages = Math.ceil(totalUsers / limit)
 
     return successResponse(
       {
         data: users,
+        meta: {
+          currentPage: page,
+          limit,
+          totalItems: totalUsers,
+          totalPages,
+        },
       },
       'Berhasil ambil data user',
     )
   } catch (error) {
     console.error(error)
-    return errorResponse('Gagal ambil kategori')
-  }
-}
-
-type Params = {
-  id: number
-}
-
-export async function PATCH(
-  req: Request,
-  { params }: { params: Promise<Params> | Params },
-) {
-  try {
-    const auth = await requireAuth(req)
-    if (!auth.authorized) {
-      return auth.response
-    }
-
-    const resolvedParams = await params
-    const userId = resolvedParams.id
-
-    const body = await req.json()
-    const { roleId } = body
-
-    if (!roleId) {
-      return errorResponse('ID Role harus dikirim di dalam body', 400)
-    }
-
-    const userExists = await prisma.user.findUnique({
-      where: { id: userId },
-    })
-
-    if (!userExists) {
-      return errorResponse('User tidak ditemukan', 404)
-    }
-
-    const roleExists = await prisma.role.findUnique({
-      where: { id: roleId },
-    })
-
-    if (!roleExists) {
-      return errorResponse('Role tidak ditemukan di sistem', 404)
-    }
-
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: {
-        roleId: roleId,
-      },
-      select: {
-        id: true,
-        name: true,
-        role: {
-          select: {
-            id: true,
-            roleName: true,
-          },
-        },
-      },
-    })
-    return successResponse(
-      {
-        user: updatedUser,
-      },
-      `Berhasil mengubah role user menjadi ${roleExists.roleName}`,
-    )
-  } catch (error) {
-    console.error('Error saat patch role:', error)
-    return errorResponse('Gagal mengubah role user')
+    return errorResponse('Gagal ambil data users')
   }
 }
