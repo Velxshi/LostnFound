@@ -28,6 +28,7 @@ model User {
   role          Role           @relation(fields: [roleId], references: [id])
   items         Item[]
   notifications Notification[]
+  userPermissions UserPermission[]
 
   @@index([roleId])
 }
@@ -40,6 +41,30 @@ model Role {
   updatedAt DateTime @updatedAt
 
   users User[]
+}
+
+model Permission {
+  id          Int              @id @default(autoincrement())
+  name        String           @unique // 'menu:dashboard', 'menu:reports', 'menu:category', 'menu:users', 'menu:hak-akses'
+  description String?
+
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  // === TAMBAHAN: Relasi balik ke pivot user ===
+  users       UserPermission[]
+}
+
+model UserPermission {
+  userId       Int
+  permissionId Int
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([userId, permissionId])
+  @@index([userId])
+  @@index([permissionId])
 }
 
 model Account {

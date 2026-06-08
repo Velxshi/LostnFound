@@ -130,6 +130,7 @@ export default function UserModal({ isOpen, onClose, onSuccess, user }: Props) {
                         required
                       >
                         <option value="1">Admin</option>
+                        <option value="3">Super Admin</option>
                         <option value="2">User</option>
                       </select>
                     </div>

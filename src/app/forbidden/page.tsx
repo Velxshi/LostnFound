@@ -186,30 +186,6 @@ export default function ForbiddenPage() {
                 Kembali ke Beranda
               </span>
             </motion.button>
-
-            <motion.button
-              onClick={() => router.back()}
-              className="flex items-center justify-center gap-2 w-full md:w-[300px] py-3 px-4 rounded-xl bg-transparent border border-[#2848b7]/30 text-[#2848b7] cursor-pointer hover:bg-[#2848b7]/5 transition-colors duration-200"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2.5}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M9 14l-4-4 4-4" />
-                <path d="M5 10h11a4 4 0 0 1 0 8h-1" />
-              </svg>
-              <span className="text-sm md:text-base font-medium font-poppins">
-                Halaman Sebelumnya
-              </span>
-            </motion.button>
           </div>
         </motion.div>
 

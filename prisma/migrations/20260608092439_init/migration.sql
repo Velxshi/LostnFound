@@ -23,6 +23,25 @@ CREATE TABLE "Role" (
 );
 
 -- CreateTable
+CREATE TABLE "Permission" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Permission_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserPermission" (
+    "userId" INTEGER NOT NULL,
+    "permissionId" INTEGER NOT NULL,
+
+    CONSTRAINT "UserPermission_pkey" PRIMARY KEY ("userId","permissionId")
+);
+
+-- CreateTable
 CREATE TABLE "Account" (
     "userId" INTEGER NOT NULL,
     "type" TEXT NOT NULL,
@@ -97,6 +116,7 @@ CREATE TABLE "Notification" (
     "userId" INTEGER NOT NULL,
     "templateId" INTEGER NOT NULL,
     "message" TEXT,
+    "itemId" INTEGER,
     "isRead" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -111,6 +131,15 @@ CREATE INDEX "User_roleId_idx" ON "User"("roleId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Role_roleName_key" ON "Role"("roleName");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Permission_name_key" ON "Permission"("name");
+
+-- CreateIndex
+CREATE INDEX "UserPermission_userId_idx" ON "UserPermission"("userId");
+
+-- CreateIndex
+CREATE INDEX "UserPermission_permissionId_idx" ON "UserPermission"("permissionId");
 
 -- CreateIndex
 CREATE INDEX "Item_userId_idx" ON "Item"("userId");
@@ -135,6 +164,12 @@ CREATE INDEX "Notification_templateId_idx" ON "Notification"("templateId");
 
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserPermission" ADD CONSTRAINT "UserPermission_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserPermission" ADD CONSTRAINT "UserPermission_permissionId_fkey" FOREIGN KEY ("permissionId") REFERENCES "Permission"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

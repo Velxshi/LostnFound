@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation' // Tambahkan ini untuk redirect
 import UserModal from './Dashboard/UserModal'
 import { BlurFade } from '../ui/blur-fade'
 import { Spinner } from '../ui/spinner'
@@ -93,12 +94,15 @@ function CardStatistikUser({
 }
 
 export default function UsersSection() {
+  const router = useRouter() // Inisialisasi router
   const [users, setUsers] = useState<User[]>([])
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [userModalOpen, setUserModalOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const isFirstLoad = useRef(true)
+
+  const [isSuperAdmin, setIsSuperAdmin] = useState<boolean | null>(null)
 
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
@@ -113,6 +117,27 @@ export default function UsersSection() {
   })
 
   useEffect(() => {
+    async function checkCurrentUser() {
+      try {
+        const res = await fetch('/api/auth/me')
+        const result = await res.json()
+
+        if (result.success && result.data?.role?.roleName === 'SUPERADMIN') {
+          setIsSuperAdmin(true)
+        } else {
+          setIsSuperAdmin(false)
+          router.push('/forbidden')
+        }
+      } catch (err) {
+        console.error('Gagal memverifikasi session:', err)
+        setIsSuperAdmin(false)
+        router.push('/forbidden')
+      }
+    }
+    checkCurrentUser()
+  }, [router])
+
+  useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search)
       setPage(1)
@@ -122,6 +147,8 @@ export default function UsersSection() {
   }, [search])
 
   const fetchUsers = useCallback(async () => {
+    if (isSuperAdmin === false) return
+
     try {
       if (isFirstLoad.current) {
         setLoading(true)
@@ -133,7 +160,6 @@ export default function UsersSection() {
         `/api/users?page=${page}&limit=${limit}&search=${debouncedSearch}`,
       )
       const result = await res.json()
-      console.log('Struktur data API kamu:', result)
 
       if (result.success) {
         setUsers(result.data.data || result.data)
@@ -166,13 +192,16 @@ export default function UsersSection() {
       setRefreshing(false)
       isFirstLoad.current = false
     }
-  }, [page, limit, debouncedSearch])
+  }, [page, limit, debouncedSearch, isSuperAdmin])
 
   useEffect(() => {
-    fetchUsers()
-  }, [fetchUsers])
+    if (isSuperAdmin !== null) {
+      fetchUsers()
+    }
+  }, [fetchUsers, isSuperAdmin])
 
   const handleEdit = (user: User) => {
+    if (!isSuperAdmin) return
     setSelectedUser(user)
     setUserModalOpen(true)
   }
@@ -191,7 +220,13 @@ export default function UsersSection() {
     { label: 'Jumlah Role', icon: 'tabler:shield-check', total: 2 },
   ]
 
-  if (loading) return <UsersSkeleton />
+  if (isSuperAdmin === null || (isSuperAdmin && loading)) {
+    return <UsersSkeleton />
+  }
+
+  if (!isSuperAdmin) {
+    return <UsersSkeleton />
+  }
 
   return (
     <div className="w-full min-h-screen bg-gray-50/50 p-6 md:p-9">
@@ -313,7 +348,6 @@ export default function UsersSection() {
           <BlurFade delay={0.55} inView>
             {users.length > 0 && (
               <div className="flex justify-center items-center gap-2 mt-12 pb-10">
-                {/* Previous */}
                 <button
                   onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
                   disabled={page === 1}
@@ -373,7 +407,6 @@ export default function UsersSection() {
                   })}
                 </div>
 
-                {/* Next */}
                 <button
                   onClick={() =>
                     setPage((prev) => Math.min(prev + 1, meta.totalPages))
