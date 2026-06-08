@@ -66,7 +66,7 @@ export async function POST(req: Request) {
         const auth = await requireAuth(req)
 
         if (!auth.authorized || !auth.token) {
-        return auth.response
+            return auth.response
         }
 
         const userId = Number(auth.token.id)
@@ -79,7 +79,10 @@ export async function POST(req: Request) {
         })
 
         if (!user || user.role.roleName !== 'ADMIN') {
-            return errorResponse('Hanya admin yang boleh menambahkan kategori', 403)
+            return errorResponse(
+                'Hanya admin yang boleh menambahkan kategori',
+                403,
+            )
         }
 
         const body = await req.json()
@@ -87,8 +90,38 @@ export async function POST(req: Request) {
         const name = body.name?.trim()
         const linkImage = body.linkImage?.trim()
 
-        if (!name || !linkImage) {
-            return errorResponse('Nama kategori dan link image wajib diisi', 400)
+        if (!name) {
+        return errorResponse('Nama kategori wajib diisi', 400)
+        }
+
+        if (name.length < 2) {
+            return errorResponse(
+                'Nama kategori minimal 2 karakter',
+                400,
+            )
+        }
+
+        if (name.length > 50) {
+            return errorResponse(
+                'Nama kategori maksimal 50 karakter',
+                400,
+            )
+        }
+
+        if (!linkImage) {
+            return errorResponse(
+                'Link gambar wajib diisi',
+                400,
+            )
+        }
+
+        try {
+            new URL(linkImage)
+        } catch {
+            return errorResponse(
+                'Format link gambar tidak valid',
+                400,
+            )
         }
 
         const category = await prisma.category.create({
@@ -104,19 +137,19 @@ export async function POST(req: Request) {
         })
 
         return successResponse(
-        {data: category},
-        'Berhasil tambah kategori',
+        { data: category },
+            'Berhasil tambah kategori',
         )
     } catch (error) {
         console.error(error)
 
         if (
-            typeof error === 'object' &&
-            error !== null &&
-            'code' in error &&
-            (error as any).code === 'P2002'
+            typeof error === 'object' && error !== null && 'code' in error &&  (error as any).code === 'P2002'
         ) {
-            return errorResponse('Nama kategori sudah digunakan', 409)
+        return errorResponse(
+            'Nama kategori sudah digunakan',
+            409,
+        )
         }
 
         return errorResponse('Gagal tambah kategori')
