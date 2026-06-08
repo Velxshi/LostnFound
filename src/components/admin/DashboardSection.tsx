@@ -15,6 +15,7 @@ export default function DashboardSection() {
   const [stats, setStats] = useState<AdminStatsResponse>()
   const [periode, setPeriode] = useState<string>('7')
   const [loading, setLoading] = useState(true)
+
   useEffect(() => {
     const fetchItems = async () => {
       try {
@@ -44,17 +45,24 @@ export default function DashboardSection() {
 
   useEffect(() => {
     fetch(`/api/stats?period=${periode}`)
-      .then((res) => res.json())
+      .then((res) => {
+        // JIKA USER SUDAH BUKAN ADMIN (Forbidden / Unauthorized), JANGAN SET STATS
+        if (!res.ok) {
+          throw new Error('Gagal memuat data statistik atau akses ditolak')
+        }
+        return res.json()
+      })
       .then((data) => {
         setStats(data)
       })
-      .catch((err) =>
+      .catch((err) => {
+        setStats(undefined)
         toast.error('Gagal mengambil data statistik, silakan memuat ulang', {
           className:
             'font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]',
           position: 'top-right',
-        }),
-      )
+        })
+      })
   }, [periode])
 
   const totaldata = stats?.summary?.total_reports || 0
@@ -153,7 +161,6 @@ export default function DashboardSection() {
           ))}
         </div>
       </BlurFade>
-
       <DetailItem isOpen={popupOpen} onClose={closeDetail} id={selectedItem} />
     </div>
   )
