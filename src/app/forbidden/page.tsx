@@ -1,34 +1,51 @@
-'use client'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import { motion } from 'motion/react'
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
+import { useSession } from "next-auth/react";
+
+const permissionRouteMap: Record<string, string> = {
+  "menu:dashboard": "/admin",
+  "menu:category": "/admin/category",
+  "menu:users": "/admin/users",
+  "menu:hak-akses": "/admin/hak-akses",
+};
 
 export default function ForbiddenPage() {
-  const router = useRouter()
+  const router = useRouter();
+
+  const { data: session } = useSession();
+  const roleId = (session?.user as any)?.roleId;
+  const permissions: string[] = (session?.user as any)?.permissions ?? [];
+
+  function getHomeRoute() {
+    if (roleId === 1) return "/admin";
+    if (roleId === 3) {
+      const firstAllowed = Object.entries(permissionRouteMap).find(([perm]) => permissions.includes(perm));
+      return firstAllowed ? firstAllowed[1] : "/";
+    }
+    return "/";
+  }
+
+  function getHomeLabel() {
+    if (roleId === 1 || roleId === 3) return "Kembali ke Page Sebelumnya";
+    return "Kembali ke Beranda";
+  }
 
   return (
     <div className="relative min-h-screen bg-[#f7f3f0] overflow-hidden flex flex-col items-center justify-center text-center px-4">
       {/* Decorative background circles — same as splash screen */}
-      <motion.div
-        className="absolute w-[500px] h-[500px] rounded-full border border-[#2848b7]/10"
-        initial={{ scale: 0.6, opacity: 0 }}
-        animate={{ scale: 1.4, opacity: 1 }}
-        transition={{ duration: 2, ease: 'easeOut' }}
-      />
-      <motion.div
-        className="absolute w-[300px] h-[300px] rounded-full border border-[#2848b7]/10"
-        initial={{ scale: 0.4, opacity: 0 }}
-        animate={{ scale: 1.1, opacity: 1 }}
-        transition={{ duration: 2, delay: 0.1, ease: 'easeOut' }}
-      />
+      <motion.div className="absolute w-125 h-125 rounded-full border border-[#2848b7]/10" initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1.4, opacity: 1 }} transition={{ duration: 2, ease: "easeOut" }} />
+      <motion.div className="absolute w-75 h-75 rounded-full border border-[#2848b7]/10" initial={{ scale: 0.4, opacity: 0 }} animate={{ scale: 1.1, opacity: 1 }} transition={{ duration: 2, delay: 0.1, ease: "easeOut" }} />
 
       {/* Lock icon ring pulse */}
       <motion.div
-        className="absolute w-[160px] h-[160px] rounded-full border-2 border-[#2848b7]/20"
+        className="absolute w-40 h-40 rounded-full border-2 border-[#2848b7]/20"
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.15, 0.4] }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       />
 
       {/* Main content */}
@@ -51,18 +68,12 @@ export default function ForbiddenPage() {
               opacity: 1,
               scale: 1,
               rotate: 0,
-              transition: { type: 'spring', stiffness: 260, damping: 18 },
+              transition: { type: "spring", stiffness: 260, damping: 18 },
             },
           }}
           className="mb-6"
         >
-          <Image
-            alt="logo"
-            src="/assets/logo/Logo.svg"
-            className="w-20 md:w-28"
-            width={112}
-            height={112}
-          />
+          <Image alt="logo" src="/assets/logo/Logo.svg" className="w-20 md:w-28" width={112} height={112} />
         </motion.div>
 
         {/* Lock icon */}
@@ -73,21 +84,12 @@ export default function ForbiddenPage() {
             visible: {
               opacity: 1,
               scale: 1,
-              transition: { type: 'spring', stiffness: 300, damping: 20 },
+              transition: { type: "spring", stiffness: 300, damping: 20 },
             },
           }}
         >
           <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-[#2848b7]/10 flex items-center justify-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-8 h-8 md:w-10 md:h-10 text-[#2848b7]"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 md:w-10 md:h-10 text-[#2848b7]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               <circle cx="12" cy="16" r="1" fill="currentColor" />
@@ -142,7 +144,7 @@ export default function ForbiddenPage() {
 
         {/* Card */}
         <motion.div
-          className="bg-[#eee8e1] w-[320px] md:w-[420px] p-8 rounded-3xl shadow-md flex flex-col items-center gap-6"
+          className="bg-[#eee8e1] w-[320px] md:w-105 p-8 rounded-3xl shadow-md flex flex-col items-center gap-6"
           variants={{
             hidden: { opacity: 0, y: 16 },
             visible: {
@@ -153,38 +155,22 @@ export default function ForbiddenPage() {
           }}
         >
           <div className="flex flex-col items-center gap-1">
-            <h3 className="text-lg md:text-xl font-semibold font-poppins text-[#1a1a1a]">
-              Tidak ada izin akses
-            </h3>
-            <p className="text-[#a89880] font-jakarta text-sm text-center">
-              Hubungi administrator jika kamu merasa ini adalah kesalahan, atau
-              kembali ke beranda.
-            </p>
+            <h3 className="text-lg md:text-xl font-semibold font-poppins text-[#1a1a1a]">Tidak ada izin akses</h3>
+            <p className="text-[#a89880] font-jakarta text-sm text-center">Hubungi administrator jika kamu merasa ini adalah kesalahan, atau kembali ke beranda.</p>
           </div>
 
           <div className="flex flex-col items-center gap-3 w-full">
             {/* Back to Home button */}
             <motion.button
-              onClick={() => router.push('/')}
-              className="flex items-center justify-center gap-2 w-full md:w-[300px] py-3 px-4 rounded-xl bg-[#2848b7] text-white cursor-pointer hover:bg-[#1f3a9e] transition-colors duration-200 shadow"
+              onClick={() => router.push(getHomeRoute())}
+              className="flex items-center justify-center gap-2 w-full md:w-75 py-3 px-4 rounded-xl bg-[#2848b7] text-white cursor-pointer hover:bg-[#1f3a9e] transition-colors duration-200 shadow"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2.5}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
                 <path d="M19 12H5M12 5l-7 7 7 7" />
               </svg>
-              <span className="text-sm md:text-base font-medium font-poppins">
-                Kembali ke Beranda
-              </span>
+              <span className="text-sm md:text-base font-medium font-poppins">{getHomeLabel()}</span>
             </motion.button>
           </div>
         </motion.div>
@@ -211,7 +197,7 @@ export default function ForbiddenPage() {
                   transition: {
                     duration: 1.2,
                     repeat: Infinity,
-                    ease: 'easeInOut',
+                    ease: "easeInOut",
                     delay: i * 0.15,
                   },
                 },
@@ -221,5 +207,5 @@ export default function ForbiddenPage() {
         </motion.div>
       </motion.div>
     </div>
-  )
+  );
 }

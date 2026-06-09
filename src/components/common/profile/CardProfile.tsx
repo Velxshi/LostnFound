@@ -33,20 +33,29 @@ export default function CardProfile({ isLoading }: Props) {
   }
 
   const menus = [
-    {
-      id: 1,
-      title: "Laporan Saya",
-      icon: "material-symbols:account-circle-outline",
-      hint: "Lihat semua laporan yang saya buat",
-      link: "/reports",
-    },
-    {
-      id: 2,
-      title: "Notifikasi",
-      icon: "material-symbols:notifications-outline",
-      hint: null,
-      link: "/notifications",
-    },
+    ...(userRole === "ADMIN" || userRole === "USER"
+      ? [
+          {
+            id: 1,
+            title: "Laporan Saya",
+            icon: "material-symbols:account-circle-outline",
+            hint: "Lihat semua laporan yang saya buat",
+            link: "/reports",
+          },
+        ]
+      : []),
+    ...(userRole === "ADMIN" || userRole === "USER"
+      ? [
+          {
+            id: 2,
+            title: "Notifikasi",
+            icon: "material-symbols:notifications-outline",
+            hint: null,
+            link: "/notifications",
+          },
+        ]
+      : []),
+
     ...(userRole === "ADMIN"
       ? [
           {
