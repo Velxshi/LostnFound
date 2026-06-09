@@ -163,7 +163,7 @@ const Map = forwardRef<MapHandle, MarkerItems>(({ data }, ref) => {
   function getRadiusColor(status: string, isMe: boolean) {
     if (isMe) return "purple";
     if (status === "HILANG") return "red";
-    if (status === "TEMUAN") return "green";
+    if (status === "TEMUAN") return "yellow";
     return "red";
   }
 

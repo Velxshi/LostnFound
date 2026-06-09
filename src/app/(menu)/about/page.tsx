@@ -27,7 +27,7 @@ export default function About() {
   ];
 
   return (
-    <div className="flex w-full flex-col gap-8 items-center">
+    <div className="flex w-full flex-col gap-8 items-center p-4 md:p-9">
       <BlurFade delay={0.25} inView>
         <div className="w-full flex flex-col gap-6">
           <div className="flex px-3 border-l-8 border-(--royale)">

@@ -18,13 +18,17 @@ export default function CategoryModal({ isOpen, onClose, onSuccess, category }: 
   const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [errors, setErrors] = useState<{ name?: string; image?: string }>({});
 
   useEffect(() => {
     if (isEdit && isOpen) {
+      setErrors({});
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setName(category.name || "");
       setImage(category.linkImage || "");
     } else if (!isEdit && isOpen) {
+      setErrors({});
+
       setName("");
       setImage("");
     }
@@ -45,9 +49,36 @@ export default function CategoryModal({ isOpen, onClose, onSuccess, category }: 
     onClose();
   };
 
+  const validate = () => {
+    const newErrors: { name?: string; image?: string } = {};
+
+    if (!name.trim()) {
+      newErrors.name = "Nama kategori wajib diisi";
+    } else if (name.trim().length < 2) {
+      newErrors.name = "Nama kategori minimal 2 karakter";
+    } else if (name.trim().length > 50) {
+      newErrors.name = "Nama kategori maksimal 50 karakter";
+    }
+
+    if (!image.trim()) {
+      newErrors.image = "Link gambar wajib diisi";
+    } else {
+      try {
+        new URL(image.trim());
+      } catch {
+        newErrors.image = "Format link gambar tidak valid";
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const dataCategory = { name, linkImage: image };
+    if (!validate()) return; // stop kalau validasi gagal
+
+    const dataCategory = { name: name.trim(), linkImage: image.trim() };
 
     try {
       setLoading(true);
@@ -61,13 +92,21 @@ export default function CategoryModal({ isOpen, onClose, onSuccess, category }: 
         if (onSuccess) onSuccess();
         onClose();
       } else {
-        toast.error("Gagal menyimpan data, silakan coba lagi", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
+        const data = await response.json().catch(() => null);
+        const message = data?.message || "Gagal menyimpan data, silakan coba lagi";
+        toast.error(message, {
+          className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]",
+          position: "top-right",
+        });
       }
     } catch {
-      toast.error("Gagal menyimpan data, silakan coba lagi", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
+      toast.error("Terjadi kesalahan jaringan, silakan coba lagi", {
+        className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]",
+        position: "top-right",
+      });
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -100,23 +139,33 @@ export default function CategoryModal({ isOpen, onClose, onSuccess, category }: 
                       <label className="mb-2 block text-body font-poppins font-bold text-royale">Nama Kategori</label>
                       <input
                         type="text"
-                        className="w-full rounded-lg ring ring-(--cream-active) px-3.25 py-2.5 text-primary placeholder:text-(--cream-active) outline-none focus:ring-2 focus:ring-(--royale) h-12.5"
+                        className={`w-full rounded-lg ring px-3.25 py-2.5 text-primary placeholder:text-(--cream-active) outline-none focus:ring-2 h-12.5 ${
+                          errors.name ? "ring-[#BA1A1A] focus:ring-[#BA1A1A]" : "ring-(--cream-active) focus:ring-(--royale)"
+                        }`}
                         placeholder="Contoh: Elektronik"
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={(e) => {
+                          setName(e.target.value);
+                          if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }));
+                        }}
                         value={name}
-                        required
                       />
+                      {errors.name && <p className="mt-1 text-sm font-poppins text-[#BA1A1A]">{errors.name}</p>}
                     </div>
                     <div className="mb-4">
                       <label className="mb-2 block text-body font-poppins font-bold text-royale">Link Gambar</label>
                       <input
                         type="text"
-                        className="w-full rounded-lg ring ring-(--cream-active) px-3.25 py-2.5 placeholder:text-(--cream-active) text-primary outline-none focus:ring-2 focus:ring-(--royale) h-12.5"
+                        className={`w-full rounded-lg ring px-3.25 py-2.5 placeholder:text-(--cream-active) text-primary outline-none focus:ring-2 h-12.5 ${
+                          errors.image ? "ring-[#BA1A1A] focus:ring-[#BA1A1A]" : "ring-(--cream-active) focus:ring-(--royale)"
+                        }`}
                         placeholder="Link Gambar"
                         value={image}
-                        onChange={(e) => setImage(e.target.value)}
-                        required
+                        onChange={(e) => {
+                          setImage(e.target.value);
+                          if (errors.image) setErrors((prev) => ({ ...prev, image: undefined }));
+                        }}
                       />
+                      {errors.image && <p className="mt-1 text-sm font-poppins text-[#BA1A1A]">{errors.image}</p>}
                     </div>
                   </div>
                   <div className="flex items-center justify-end gap-3 px-8 py-5">
