@@ -42,6 +42,7 @@ export default function SearchComponent({
       fetch(`/api/items?search=${encodeURIComponent(value)}`)
         .then((res) => res.json())
         .then((data) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           let raw: any[] = []
           if (Array.isArray(data.data)) raw = data.data
 

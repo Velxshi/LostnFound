@@ -42,6 +42,7 @@ export default function CategorySection() {
         toast.error("Gagal mengambil data, silakan memuat ulang", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
       const data = await res.json();
       setItems(data);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       toast.error("Gagal mengambil data, silakan memuat ulang", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
     } finally {

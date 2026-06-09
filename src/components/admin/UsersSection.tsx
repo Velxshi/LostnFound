@@ -107,6 +107,7 @@ export default function UsersSection() {
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [page, setPage] = useState(1)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [limit, setLimit] = useState(12)
 
   const [meta, setMeta] = useState<MetaProps>({
@@ -297,7 +298,7 @@ export default function UsersSection() {
                             hover:bg-gray-50/50 transition-colors duration-200"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="bg-gradient-to-tr from-primary/20 to-primary/5 text-primary font-bold font-poppins text-xs rounded-lg w-9 h-9 flex items-center justify-center shrink-0 uppercase tracking-wider shadow-inner">
+                    <div className="bg-linear-to-tr from-primary/20 to-primary/5 text-primary font-bold font-poppins text-xs rounded-lg w-9 h-9 flex items-center justify-center shrink-0 uppercase tracking-wider shadow-inner">
                       {user.name
                         ? user.name
                             .split(' ')
