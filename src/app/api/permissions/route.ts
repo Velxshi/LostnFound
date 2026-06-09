@@ -25,7 +25,7 @@ export async function GET(req: Request) {
 
     const permissions = await prisma.permission.findMany({
       where: {
-        id: { notIn: [3, 4] },
+        name: { notIn: ['menu:hak-akses', 'menu:users'] },
       },
       select: {
         id: true,
