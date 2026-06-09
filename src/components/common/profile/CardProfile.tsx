@@ -63,7 +63,7 @@ export default function CardProfile({ isLoading }: Props) {
             title: isAdminPage() ? "Masuk ke Mode Pengguna" : "Masuk Ke Mode Admin",
             icon: "material-symbols:change-circle-outline",
             hint: null,
-            link: isAdminPage() ? "/?mode=public" : "/admin",
+            link: isAdminPage() ? "/?mode=public" : "/admin/profile",
           },
         ]
       : []),
