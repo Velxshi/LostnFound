@@ -11,6 +11,7 @@ import { BlurFade } from "../ui/blur-fade";
 import CategorySkeleton from "./Category/CategorySkeleton";
 import CategoryModal from "./Category/Modals/CategoryModal";
 import { Spinner } from "../ui/spinner";
+import { useSession } from "next-auth/react";
 
 // function CardStatistik
 export default function CategorySection() {
@@ -20,6 +21,8 @@ export default function CategorySection() {
   const [loading, setLoading] = useState(true);
   const isFirstLoad = useRef(true);
   const [searching, setSearching] = useState(false);
+
+  const { data: session } = useSession();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -42,7 +45,7 @@ export default function CategorySection() {
         toast.error("Gagal mengambil data, silakan memuat ulang", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
       const data = await res.json();
       setItems(data);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       toast.error("Gagal mengambil data, silakan memuat ulang", { className: "font-poppins !text-center !bg-[#FFDAD6] !border !border-[#C4C5D5] !rounded-xl !text-[#BA1A1A] !w-fit !min-w-[200px] !max-w-[90vw]", position: "top-right" });
     } finally {
@@ -115,9 +118,11 @@ export default function CategorySection() {
               <div className="lg:flex hidden w-full">
                 <SearchComponent onSearch={setSearch} />
               </div>
-              <button className="bg-primary hover:bg-(--royale-hover) text-cream font-bold py-2 px-4 rounded-lg w-full h-13.25 font-poppins cursor-pointer lg:w-80 active:scale-95  transisi" onClick={() => setPopup(true)}>
-                Tambah Kategori
-              </button>
+              {session?.user.permissions.includes("action:create_category") && (
+                <button className="bg-primary hover:bg-(--royale-hover) text-cream font-bold py-2 px-4 rounded-lg w-full h-13.25 font-poppins cursor-pointer lg:w-80 active:scale-95  transisi" onClick={() => setPopup(true)}>
+                  Tambah Kategori
+                </button>
+              )}
             </div>
 
             <div className="mt-4 flex flex-col gap-4 w-full relative">
@@ -127,7 +132,14 @@ export default function CategorySection() {
                 </div>
               )}
               {items?.categories.map((item) => (
-                <CategoryItem key={item.id} data={item} onEdit={handleEdit} onDelete={handleDelete} />
+                <CategoryItem
+                  key={item.id}
+                  data={item}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  hakEdit={session?.user.permissions.includes("action:edit_category")}
+                  hakHapus={session?.user.permissions.includes("action:delete_category")}
+                />
               ))}
               {items?.categories.length === 0 && (
                 <div className="w-full flex justify-center items-center z-50 bg-[#F7F3F0]">
