@@ -12,11 +12,59 @@ export async function POST(
     if (!auth.authorized || !auth.token) {
       return auth.response
     }
+    const userId = Number(auth.token.id)
 
     const { id } = await params
     const itemId = Number(id)
     const body = await req.json()
     const { locationDetail, dateFound, additionalNote } = body
+
+    if (!locationDetail?.trim()) {
+      return errorResponse(
+        'Lokasi ditemukan wajib diisi',
+        400,
+      )
+    }
+
+    if (locationDetail.trim().length < 5) {
+      return errorResponse(
+        'Lokasi ditemukan terlalu pendek',
+        400,
+      )
+    }
+
+    if (!dateFound) {
+      return errorResponse(
+        'Tanggal ditemukan wajib diisi',
+        400,
+      )
+    }
+
+    const foundDate = new Date(dateFound)
+
+    if (isNaN(foundDate.getTime())) {
+      return errorResponse(
+        'Format tanggal ditemukan tidak valid',
+        400,
+      )
+    }
+
+    if (foundDate > new Date()) {
+      return errorResponse(
+        'Tanggal ditemukan tidak boleh melebihi hari ini',
+        400,
+      )
+    }
+
+    if (
+      additionalNote &&
+      additionalNote.trim().length > 500
+    ) {
+      return errorResponse(
+        'Pesan penemu maksimal 500 karakter',
+        400,
+      )
+    }
 
     const item = await prisma.item.findUnique({
       where: {
@@ -29,6 +77,13 @@ export async function POST(
 
     if (!item) {
       return errorResponse('Data barang tidak ditemukan', 404)
+    }
+
+    if (item.userId === Number(userId)) {
+      return errorResponse(
+        'Anda tidak dapat mengirim informasi pada laporan milik sendiri',
+        400,
+      )
     }
 
     if (item.statusId !== 1) {

@@ -13,6 +13,8 @@ export async function POST(
       return auth.response
     }
 
+    const userId = Number(auth.token.id)
+
     const { id } = await params
     const itemId = Number(id)
     const body = await req.json()
@@ -30,8 +32,78 @@ export async function POST(
       include: { user: true },
     })
 
+    if (!warnaBarang?.trim()) {
+      return errorResponse('Warna barang wajib diisi', 400)
+    }
+
+    if (warnaBarang.trim().length < 3) {
+      return errorResponse(
+        'Warna barang minimal 3 karakter',
+        400,
+      )
+    }
+
+    if (!lokasiTerakhir?.trim()) {
+      return errorResponse(
+        'Lokasi terakhir hilang wajib diisi',
+        400,
+      )
+    }
+
+    if (lokasiTerakhir.trim().length < 5) {
+      return errorResponse(
+        'Lokasi terakhir hilang terlalu pendek',
+        400,
+      )
+    }
+
+    if (!isiBarang?.trim()) {
+      return errorResponse(
+        'Isi barang wajib diisi',
+        400,
+      )
+    }
+
+    if (isiBarang.trim().length < 3) {
+      return errorResponse(
+        'Isi barang minimal 3 karakter',
+        400,
+      )
+    }
+
+    if (!ciriKhusus?.trim()) {
+      return errorResponse(
+        'Ciri khusus wajib diisi',
+        400,
+      )
+    }
+
+    if (ciriKhusus.trim().length < 5) {
+      return errorResponse(
+        'Ciri khusus minimal 5 karakter',
+        400,
+      )
+    }
+
+    if (
+      pesanTambahan &&
+      pesanTambahan.trim().length > 500
+    ) {
+      return errorResponse(
+        'Pesan tambahan maksimal 500 karakter',
+        400,
+      )
+    }
+
     if (!item) {
       return errorResponse('Data barang tidak ditemukan', 404)
+    }
+
+    if (item.userId === Number(userId)) {
+      return errorResponse(
+        'Anda tidak dapat mengklaim barang milik sendiri',
+        400,
+      )
     }
 
     if (item.statusId !== 2) {

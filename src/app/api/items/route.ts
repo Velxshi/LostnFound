@@ -100,40 +100,163 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const auth = await requireAuth(req);
+    const auth = await requireAuth(req)
 
     if (!auth.authorized || !auth.token) {
-      return auth.response;
+      return auth.response
     }
 
-    const userId = auth.token.id;
-    const body = await req.json();
+    const userId = Number(auth.token.id)
+    const body = await req.json()
+
+    const title = body.title?.trim()
+    const desc = body.desc?.trim()
+
+    if (!title) {
+      return errorResponse('Judul barang wajib diisi', 400)
+    }
+
+    if (title.length < 3) {
+      return errorResponse(
+        'Judul barang minimal 3 karakter',
+        400,
+      )
+    }
+
+    if (title.length > 100) {
+      return errorResponse(
+        'Judul barang maksimal 100 karakter',
+        400,
+      )
+    }
+
+    if (!body.categoryId) {
+      return errorResponse(
+        'Kategori wajib dipilih',
+        400,
+      )
+    }
+
+    if (!desc) {
+      return errorResponse(
+        'Deskripsi barang wajib diisi',
+        400,
+      )
+    }
+
+    if (desc.length < 10) {
+      return errorResponse(
+        'Deskripsi minimal 10 karakter',
+        400,
+      )
+    }
+
+    if (!body.statusId) {
+      return errorResponse(
+        'Status wajib dipilih',
+        400,
+      )
+    }
+
+    if (!body.tanggal) {
+      return errorResponse(
+        'Tanggal kejadian wajib diisi',
+        400,
+      )
+    }
+
+    const reportDate = new Date(body.tanggal)
+
+    if (isNaN(reportDate.getTime())) {
+      return errorResponse(
+        'Format tanggal tidak valid',
+        400,
+      )
+    }
+
+    const latitude =
+      body.latitude !== undefined
+        ? Number(body.latitude)
+        : null
+
+    const longitude =
+      body.longitude !== undefined
+        ? Number(body.longitude)
+        : null
+
+    if (latitude !== null && longitude !== null) {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`,
+        {
+          headers: {
+            'User-Agent': 'LostnFound/1.0',
+          },
+        },
+      )
+
+      const location = await response.json()
+
+      const address = location.address || {}
+
+      const isWaterArea =
+        address.ocean ||
+        address.sea ||
+        address.water ||
+        address.bay ||
+        address.strait
+
+      if (isWaterArea) {
+        return errorResponse(
+          'Lokasi tidak boleh berada di area perairan',
+          400,
+        )
+      }
+    }
 
     const item = await prisma.item.create({
       data: {
-        title: body.title,
-        categoryId: body.categoryId,
-        desc: body.desc,
-        statusId: body.statusId,
-        userId: Number(userId),
-        createdAt: body.tanggal ? new Date(body.tanggal) : new Date(),
-        note: body.note || null,
-        locationDetail: body.locationDetail || null,
-        latitude: body.latitude || null,
-        longitude: body.longitude || null,
-        itemDetails: body.itemDetails || null,
-        characteristics: body.characteristics || null,
+        title,
+        categoryId: Number(body.categoryId),
+        desc,
+        statusId: Number(body.statusId),
+        userId,
+        createdAt: reportDate,
+
+        note: body.note?.trim() || null,
+        locationDetail:
+          body.locationDetail?.trim() || null,
+
+        latitude,
+        longitude,
+
+        itemDetails:
+          body.itemDetails?.trim() || null,
+
+        characteristics:
+          body.characteristics?.trim() || null,
       },
-    });
+    })
 
     const user = await prisma.user.findUnique({
-      where: { id: Number(userId) },
-      select: { roleId: true },
-    });
+      where: {
+        id: userId,
+      },
+      select: {
+        roleId: true,
+      },
+    })
 
-    return successResponse({ id: item.id, roleId: user?.roleId }, "Berhasil laporkan item");
+    return successResponse(
+      {
+        id: item.id,
+        roleId: user?.roleId,
+      },
+      'Berhasil laporkan item',
+    )
   } catch (error) {
-    console.error(error);
-    return errorResponse("Gagal laporkan item");
+    console.error(error)
+    return errorResponse(
+      'Gagal laporkan item',
+    )
   }
 }
