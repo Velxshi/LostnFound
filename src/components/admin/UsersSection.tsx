@@ -217,7 +217,7 @@ export default function UsersSection() {
 
   const statistikItem = [
     { label: 'Total Pengguna', icon: 'tabler:users', total: meta.totalItems },
-    { label: 'Jumlah Role', icon: 'tabler:shield-check', total: 2 },
+    { label: 'Jumlah Role', icon: 'tabler:shield-check', total: 3 },
   ]
 
   if (isSuperAdmin === null || (isSuperAdmin && loading)) {
@@ -250,7 +250,10 @@ export default function UsersSection() {
           </div>
 
           <BlurFade delay={0.15} inView>
-            <SearchInput onSearch={(value: string) => setSearch(value)} />
+            <SearchInput
+              onSearch={(value: string) => setSearch(value)}
+              placeholder="Cari user..."
+            />
           </BlurFade>
 
           <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden relative mt-7">

@@ -15,6 +15,22 @@ export async function PUT(
 
     const userId = Number(auth.token.id)
 
+    const hasPermission = await prisma.userPermission.findFirst({
+      where: {
+        userId,
+        permission: {
+          name: 'action:edit_category',
+        },
+      },
+    })
+
+    if (!hasPermission) {
+      return errorResponse(
+        'Akses ditolak. Anda tidak memiliki izin untuk mengubah kategori.',
+        403,
+      )
+    }
+
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
@@ -96,6 +112,22 @@ export async function DELETE(
     }
 
     const userId = Number(auth.token.id)
+
+    const hasPermission = await prisma.userPermission.findFirst({
+      where: {
+        userId,
+        permission: {
+          name: 'action:delete_category',
+        },
+      },
+    })
+
+    if (!hasPermission) {
+      return errorResponse(
+        'Akses ditolak. Anda tidak memiliki izin untuk menghapus kategori.',
+        403,
+      )
+    }
 
     const user = await prisma.user.findUnique({
       where: { id: userId },

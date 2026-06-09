@@ -12,11 +12,13 @@ export interface SuggestionItem {
 interface SearchComponentProps {
   onSearch: (value: string) => void
   onSelectSuggestion?: (item: SuggestionItem) => void
+  placeholder?: string
 }
 
 export default function SearchComponent({
   onSearch,
   onSelectSuggestion,
+  placeholder = 'Cari laporan...',
 }: SearchComponentProps) {
   const [query, setQuery] = useState('')
   const [suggestions, setSuggestions] = useState<SuggestionItem[]>([])
@@ -135,7 +137,7 @@ export default function SearchComponent({
         name="search"
         onKeyDown={handleKeyDown}
         className="text-[13px] font-extralight font-poppins w-full pl-12 pr-4 py-4 bg-white outline-none rounded-2xl shadow-sm text-dark placeholder-gray-400"
-        placeholder="Cari laporan..."
+        placeholder={placeholder}
         autoComplete="off"
       />
 

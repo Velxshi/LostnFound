@@ -61,12 +61,10 @@ export async function PATCH(
     }
 
     const updatedUser = await prisma.$transaction(async (tx) => {
-      // 1. Hapus permission lama jika ada
       await tx.userPermission.deleteMany({
         where: { userId },
       })
 
-      // 2. Tentukan target permission baru berdasarkan role tujuan
       let targetPermissionNames: string[] = []
 
       if (roleExists.roleName === 'ADMIN') {
@@ -74,9 +72,7 @@ export async function PATCH(
       } else if (roleExists.roleName === 'SUPERADMIN') {
         targetPermissionNames = ['menu:users', 'menu:hak-akses']
       }
-      // USER: targetPermissionNames tetap kosong []
 
-      // 3. Tambahkan permission baru jika ada
       if (targetPermissionNames.length > 0) {
         const matchedPermissions = await tx.permission.findMany({
           where: {
@@ -95,7 +91,6 @@ export async function PATCH(
         }
       }
 
-      // 4. Update roleId user
       return await tx.user.update({
         where: { id: userId },
         data: { roleId },

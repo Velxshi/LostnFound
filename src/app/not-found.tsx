@@ -1,23 +1,52 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { motion } from 'motion/react'
+import { useSession } from 'next-auth/react'
+
+const permissionRouteMap: Record<string, string> = {
+  'menu:dashboard': '/admin',
+  'menu:category': '/admin/category',
+  'menu:users': '/admin/users',
+  'menu:hak-akses': '/admin/hak-akses',
+}
 
 export default function NotFoundPage() {
   const router = useRouter()
+
+  const { data: session } = useSession()
+  const roleId = (session?.user as any)?.roleId
+  const permissions: string[] = (session?.user as any)?.permissions ?? []
+
+  function getHomeRoute() {
+    if (roleId === 1) return '/admin'
+    if (roleId === 3) {
+      const firstAllowed = Object.entries(permissionRouteMap).find(([perm]) =>
+        permissions.includes(perm),
+      )
+      return firstAllowed ? firstAllowed[1] : '/'
+    }
+    return '/'
+  }
+
+  function getHomeLabel() {
+    if (roleId === 1 || roleId === 3) return 'Kembali ke Page Sebelumnya'
+    return 'Kembali ke Beranda'
+  }
 
   return (
     <div className="relative min-h-screen bg-[#f7f3f0] overflow-hidden flex flex-col items-center justify-center text-center px-4">
       {/* Decorative background circles — same as splash screen */}
       <motion.div
-        className="absolute w-[500px] h-[500px] rounded-full border border-[#2848b7]/10"
+        className="absolute w-125 h-125 rounded-full border border-[#2848b7]/10"
         initial={{ scale: 0.6, opacity: 0 }}
         animate={{ scale: 1.4, opacity: 1 }}
         transition={{ duration: 2, ease: 'easeOut' }}
       />
       <motion.div
-        className="absolute w-[300px] h-[300px] rounded-full border border-[#2848b7]/10"
+        className="absolute w-75 h-75 rounded-full border border-[#2848b7]/10"
         initial={{ scale: 0.4, opacity: 0 }}
         animate={{ scale: 1.1, opacity: 1 }}
         transition={{ duration: 2, delay: 0.1, ease: 'easeOut' }}
@@ -104,7 +133,7 @@ export default function NotFoundPage() {
 
         {/* Card */}
         <motion.div
-          className="bg-[#eee8e1] w-[320px] md:w-[420px] p-8 rounded-3xl shadow-md flex flex-col items-center gap-6"
+          className="bg-[#eee8e1] w-[320px] md:w-105 p-8 rounded-3xl shadow-md flex flex-col items-center gap-6"
           variants={{
             hidden: { opacity: 0, y: 16 },
             visible: {
@@ -125,8 +154,8 @@ export default function NotFoundPage() {
 
           {/* Back to Home button */}
           <motion.button
-            onClick={() => router.push('/')}
-            className="flex items-center justify-center gap-2 w-full md:w-[300px] py-3 px-4 rounded-xl bg-[#2848b7] text-white cursor-pointer hover:bg-[#1f3a9e] transition-colors duration-200 shadow"
+            onClick={() => router.push(getHomeRoute())}
+            className="flex items-center justify-center gap-2 w-full md:w-75 py-3 px-4 rounded-xl bg-[#2848b7] text-white cursor-pointer hover:bg-[#1f3a9e] transition-colors duration-200 shadow"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
           >
@@ -143,7 +172,7 @@ export default function NotFoundPage() {
               <path d="M19 12H5M12 5l-7 7 7 7" />
             </svg>
             <span className="text-sm md:text-base font-medium font-poppins">
-              Kembali ke Beranda
+              {getHomeLabel()}
             </span>
           </motion.button>
         </motion.div>
