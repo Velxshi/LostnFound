@@ -57,3 +57,84 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     return errorResponse("Gagal ambil detail item");
   }
 }
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const auth = await requireAuth(req)
+
+    if (!auth.authorized || !auth.token) {
+      return auth.response
+    }
+
+    const userId = Number(auth.token.id)
+
+    const hasPermission = await prisma.userPermission.findFirst({
+      where: {
+        userId,
+        permission: {
+          name: 'action:delete_report',
+        },
+      },
+    })
+
+    if (!hasPermission) {
+      return errorResponse(
+        'Akses ditolak. Anda tidak memiliki izin untuk menghapus kategori.',
+        403,
+      )
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        role: true,
+      },
+    })
+
+    if (!user || user.role.roleName !== 'ADMIN') {
+      return errorResponse(
+        'Hanya admin yang dapat menghapus item',
+        403,
+      )
+    }
+
+    const { id } = await params
+    const itemId = Number(id)
+
+    if (isNaN(itemId)) {
+      return errorResponse('ID item tidak valid', 400)
+    }
+
+    const item = await prisma.item.findUnique({
+      where: {
+        id: itemId,
+      },
+    })
+
+    if (!item) {
+      return errorResponse(
+        'Item tidak ditemukan',
+        404,
+      )
+    }
+
+    await prisma.item.delete({
+      where: {
+        id: itemId,
+      },
+    })
+
+    return successResponse(
+      null,
+      'Item berhasil dihapus',
+    )
+  } catch (error) {
+    console.error(error)
+    return errorResponse(
+      'Gagal menghapus item',
+    )
+  }
+}
